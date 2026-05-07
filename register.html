@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Create Account</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg:       #ecdcfe;
+      --primary:  #082567;
+      --accent:   #5b21b6;
+      --accent2:  #7c3aed;
+      --card:     rgba(255,255,255,0.62);
+      --input-bg: rgba(255,255,255,0.78);
+      --border:   rgba(8,37,103,0.13);
+      --muted:    #6b7b9c;
+      --danger:   #dc2626;
+      --success:  #16a34a;
+      --t:        0.3s ease;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: var(--bg);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      color: var(--primary);
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* ── Background orbs ── */
+    .orb {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(72px);
+      pointer-events: none;
+      z-index: 0;
+      animation: float 9s ease-in-out infinite alternate;
+    }
+    .orb-1 { width: 380px; height: 380px; background: radial-gradient(#c4b5fd, #a78bfa 70%); top: -130px; left: -110px; opacity: .5; }
+    .orb-2 { width: 300px; height: 300px; background: radial-gradient(#818cf8, #6366f1 70%); bottom: -90px; right: -90px; opacity: .45; animation-duration: 11s; animation-direction: alternate-reverse; }
+    .orb-3 { width: 180px; height: 180px; background: radial-gradient(#f9a8d4, #f472b6 70%); top: 40%; right: 8%; opacity: .3; animation-duration: 13s; }
+
+    @keyframes float {
+      from { transform: translate(0,0) scale(1); }
+      to   { transform: translate(24px,18px) scale(1.06); }
+    }
+
+    /* ── Card ── */
+    .card {
+      position: relative;
+      z-index: 1;
+      background: var(--card);
+      backdrop-filter: blur(22px);
+      -webkit-backdrop-filter: blur(22px);
+      border: 1.5px solid rgba(255,255,255,0.68);
+      border-radius: 28px;
+      box-shadow:
+        0 2px 0 rgba(255,255,255,0.9) inset,
+        0 24px 48px rgba(91,33,182,0.16),
+        0 6px 16px rgba(8,37,103,0.10);
+      width: 100%;
+      max-width: 460px;
+      padding: 40px 40px 34px;
+      animation: rise 0.65s cubic-bezier(.22,1,.36,1) both;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 10%; right: 10%;
+      height: 1.5px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.95), transparent);
+      border-radius: 999px;
+    }
+
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(36px) scale(.96); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    /* ── Progress steps ── */
+    .steps {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0;
+      margin-bottom: 28px;
+      animation: rise .7s .05s cubic-bezier(.22,1,.36,1) both;
+    }
+    .step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+      position: relative;
+      z-index: 1;
+    }
+    .step-circle {
+      width: 34px; height: 34px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.6);
+      border: 2px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: .75rem; font-weight: 700;
+      color: var(--muted);
+      transition: all var(--t);
+    }
+    .step.active .step-circle {
+      background: linear-gradient(135deg, #7c3aed, #4338ca);
+      border-color: transparent;
+      color: #fff;
+      box-shadow: 0 3px 12px rgba(124,58,237,.38);
+    }
+    .step.done .step-circle {
+      background: linear-gradient(135deg, #16a34a, #15803d);
+      border-color: transparent;
+      color: #fff;
+    }
+    .step-label {
+      font-size: .62rem;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .5px;
+    }
+    .step.active .step-label { color: var(--accent2); }
+    .step.done  .step-label  { color: var(--success); }
+
+    .step-line {
+      flex: 1;
+      height: 2px;
+      background: var(--border);
+      margin: 0 6px;
+      margin-bottom: 20px;
+      border-radius: 2px;
+      transition: background var(--t);
+      min-width: 32px;
+    }
+    .step-line.done { background: linear-gradient(90deg, #16a34a, #7c3aed); }
+
+    /* ── Logo ── */
+    .logo-wrap {
+      display: flex; justify-content: center;
+      margin-bottom: 14px;
+      animation: rise .7s .1s cubic-bezier(.22,1,.36,1) both;
+    }
+    .logo-mark {
+      width: 175px; height: 54px;
+      background: linear-gradient(140deg, #7c3aed 0%, #4338ca 100%);
+      border-radius: 16px;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 6px 22px rgba(124,58,237,.38), 0 1px 0 rgba(255,255,255,.25) inset;
+      font-size: 1.35rem; font-weight: 800;
+      color: #fff; letter-spacing: -1px;
+      user-select: none;
+    }
+
+    /* ── Header ── */
+    .header {
+      text-align: center;
+      margin-bottom: 26px;
+      animation: rise .7s .15s cubic-bezier(.22,1,.36,1) both;
+    }
+    .header h1 { font-size: 1.65rem; font-weight: 700; letter-spacing: -.5px; line-height: 1.2; }
+    .header p  { font-size: .875rem; color: var(--muted); margin-top: 4px; font-weight: 400; }
+
+    /* ── Field panel system ── */
+    .panel { display: none; flex-direction: column; gap: 18px; }
+    .panel.active { display: flex; animation: panelIn .4s cubic-bezier(.22,1,.36,1) both; }
+
+    @keyframes panelIn {
+      from { opacity: 0; transform: translateX(24px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes panelBack {
+      from { opacity: 0; transform: translateX(-24px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+    .panel.back { animation: panelBack .4s cubic-bezier(.22,1,.36,1) both; }
+
+    /* ── Name row (two columns) ── */
+    .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+    /* ── Input field ── */
+    .field {
+      position: relative;
+      width: 100%;
+    }
+
+    .field .ico {
+      position: absolute;
+      left: 14px; top: 50%;
+      transform: translateY(-50%);
+      width: 17px; height: 17px;
+      color: var(--muted);
+      pointer-events: none;
+      transition: color var(--t);
+      z-index: 2;
+    }
+
+    .field input, .field select {
+      width: 100%;
+      padding: 18px 44px 7px 42px;
+      background: var(--input-bg);
+      border: 1.5px solid var(--border);
+      border-radius: 14px;
+      font-family: 'Poppins', sans-serif;
+      font-size: .9rem;
+      color: var(--primary);
+      outline: none;
+      transition: border-color var(--t), box-shadow var(--t), background var(--t);
+      appearance: none;
+    }
+
+    .field select { cursor: pointer; }
+
+    .field input:focus,
+    .field select:focus {
+      border-color: var(--accent2);
+      box-shadow: 0 0 0 4px rgba(124,58,237,.13);
+      background: rgba(255,255,255,.93);
+    }
+
+    /* validation states */
+    .field input.valid   { border-color: #16a34a; }
+    .field input.invalid { border-color: var(--danger); }
+    .field input.valid:focus   { box-shadow: 0 0 0 4px rgba(22,163,74,.13); }
+    .field input.invalid:focus { box-shadow: 0 0 0 4px rgba(220,38,38,.13); }
+
+    .field label {
+      position: absolute;
+      left: 42px; top: 50%;
+      transform: translateY(-50%);
+      font-size: .855rem;
+      color: var(--muted);
+      pointer-events: none;
+      transition: top var(--t), font-size var(--t), color var(--t);
+      padding: 0 3px; z-index: 1;
+    }
+
+    .field input:focus + label,
+    .field input:not(:placeholder-shown) + label,
+    .field select:focus + label,
+    .field select:not([value=""]) + label,
+    .field.has-value label {
+      top: 8px;
+      font-size: .67rem;
+      font-weight: 600;
+      color: var(--accent2);
+      background: rgba(255,255,255,.85);
+      border-radius: 4px;
+    }
+
+    .field:focus-within .ico { color: var(--accent2); }
+
+    /* validation icon */
+    .val-ico {
+      position: absolute;
+      right: 13px; top: 50%;
+      transform: translateY(-50%);
+      width: 16px; height: 16px;
+      opacity: 0; transition: opacity var(--t);
+      pointer-events: none;
+    }
+    .field input.valid   ~ .val-ico.ok  { opacity: 1; color: #16a34a; }
+    .field input.invalid ~ .val-ico.err { opacity: 1; color: var(--danger); }
+
+    /* eye toggle */
+    .eye-btn {
+      position: absolute;
+      right: 13px; top: 50%;
+      transform: translateY(-50%);
+      background: none; border: none;
+      cursor: pointer; padding: 5px;
+      color: var(--muted);
+      display: flex; align-items: center;
+      transition: color var(--t); z-index: 3;
+      border-radius: 8px;
+    }
+    .eye-btn:hover { color: var(--accent2); }
+    .eye-btn svg   { width: 17px; height: 17px; }
+
+    /* field hint */
+    .hint {
+      font-size: .68rem; color: var(--muted);
+      margin-top: -10px; padding-left: 4px;
+      transition: color var(--t);
+    }
+    .hint.err { color: var(--danger); }
+
+    /* ── Password strength bar ── */
+    .strength-wrap { margin-top: -10px; }
+    .strength-bars {
+      display: flex; gap: 4px; margin-bottom: 4px;
+    }
+    .bar {
+      flex: 1; height: 3px;
+      background: rgba(8,37,103,.1);
+      border-radius: 3px;
+      transition: background .4s ease;
+    }
+    .bar.weak   { background: #ef4444; }
+    .bar.medium { background: #f59e0b; }
+    .bar.strong { background: #22c55e; }
+    .strength-label {
+      font-size: .67rem; font-weight: 600;
+      color: var(--muted); text-align: right;
+      transition: color .3s;
+    }
+
+    /* ── Terms checkbox ── */
+    .terms-row {
+      display: flex; align-items: flex-start; gap: 10px;
+    }
+    .terms-row input[type="checkbox"] {
+      width: 18px; height: 18px; min-width: 18px;
+      accent-color: var(--accent2);
+      margin-top: 2px; cursor: pointer;
+      border-radius: 4px;
+    }
+    .terms-row label {
+      font-size: .8rem; color: var(--muted);
+      cursor: pointer; line-height: 1.5;
+      position: static; transform: none;
+      background: none; padding: 0;
+    }
+    .terms-row label a {
+      color: var(--accent2); font-weight: 600;
+      text-decoration: none;
+    }
+    .terms-row label a:hover { color: var(--primary); }
+
+    /* ── Buttons row ── */
+    .btn-row {
+      display: flex; gap: 10px;
+    }
+
+    .btn-back {
+      flex: 0 0 auto;
+      padding: 14px 18px;
+      background: rgba(255,255,255,.7);
+      border: 1.5px solid var(--border);
+      border-radius: 14px;
+      cursor: pointer;
+      color: var(--muted);
+      display: flex; align-items: center;
+      transition: background var(--t), color var(--t), transform var(--t);
+      font-family: 'Poppins', sans-serif;
+    }
+    .btn-back:hover {
+      background: rgba(255,255,255,.95);
+      color: var(--primary);
+      transform: translateX(-2px);
+    }
+    .btn-back svg { width: 17px; height: 17px; }
+
+    .btn-next, .btn-submit {
+      flex: 1;
+      padding: 14px;
+      background: linear-gradient(135deg, #7c3aed 0%, #4338ca 100%);
+      color: #fff;
+      font-family: 'Poppins', sans-serif;
+      font-size: .97rem; font-weight: 600;
+      border: none; border-radius: 14px;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center; gap: 7px;
+      box-shadow: 0 5px 20px rgba(124,58,237,.38);
+      transition: transform var(--t), box-shadow var(--t), background var(--t), letter-spacing var(--t);
+      position: relative; overflow: hidden;
+    }
+    .btn-next::after, .btn-submit::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,.18), transparent);
+      opacity: 0; transition: opacity var(--t);
+    }
+    .btn-next:hover, .btn-submit:hover {
+      transform: translateY(-2px) scale(1.015);
+      box-shadow: 0 10px 28px rgba(124,58,237,.48);
+      letter-spacing: .4px;
+    }
+    .btn-next:hover::after, .btn-submit:hover::after { opacity: 1; }
+    .btn-next:hover .arrow, .btn-submit:hover .arrow { transform: translateX(4px); }
+    .btn-next:active, .btn-submit:active { transform: scale(.98); }
+    .arrow { transition: transform var(--t); display: flex; }
+    .arrow svg { width: 17px; height: 17px; }
+
+    /* ── Divider ── */
+    .divider {
+      display: flex; align-items: center; gap: 10px;
+    }
+    .divider::before, .divider::after {
+      content: ''; flex: 1; height: 1px;
+      background: rgba(8,37,103,.12);
+    }
+    .divider span { font-size: .72rem; color: #9ca3af; white-space: nowrap; }
+
+    /* ── Social ── */
+    .social-row { display: flex; gap: 10px; }
+    .btn-social {
+      flex: 1; padding: 10px 6px;
+      background: rgba(255,255,255,.72);
+      border: 1.5px solid var(--border);
+      border-radius: 12px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+      font-family: 'Poppins', sans-serif;
+      font-size: .75rem; font-weight: 500;
+      color: var(--primary);
+      transition: background var(--t), box-shadow var(--t), transform var(--t);
+    }
+    .btn-social:hover {
+      background: rgba(255,255,255,.95);
+      box-shadow: 0 3px 14px rgba(8,37,103,.10);
+      transform: translateY(-1px);
+    }
+    .btn-social svg { width: 16px; height: 16px; flex-shrink: 0; }
+
+    /* ── Sign in link ── */
+    .signin-row {
+      text-align: center;
+      font-size: .835rem; color: var(--muted);
+    }
+    .signin-row a {
+      color: var(--accent2); font-weight: 600;
+      text-decoration: none; margin-left: 3px;
+      transition: color var(--t);
+    }
+    .signin-row a:hover { color: var(--primary); }
+
+    /* ── Success screen ── */
+    .success-screen {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 14px;
+      animation: rise .6s cubic-bezier(.22,1,.36,1) both;
+    }
+    .success-screen.show { display: flex; }
+
+    .success-icon {
+      width: 72px; height: 72px;
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 6px 24px rgba(34,197,94,.35);
+      animation: popIn .5s .1s cubic-bezier(.34,1.56,.64,1) both;
+    }
+    @keyframes popIn {
+      from { opacity: 0; transform: scale(.4); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+    .success-icon svg { width: 36px; height: 36px; color: #fff; }
+    .success-screen h2 { font-size: 1.45rem; font-weight: 700; color: var(--primary); }
+    .success-screen p  { font-size: .875rem; color: var(--muted); max-width: 290px; line-height: 1.6; }
+    .btn-go {
+      padding: 13px 36px;
+      background: linear-gradient(135deg, #7c3aed, #4338ca);
+      color: #fff; font-family: 'Poppins', sans-serif;
+      font-size: .95rem; font-weight: 600;
+      border: none; border-radius: 14px; cursor: pointer;
+      box-shadow: 0 5px 18px rgba(124,58,237,.38);
+      transition: transform var(--t), box-shadow var(--t);
+      margin-top: 6px;
+    }
+    .btn-go:hover { transform: translateY(-2px); box-shadow: 0 10px 26px rgba(124,58,237,.48); }
+
+    /* ── Toast ── */
+    .toast {
+      position: fixed; bottom: 28px; left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: var(--primary); color: #fff;
+      padding: 12px 24px; border-radius: 40px;
+      font-size: .84rem; font-weight: 500;
+      box-shadow: 0 8px 24px rgba(8,37,103,.3);
+      transition: transform .4s cubic-bezier(.22,1,.36,1), opacity .4s;
+      opacity: 0; z-index: 999; white-space: nowrap;
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+    /* ── Responsive ── */
+    @media (max-width: 480px) {
+      .card { padding: 32px 18px 28px; }
+      .header h1 { font-size: 1.45rem; }
+      .field-row { grid-template-columns: 1fr; }
+      .social-row { flex-direction: column; }
+    }
+
+    /* ── Home button (outside card, always visible) ── */
+    .home-btn {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      font-family: 'Poppins', sans-serif;
+      font-size: .845rem;
+      font-weight: 500;
+      color: rgba(8, 37, 103, 0.5);
+      text-decoration: none;
+      margin-top: 18px;
+      transition: color 0.3s ease;
+    }
+    .home-btn:hover { color: var(--accent2); }
+    .home-btn svg { transition: transform 0.3s ease; }
+    .home-btn:hover svg { transform: translateY(-2px); }
+  </style>
+</head>
+<body>
+
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+
+  <div class="card" id="mainCard">
+
+    <!-- Progress Steps -->
+    <div class="steps" id="stepsBar">
+      <div class="step active" id="s1">
+        <div class="step-circle">1</div>
+        <div class="step-label">Account</div>
+      </div>
+      <div class="step-line" id="line1"></div>
+      <div class="step" id="s2">
+        <div class="step-circle">2</div>
+        <div class="step-label">Profile</div>
+      </div>
+      <div class="step-line" id="line2"></div>
+      <div class="step" id="s3">
+        <div class="step-circle">3</div>
+        <div class="step-label">Finish</div>
+      </div>
+    </div>
+
+    <!-- Logo -->
+    <div class="logo-wrap">
+      <div class="logo-mark">TagoreTunes</div>
+    </div>
+
+    <!-- Header -->
+    <div class="header" id="cardHeader">
+      <h1>Create Account</h1>
+      <p>Join us — it only takes a minute</p>
+    </div>
+
+    <form id="regForm" novalidate>
+
+      <!-- ══ PANEL 1 — Account details ══ -->
+      <div class="panel active" id="panel1">
+
+        <!-- Email -->
+        <div class="field">
+          <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          <input type="email" id="email" placeholder=" " autocomplete="email">
+          <label for="email">Email address</label>
+          <!-- validation icons -->
+          <svg class="val-ico ok" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          <svg class="val-ico err" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </div>
+
+        <!-- Password -->
+        <div class="field">
+          <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          <input type="password" id="password" placeholder=" " autocomplete="new-password">
+          <label for="password">Password</label>
+          <button type="button" class="eye-btn" id="eyeBtn1">
+            <svg id="eyeIcon1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Strength bar -->
+        <div class="strength-wrap">
+          <div class="strength-bars">
+            <div class="bar" id="bar1"></div>
+            <div class="bar" id="bar2"></div>
+            <div class="bar" id="bar3"></div>
+            <div class="bar" id="bar4"></div>
+          </div>
+          <div class="strength-label" id="strengthLabel">Enter a password</div>
+        </div>
+
+        <!-- Confirm password -->
+        <div class="field">
+          <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          <input type="password" id="confirm" placeholder=" " autocomplete="new-password">
+          <label for="confirm">Confirm password</label>
+          <button type="button" class="eye-btn" id="eyeBtn2">
+            <svg id="eyeIcon2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+            </svg>
+          </button>
+          <svg class="val-ico ok" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          <svg class="val-ico err" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </div>
+        <div class="hint" id="confirmHint"></div>
+
+        <!-- Divider -->
+        <div class="divider"><span>or sign up with</span></div>
+
+        <!-- Social -->
+        <div class="social-row">
+          <button type="button" class="btn-social">
+            <svg viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+            Google
+          </button>
+          <button type="button" class="btn-social">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+            GitHub
+          </button>
+          <button type="button" class="btn-social">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98l-.09.06c-.22.15-2.18 1.27-2.16 3.79.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.79M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+            Apple
+          </button>
+        </div>
+
+        <button type="button" class="btn-next" id="nextBtn1">
+          Continue
+          <span class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
+        </button>
+
+        <p class="signin-row">Already have an account? <a href="login.html">Sign In</a></p>
+      </div>
+
+      <!-- ══ PANEL 2 — Profile ══ -->
+      <div class="panel" id="panel2">
+
+        <!-- First + Last name -->
+        <div class="field-row">
+          <div class="field">
+            <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <input type="text" id="firstName" placeholder=" " autocomplete="given-name">
+            <label for="firstName">First name</label>
+          </div>
+          <div class="field">
+            <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <input type="text" id="lastName" placeholder=" " autocomplete="family-name">
+            <label for="lastName">Last name</label>
+          </div>
+        </div>
+
+        <!-- Username -->
+        <div class="field">
+          <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8.56 2.75c4.37 6.03 6.02 9.42 8.03 17.72m2.54-15.38c-3.72 4.35-8.94 5.66-16.88 5.85m19.5 1.9c-3.5-.93-6.63-.82-8.94 0-2.58.92-5.01 2.86-7.44 6.32"/></svg>
+          <input type="text" id="username" placeholder=" " autocomplete="username">
+          <label for="username">Username</label>
+          <svg class="val-ico ok" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          <svg class="val-ico err" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </div>
+        <div class="hint" id="usernameHint">3–20 characters, letters, numbers, underscore</div>
+
+        <!-- Phone -->
+        <div class="field">
+          <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.38 2 2 0 0 1 3.58 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 9.91a16 16 0 0 0 6.18 6.18l.91-.91a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          <input type="tel" id="phone" placeholder=" " autocomplete="tel">
+          <label for="phone">Phone (optional)</label>
+        </div>
+
+        <!-- Date of birth -->
+        <div class="field has-value">
+          <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          <input type="date" id="dob" placeholder=" " style="padding-right:14px;">
+          <label for="dob">Date of birth</label>
+        </div>
+
+        <div class="btn-row">
+          <button type="button" class="btn-back" id="backBtn2" title="Back">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+          </button>
+          <button type="button" class="btn-next" id="nextBtn2">
+            Continue
+            <span class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
+          </button>
+        </div>
+      </div>
+
+      <!-- ══ PANEL 3 — Finish ══ -->
+      <div class="panel" id="panel3">
+
+        <!-- Avatar picker -->
+        <div style="text-align:center; margin-bottom:4px;">
+          <div style="font-size:.78rem; font-weight:600; color:var(--muted); margin-bottom:10px; text-transform:uppercase; letter-spacing:.5px;">Choose your avatar</div>
+          <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap;" id="avatarPicker">
+            <!-- avatars generated by JS -->
+          </div>
+        </div>
+
+        <!-- How did you hear -->
+        <div class="field has-value">
+          <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <select id="referral" style="color:var(--primary);">
+            <option value="" disabled selected></option>
+            <option>Search Engine</option>
+            <option>Social Media</option>
+            <option>Friend / Colleague</option>
+            <option>Advertisement</option>
+            <option>Other</option>
+          </select>
+          <label for="referral">How did you find us?</label>
+        </div>
+
+        <!-- Terms -->
+        <div class="terms-row">
+          <input type="checkbox" id="terms">
+          <label for="terms">I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a></label>
+        </div>
+
+        <!-- Newsletter -->
+        <div class="terms-row" style="margin-top:-4px;">
+          <input type="checkbox" id="newsletter" checked>
+          <label for="newsletter">Send me product updates and tips (optional)</label>
+        </div>
+
+        <div class="btn-row">
+          <button type="button" class="btn-back" id="backBtn3" title="Back">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+          </button>
+          <button type="submit" class="btn-submit" id="submitBtn">
+            Create Account
+            <span class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+          </button>
+        </div>
+
+        <p class="signin-row">Already have an account? <a href="login.html">Sign In</a></p>
+      </div>
+
+    </form>
+
+    <!-- ══ SUCCESS screen ══ -->
+    <div class="success-screen" id="successScreen">
+      <div class="success-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <h2>You're all set! 🎉</h2>
+      <p>Your account has been created. Welcome to the community — we're glad you're here.</p>
+      <button class="btn-go" onclick="window.location.href='login.html'">Go to Sign In →</button>
+    </div>
+
+    <a href="index.html" class="home-btn" title="Back to Home">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+          <polyline points="9 22 9 12 15 12 15 22"/>
+        </svg>
+        Back to Home
+      </a>
+
+  </div><!-- /card -->
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+  (function () {
+    /* ─── Helpers ─── */
+    const $  = id => document.getElementById(id);
+    let toastT;
+    function toast(msg, dur = 3200) {
+      const el = $('toast');
+      el.textContent = msg;
+      el.classList.add('show');
+      clearTimeout(toastT);
+      toastT = setTimeout(() => el.classList.remove('show'), dur);
+    }
+
+    /* ─── Eye toggles ─── */
+    const EYE_OPEN = `<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>`;
+    const EYE_OFF  = `<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>`;
+
+    function setupEye(btnId, inputId, iconId) {
+      $( btnId).addEventListener('click', () => {
+        const inp  = $(inputId);
+        const show = inp.type === 'password';
+        inp.type   = show ? 'text' : 'password';
+        $(iconId).innerHTML = show ? EYE_OFF : EYE_OPEN;
+        inp.focus();
+      });
+    }
+    setupEye('eyeBtn1','password','eyeIcon1');
+    setupEye('eyeBtn2','confirm','eyeIcon2');
+
+    /* ─── Password strength ─── */
+    $('password').addEventListener('input', updateStrength);
+    function updateStrength() {
+      const v     = $('password').value;
+      const bars  = ['bar1','bar2','bar3','bar4'].map(id => $(id));
+      const label = $('strengthLabel');
+      bars.forEach(b => { b.className = 'bar'; });
+      if (!v) { label.textContent = 'Enter a password'; label.style.color = ''; return; }
+      let score = 0;
+      if (v.length >= 8)  score++;
+      if (/[A-Z]/.test(v)) score++;
+      if (/[0-9]/.test(v)) score++;
+      if (/[^A-Za-z0-9]/.test(v)) score++;
+      const map = ['','weak','medium','medium','strong'];
+      const cls = ['','#ef4444','#f59e0b','#f59e0b','#22c55e'];
+      const lbl = ['','Weak','Fair','Good','Strong'];
+      for (let i = 0; i < score; i++) bars[i].classList.add(map[score]);
+      label.textContent = lbl[score];
+      label.style.color = cls[score];
+    }
+
+    /* ─── Confirm password live check ─── */
+    $('confirm').addEventListener('input', checkConfirm);
+    function checkConfirm() {
+      const pw  = $('password').value;
+      const cf  = $('confirm').value;
+      const inp = $('confirm');
+      const hint = $('confirmHint');
+      if (!cf) { inp.className = ''; hint.textContent = ''; hint.className = 'hint'; return; }
+      if (pw === cf) {
+        inp.className = 'valid';
+        hint.textContent = '✓ Passwords match';
+        hint.className = 'hint';
+        hint.style.color = '#16a34a';
+      } else {
+        inp.className = 'invalid';
+        hint.textContent = '✗ Passwords do not match';
+        hint.className = 'hint err';
+        hint.style.color = '';
+      }
+    }
+
+    /* ─── Email live validation ─── */
+    $('email').addEventListener('blur', () => {
+      const v = $('email').value.trim();
+      if (!v) { $('email').className = ''; return; }
+      $('email').className = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) ? 'valid' : 'invalid';
+    });
+
+    /* ─── Username live validation ─── */
+    $('username').addEventListener('input', () => {
+      const v = $('username').value;
+      const hint = $('usernameHint');
+      if (!v) { $('username').className = ''; hint.style.color = ''; return; }
+      const ok = /^[a-zA-Z0-9_]{3,20}$/.test(v);
+      $('username').className = ok ? 'valid' : 'invalid';
+      hint.style.color = ok ? '#16a34a' : '#dc2626';
+    });
+
+    /* ─── Avatar picker ─── */
+    const emojis = ['🦊','🐼','🦁','🐸','🐳','🦋','🐙','🦄','🐺','🦝','🐨','🦖'];
+    let selectedAvatar = emojis[0];
+    const picker = $('avatarPicker');
+    emojis.forEach((e, i) => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.textContent = e;
+      btn.title = e;
+      btn.style.cssText = `font-size:1.6rem; background:${i===0?'rgba(124,58,237,.18)':'rgba(255,255,255,.7)'}; border:2px solid ${i===0?'#7c3aed':'rgba(8,37,103,.12)'}; border-radius:12px; width:46px; height:46px; cursor:pointer; transition:all .2s; display:flex; align-items:center; justify-content:center;`;
+      btn.addEventListener('click', () => {
+        picker.querySelectorAll('button').forEach(b => {
+          b.style.background = 'rgba(255,255,255,.7)';
+          b.style.borderColor = 'rgba(8,37,103,.12)';
+          b.style.transform = '';
+        });
+        btn.style.background  = 'rgba(124,58,237,.18)';
+        btn.style.borderColor = '#7c3aed';
+        btn.style.transform   = 'scale(1.15)';
+        selectedAvatar = e;
+      });
+      picker.appendChild(btn);
+    });
+
+    /* ─── Step management ─── */
+    let current = 1;
+
+    function goTo(n, dir = 'forward') {
+      const from = $(`panel${current}`);
+      from.classList.remove('active','back');
+
+      // update step indicators
+      for (let i = 1; i <= 3; i++) {
+        const step = $(`s${i}`);
+        step.classList.remove('active','done');
+        if (i < n)       step.classList.add('done');
+        else if (i === n) step.classList.add('active');
+      }
+      if ($('line1')) $('line1').classList.toggle('done', n > 1);
+      if ($('line2')) $('line2').classList.toggle('done', n > 2);
+
+      // update header
+      const titles = ['','Create Account','Your Profile','Almost Done'];
+      const subs   = ['','Join us — it only takes a minute','Tell us a little about yourself','One last step — you\'re nearly there'];
+      $('cardHeader').querySelector('h1').textContent = titles[n];
+      $('cardHeader').querySelector('p').textContent  = subs[n];
+
+      current = n;
+      const to = $(`panel${n}`);
+      to.classList.remove('back');
+      if (dir === 'back') to.classList.add('back');
+      to.classList.add('active');
+    }
+
+    /* ─── Panel 1 → 2 ─── */
+    $('nextBtn1').addEventListener('click', () => {
+      const email = $('email').value.trim();
+      const pw    = $('password').value;
+      const cf    = $('confirm').value;
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        toast('⚠️ Enter a valid email address.'); $('email').focus(); return;
+      }
+      if (pw.length < 8) {
+        toast('⚠️ Password must be at least 8 characters.'); $('password').focus(); return;
+      }
+      if (pw !== cf) {
+        toast('⚠️ Passwords do not match.'); $('confirm').focus(); return;
+      }
+      goTo(2);
+    });
+
+    /* ─── Panel 2 → 3 ─── */
+    $('nextBtn2').addEventListener('click', () => {
+      const fn = $('firstName').value.trim();
+      const ln = $('lastName').value.trim();
+      const un = $('username').value.trim();
+      if (!fn || !ln) {
+        toast('⚠️ Please enter your first and last name.'); return;
+      }
+      if (!un || !/^[a-zA-Z0-9_]{3,20}$/.test(un)) {
+        toast('⚠️ Enter a valid username (3–20 chars, letters/numbers/underscore).'); $('username').focus(); return;
+      }
+      goTo(3);
+    });
+
+    /* ─── Back buttons ─── */
+    $('backBtn2').addEventListener('click', () => goTo(1, 'back'));
+    $('backBtn3').addEventListener('click', () => goTo(2, 'back'));
+
+    /* ─── Submit ─── */
+    $('regForm').addEventListener('submit', e => {
+      e.preventDefault();
+      if (!$('terms').checked) {
+        toast('⚠️ Please accept the Terms of Service to continue.');
+        return;
+      }
+      // Success!
+      $('stepsBar').style.display = 'none';
+      $('cardHeader').style.display = 'none';
+      $('regForm').style.display = 'none';
+      $('successScreen').classList.add('show');
+
+      // mark all steps done
+      ['s1','s2','s3'].forEach(id => {
+        $(id).classList.remove('active');
+        $(id).classList.add('done');
+      });
+    });
+
+  })();
+  </script>
+</body>
+</html>

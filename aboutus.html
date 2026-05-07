@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About Us — TagoreTunes Music Academy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#faf7ff;
+  --primary:#082567;
+  --accent:#7c3aed;
+  --accent2:#5b21b6;
+  --gold:#f59e0b;
+  --pink:#f472b6;
+  --green:#10b981;
+  --card:rgba(255,255,255,0.72);
+  --border:rgba(8,37,103,0.11);
+  --muted:#6b7b9c;
+  --t:0.3s ease;
+  --radius:22px;
+  --nav-h:72px;
+}
+html{scroll-behavior:smooth;}
+body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--primary);overflow-x:hidden;}
+::-webkit-scrollbar{width:5px;}
+::-webkit-scrollbar-track{background:#ecdcfe;}
+::-webkit-scrollbar-thumb{background:var(--accent);border-radius:3px;}
+
+/* ════════ NAVBAR ════════ */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:1000;
+  padding:0 5%;height:var(--nav-h);
+  display:flex;align-items:center;justify-content:space-between;
+  background:rgba(250,247,255,0.88);
+  backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+  border-bottom:1px solid rgba(124,58,237,0.12);
+  box-shadow:0 4px 24px rgba(91,33,182,0.09);
+  transition:box-shadow var(--t);
+}
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;}
+.logo-mark{width:40px;height:40px;background:linear-gradient(135deg,#7c3aed,#4338ca);border-radius:12px;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:900;color:#fff;box-shadow:0 4px 14px rgba(124,58,237,0.35);flex-shrink:0;}
+.logo-text{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;color:var(--primary);letter-spacing:-.3px;}
+.logo-text span{color:var(--accent);}
+.nav-links{display:flex;align-items:center;gap:6px;}
+.nav-links a{font-size:.875rem;font-weight:500;color:var(--muted);text-decoration:none;padding:8px 14px;border-radius:10px;transition:color var(--t),background var(--t);}
+.nav-links a:hover{color:var(--primary);background:rgba(124,58,237,0.08);}
+.nav-links a.active{color:var(--accent);font-weight:600;}
+.btn-apply-nav{font-size:.84rem;font-weight:600;color:#fff;background:linear-gradient(135deg,#7c3aed,#4338ca);padding:9px 18px;border-radius:10px;text-decoration:none;box-shadow:0 3px 12px rgba(124,58,237,0.35);transition:transform var(--t),box-shadow var(--t);}
+.btn-apply-nav:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(124,58,237,0.45);}
+.btn-login-nav{font-size:.84rem;font-weight:600;color:var(--accent);background:rgba(124,58,237,0.1);padding:9px 16px;border-radius:10px;text-decoration:none;border:1.5px solid rgba(124,58,237,0.25);transition:background var(--t);}
+.btn-login-nav:hover{background:rgba(124,58,237,0.18);}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:8px;border:none;background:none;}
+.hamburger span{display:block;width:22px;height:2px;background:var(--primary);border-radius:2px;transition:all .3s;}
+.hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+.hamburger.open span:nth-child(2){opacity:0;}
+.hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+.mobile-menu{display:none;position:fixed;top:var(--nav-h);left:0;right:0;background:rgba(250,247,255,0.97);backdrop-filter:blur(18px);border-bottom:1px solid var(--border);padding:20px 5%;z-index:999;flex-direction:column;gap:4px;}
+.mobile-menu.open{display:flex;}
+.mobile-menu a{font-size:.95rem;font-weight:500;color:var(--primary);text-decoration:none;padding:12px 16px;border-radius:10px;transition:background var(--t);}
+.mobile-menu a:hover{background:rgba(124,58,237,0.08);}
+
+/* ════════ SHARED SECTION STYLES ════════ */
+.section{padding:90px 5%;}
+.section-inner{max-width:1200px;margin:0 auto;}
+.section-label{display:inline-flex;align-items:center;gap:8px;font-size:.72rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:12px;}
+.section-label::before{content:'';width:18px;height:2px;background:var(--accent);border-radius:2px;}
+.section-title{font-family:'Playfair Display',serif;font-size:clamp(1.9rem,3.5vw,2.9rem);font-weight:900;color:var(--primary);line-height:1.15;margin-bottom:14px;}
+.section-title em{font-style:italic;color:var(--accent);}
+.section-sub{font-size:1rem;color:var(--muted);line-height:1.75;max-width:560px;}
+
+/* reveal */
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .7s ease,transform .7s ease;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+.reveal-left{opacity:0;transform:translateX(-30px);transition:opacity .7s ease,transform .7s ease;}
+.reveal-left.visible{opacity:1;transform:translateX(0);}
+.reveal-right{opacity:0;transform:translateX(30px);transition:opacity .7s ease,transform .7s ease;}
+.reveal-right.visible{opacity:1;transform:translateX(0);}
+.delay-1{transition-delay:.1s;}.delay-2{transition-delay:.2s;}.delay-3{transition-delay:.3s;}.delay-4{transition-delay:.4s;}.delay-5{transition-delay:.5s;}
+
+/* ════════ HERO ════════ */
+.hero{
+  margin-top:var(--nav-h);
+  min-height:88vh;
+  background:linear-gradient(155deg,#f3eaff 0%,#ecdcfe 45%,#e0d9ff 100%);
+  display:flex;align-items:center;
+  padding:70px 5% 60px;
+  position:relative;overflow:hidden;
+}
+.orb{position:absolute;border-radius:50%;filter:blur(80px);pointer-events:none;}
+.orb1{width:420px;height:420px;background:radial-gradient(#c4b5fd,#a78bfa 70%);top:-140px;right:-80px;opacity:.42;animation:floatO 10s ease-in-out infinite alternate;}
+.orb2{width:280px;height:280px;background:radial-gradient(#f9a8d4,#f472b6 70%);bottom:-80px;left:5%;opacity:.28;animation:floatO 13s ease-in-out infinite alternate-reverse;}
+.orb3{width:200px;height:200px;background:radial-gradient(#818cf8,#6366f1 70%);top:35%;left:28%;opacity:.2;animation:floatO 8s ease-in-out infinite alternate;}
+@keyframes floatO{from{transform:translate(0,0);}to{transform:translate(26px,18px);}}
+
+.hero-inner{max-width:1200px;margin:0 auto;width:100%;display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;position:relative;z-index:1;}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(124,58,237,0.12);border:1.5px solid rgba(124,58,237,0.25);border-radius:40px;padding:7px 16px;font-size:.72rem;font-weight:600;color:var(--accent);margin-bottom:18px;animation:rise .7s cubic-bezier(.22,1,.36,1) both;}
+.hero-badge .dot{width:7px;height:7px;background:var(--accent);border-radius:50%;animation:pulse 1.8s ease-in-out infinite;}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.4;transform:scale(1.4);}}
+@keyframes rise{from{opacity:0;transform:translateY(24px);}to{opacity:1;transform:translateY(0);}}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(2.4rem,5vw,3.8rem);font-weight:900;line-height:1.1;letter-spacing:-.5px;color:var(--primary);animation:rise .7s .06s cubic-bezier(.22,1,.36,1) both;}
+.hero h1 em{font-style:italic;color:var(--accent);}
+.hero-desc{font-size:1.05rem;color:var(--muted);line-height:1.75;margin:18px 0 30px;max-width:500px;animation:rise .7s .12s cubic-bezier(.22,1,.36,1) both;}
+.hero-btns{display:flex;gap:14px;flex-wrap:wrap;animation:rise .7s .18s cubic-bezier(.22,1,.36,1) both;}
+.btn-primary{padding:13px 26px;background:linear-gradient(135deg,#7c3aed,#4338ca);color:#fff;font-family:'Poppins',sans-serif;font-size:.93rem;font-weight:600;border:none;border-radius:13px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:8px;box-shadow:0 5px 20px rgba(124,58,237,0.38);transition:transform var(--t),box-shadow var(--t);}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(124,58,237,0.48);}
+.btn-secondary{padding:13px 26px;background:rgba(255,255,255,0.7);color:var(--primary);font-family:'Poppins',sans-serif;font-size:.93rem;font-weight:600;border:1.5px solid var(--border);border-radius:13px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:8px;backdrop-filter:blur(8px);transition:background var(--t),border-color var(--t),transform var(--t);}
+.btn-secondary:hover{background:rgba(255,255,255,.95);border-color:var(--accent);transform:translateY(-1px);}
+
+/* founded badge */
+.founded-badge{
+  display:inline-flex;align-items:center;gap:10px;
+  background:rgba(255,255,255,0.7);backdrop-filter:blur(8px);
+  border:1.5px solid rgba(255,255,255,0.85);
+  border-radius:16px;padding:12px 18px;
+  margin-top:28px;
+  animation:rise .7s .24s cubic-bezier(.22,1,.36,1) both;
+}
+.founded-year{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:900;color:var(--primary);}
+.founded-sep{width:1px;height:30px;background:var(--border);}
+.founded-text{font-size:.78rem;color:var(--muted);line-height:1.4;}
+.founded-text strong{color:var(--primary);display:block;}
+
+/* hero visual */
+.hero-visual{position:relative;display:flex;align-items:center;justify-content:center;animation:rise .7s .08s cubic-bezier(.22,1,.36,1) both;}
+.hero-img-wrap{
+  width:100%;max-width:460px;
+  background:rgba(255,255,255,0.65);backdrop-filter:blur(16px);
+  border:1.5px solid rgba(255,255,255,0.8);
+  border-radius:28px;
+  box-shadow:0 24px 56px rgba(91,33,182,0.18),0 2px 0 rgba(255,255,255,0.9) inset;
+  padding:32px;position:relative;overflow:hidden;
+}
+.hero-img-wrap::before{content:'';position:absolute;top:0;left:10%;right:10%;height:1.5px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.95),transparent);border-radius:999px;}
+.hero-svg{width:100%;}
+
+/* floating mini-cards on hero */
+.mini-card{
+  position:absolute;background:rgba(255,255,255,0.9);backdrop-filter:blur(12px);
+  border:1.5px solid rgba(255,255,255,.85);border-radius:14px;
+  padding:10px 14px;box-shadow:0 8px 24px rgba(91,33,182,0.14);
+  display:flex;align-items:center;gap:9px;font-size:.76rem;font-weight:600;color:var(--primary);white-space:nowrap;
+}
+.mc1{top:4%;left:-14%;animation:floatCard 4s ease-in-out infinite;}
+.mc2{bottom:10%;right:-12%;animation:floatCard 5s 1s ease-in-out infinite;}
+.mc3{top:46%;left:-16%;animation:floatCard 4.5s .5s ease-in-out infinite;}
+@keyframes floatCard{0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);}}
+
+/* ════════ STORY SECTION ════════ */
+.story-section{background:#fff;}
+.story-grid{display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:center;}
+.story-visual{position:relative;}
+.timeline{display:flex;flex-direction:column;gap:0;}
+.tl-item{display:flex;gap:20px;position:relative;}
+.tl-item::before{content:'';position:absolute;left:19px;top:40px;bottom:-20px;width:2px;background:linear-gradient(180deg,rgba(124,58,237,0.3),rgba(124,58,237,0.05));z-index:0;}
+.tl-item:last-child::before{display:none;}
+.tl-dot-wrap{display:flex;flex-direction:column;align-items:center;flex-shrink:0;z-index:1;}
+.tl-dot{width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,#7c3aed,#4338ca);display:flex;align-items:center;justify-content:center;font-size:1rem;box-shadow:0 4px 14px rgba(124,58,237,0.3);flex-shrink:0;}
+.tl-content{padding-bottom:28px;}
+.tl-year{font-size:.68rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent);margin-bottom:4px;}
+.tl-title{font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:700;color:var(--primary);margin-bottom:5px;}
+.tl-desc{font-size:.84rem;color:var(--muted);line-height:1.65;}
+
+.story-text-col{}
+.story-quote{
+  background:linear-gradient(135deg,#082567,#1e1b4b);
+  border-radius:var(--radius);padding:28px;margin-top:28px;
+  position:relative;overflow:hidden;
+}
+.story-quote::before{content:'❝';position:absolute;top:-10px;left:16px;font-size:5rem;color:rgba(255,255,255,0.08);font-family:'Playfair Display',serif;line-height:1;}
+.story-quote p{font-size:.92rem;color:rgba(255,255,255,0.82);line-height:1.75;font-style:italic;position:relative;z-index:1;margin-bottom:14px;}
+.quote-author{display:flex;align-items:center;gap:10px;position:relative;z-index:1;}
+.quote-avatar{width:38px;height:38px;border-radius:50%;background:rgba(124,58,237,0.4);display:flex;align-items:center;justify-content:center;font-size:1rem;border:2px solid rgba(255,255,255,0.2);}
+.quote-name{font-size:.82rem;font-weight:700;color:#fff;}
+.quote-role{font-size:.72rem;color:rgba(255,255,255,0.55);}
+
+/* ════════ NUMBERS SECTION ════════ */
+.numbers-section{
+  background:linear-gradient(135deg,#082567 0%,#1e1b4b 100%);
+  position:relative;overflow:hidden;
+}
+.numbers-section::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Cg fill='%23ffffff' fill-opacity='0.025'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");}
+.n-orb1{position:absolute;width:300px;height:300px;background:radial-gradient(#7c3aed,transparent 70%);top:-80px;right:5%;opacity:.28;border-radius:50%;filter:blur(70px);}
+.n-orb2{position:absolute;width:220px;height:220px;background:radial-gradient(#ec4899,transparent 70%);bottom:-60px;left:8%;opacity:.22;border-radius:50%;filter:blur(60px);}
+.numbers-header{text-align:center;margin-bottom:52px;position:relative;z-index:1;}
+.numbers-header .section-label{color:#c4b5fd;}
+.numbers-header .section-label::before{background:#c4b5fd;}
+.numbers-header .section-title{color:#fff;}
+.numbers-header .section-title em{color:#c4b5fd;}
+.numbers-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;position:relative;z-index:1;}
+.num-card{
+  background:rgba(255,255,255,0.07);backdrop-filter:blur(10px);
+  border:1.5px solid rgba(255,255,255,0.12);
+  border-radius:var(--radius);padding:30px 20px;text-align:center;
+  transition:background var(--t),transform var(--t),box-shadow var(--t);
+  position:relative;overflow:hidden;
+}
+.num-card::before{content:'';position:absolute;top:0;left:20%;right:20%;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.2),transparent);}
+.num-card:hover{background:rgba(255,255,255,0.12);transform:translateY(-4px);box-shadow:0 14px 36px rgba(0,0,0,0.25);}
+.num-icon{font-size:1.8rem;margin-bottom:14px;}
+.num-value{font-family:'Playfair Display',serif;font-size:2.4rem;font-weight:900;color:#fff;line-height:1;margin-bottom:6px;}
+.num-value span{font-size:1.4rem;color:#c4b5fd;}
+.num-label{font-size:.8rem;color:rgba(255,255,255,0.55);font-weight:500;}
+
+/* ════════ VALUES SECTION ════════ */
+.values-section{background:linear-gradient(180deg,#f3eaff,#faf7ff);}
+.values-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;}
+.value-card{
+  background:rgba(255,255,255,0.72);backdrop-filter:blur(14px);
+  border:1.5px solid rgba(255,255,255,0.85);
+  border-radius:var(--radius);padding:32px;
+  box-shadow:0 4px 20px rgba(91,33,182,0.07);
+  transition:transform var(--t),box-shadow var(--t);
+  position:relative;overflow:hidden;
+}
+.value-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;border-radius:0 0 var(--radius) var(--radius);transform:scaleX(0);transition:transform var(--t);}
+.value-card:nth-child(1)::after{background:linear-gradient(90deg,#7c3aed,#ec4899);}
+.value-card:nth-child(2)::after{background:linear-gradient(90deg,#f59e0b,#f97316);}
+.value-card:nth-child(3)::after{background:linear-gradient(90deg,#10b981,#059669);}
+.value-card:nth-child(4)::after{background:linear-gradient(90deg,#06b6d4,#0891b2);}
+.value-card:nth-child(5)::after{background:linear-gradient(90deg,#ec4899,#be185d);}
+.value-card:nth-child(6)::after{background:linear-gradient(90deg,#8b5cf6,#7c3aed);}
+.value-card:hover{transform:translateY(-5px);box-shadow:0 16px 40px rgba(91,33,182,0.14);}
+.value-card:hover::after{transform:scaleX(1);}
+.value-icon{width:54px;height:54px;border-radius:15px;background:linear-gradient(135deg,#7c3aed,#4338ca);display:flex;align-items:center;justify-content:center;font-size:1.5rem;margin-bottom:18px;box-shadow:0 4px 16px rgba(124,58,237,0.28);}
+.value-card:nth-child(2) .value-icon{background:linear-gradient(135deg,#f59e0b,#f97316);}
+.value-card:nth-child(3) .value-icon{background:linear-gradient(135deg,#10b981,#059669);}
+.value-card:nth-child(4) .value-icon{background:linear-gradient(135deg,#06b6d4,#0891b2);}
+.value-card:nth-child(5) .value-icon{background:linear-gradient(135deg,#ec4899,#be185d);}
+.value-card:nth-child(6) .value-icon{background:linear-gradient(135deg,#8b5cf6,#7c3aed);}
+.value-title{font-size:1rem;font-weight:700;color:var(--primary);margin-bottom:8px;}
+.value-desc{font-size:.84rem;color:var(--muted);line-height:1.68;}
+
+/* ════════ TEAM SECTION ════════ */
+.team-section{background:#fff;}
+.team-header{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:44px;}
+.team-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;}
+.team-card{
+  background:linear-gradient(160deg,#faf7ff,#f3eaff);
+  border:1.5px solid rgba(124,58,237,0.1);
+  border-radius:var(--radius);padding:28px 20px;text-align:center;
+  transition:transform var(--t),box-shadow var(--t);
+  position:relative;overflow:hidden;
+}
+.team-card::before{content:'';position:absolute;top:0;left:0;right:0;height:100%;background:linear-gradient(180deg,rgba(124,58,237,0.04),transparent);opacity:0;transition:opacity var(--t);}
+.team-card:hover{transform:translateY(-6px);box-shadow:0 18px 44px rgba(91,33,182,0.14);}
+.team-card:hover::before{opacity:1;}
+.team-avatar{
+  width:80px;height:80px;border-radius:50%;margin:0 auto 14px;
+  background:linear-gradient(135deg,#ecdcfe,#ddd6fe);
+  display:flex;align-items:center;justify-content:center;
+  font-size:2rem;
+  border:3px solid rgba(255,255,255,0.9);
+  box-shadow:0 4px 18px rgba(124,58,237,0.2);
+  transition:transform var(--t);
+}
+.team-card:hover .team-avatar{transform:scale(1.08);}
+.team-dept{font-size:.64rem;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--accent);margin-bottom:5px;}
+.team-name{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--primary);margin-bottom:3px;}
+.team-role{font-size:.76rem;color:var(--muted);margin-bottom:12px;}
+.team-socials{display:flex;gap:8px;justify-content:center;}
+.tsoc{width:30px;height:30px;border-radius:8px;background:rgba(124,58,237,0.1);border:1px solid rgba(124,58,237,0.15);display:flex;align-items:center;justify-content:center;font-size:.8rem;cursor:pointer;transition:background var(--t),transform var(--t);text-decoration:none;}
+.tsoc:hover{background:rgba(124,58,237,0.2);transform:translateY(-2px);}
+
+/* founder card (larger) */
+.founder-row{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-bottom:22px;}
+.founder-card{
+  background:linear-gradient(135deg,#082567,#1e1b4b);
+  border-radius:var(--radius);padding:30px;
+  display:flex;gap:22px;align-items:center;
+  position:relative;overflow:hidden;
+  transition:transform var(--t),box-shadow var(--t);
+}
+.founder-card:hover{transform:translateY(-4px);box-shadow:0 20px 50px rgba(8,37,103,0.3);}
+.founder-card::before{content:'';position:absolute;top:-60px;right:-60px;width:200px;height:200px;background:radial-gradient(#7c3aed,transparent 70%);opacity:.3;border-radius:50%;}
+.founder-card::after{content:'';position:absolute;bottom:-40px;left:-40px;width:150px;height:150px;background:radial-gradient(#ec4899,transparent 70%);opacity:.2;border-radius:50%;}
+.founder-avatar{width:80px;height:80px;border-radius:50%;background:rgba(124,58,237,0.35);border:3px solid rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;font-size:2rem;flex-shrink:0;z-index:1;box-shadow:0 6px 20px rgba(0,0,0,0.2);}
+.founder-info{z-index:1;}
+.founder-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(245,158,11,0.25);border:1px solid rgba(245,158,11,0.3);border-radius:20px;padding:3px 10px;font-size:.64rem;font-weight:700;color:#fbbf24;margin-bottom:7px;letter-spacing:.3px;}
+.founder-name{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:900;color:#fff;margin-bottom:3px;}
+.founder-role{font-size:.78rem;color:rgba(255,255,255,0.6);margin-bottom:8px;}
+.founder-bio{font-size:.76rem;color:rgba(255,255,255,0.5);line-height:1.6;}
+
+/* ════════ MILESTONES (horizontal scroll timeline) ════════ */
+.milestones-section{background:linear-gradient(180deg,#faf7ff,#f3eaff);}
+.milestones-track{
+  display:flex;gap:0;overflow-x:auto;padding-bottom:20px;
+  scrollbar-width:thin;scrollbar-color:var(--accent) #ecdcfe;
+  -webkit-overflow-scrolling:touch;
+}
+.milestones-track::-webkit-scrollbar{height:4px;}
+.milestones-track::-webkit-scrollbar-thumb{background:var(--accent);border-radius:2px;}
+.milestone-item{
+  flex:0 0 220px;
+  padding:0 20px 0 0;
+  position:relative;
+}
+.milestone-item::before{content:'';position:absolute;top:18px;left:19px;right:-20px;height:2px;background:linear-gradient(90deg,rgba(124,58,237,0.4),rgba(124,58,237,0.08));}
+.milestone-item:last-child::before{display:none;}
+.ms-dot{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#7c3aed,#4338ca);display:flex;align-items:center;justify-content:center;font-size:.9rem;margin-bottom:14px;box-shadow:0 4px 14px rgba(124,58,237,0.3);flex-shrink:0;position:relative;z-index:1;}
+.ms-year{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:900;color:var(--primary);margin-bottom:4px;}
+.ms-title{font-size:.84rem;font-weight:700;color:var(--primary);margin-bottom:5px;}
+.ms-desc{font-size:.76rem;color:var(--muted);line-height:1.6;}
+
+/* ════════ AWARDS SECTION ════════ */
+.awards-section{background:#fff;}
+.awards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:18px;}
+.award-card{
+  background:linear-gradient(160deg,#faf7ff,#f3eaff);
+  border:1.5px solid rgba(124,58,237,0.1);
+  border-radius:18px;padding:24px;
+  display:flex;gap:16px;align-items:flex-start;
+  transition:transform var(--t),box-shadow var(--t);
+}
+.award-card:hover{transform:translateY(-3px);box-shadow:0 12px 32px rgba(91,33,182,0.12);}
+.award-icon{width:46px;height:46px;border-radius:13px;background:linear-gradient(135deg,#f59e0b,#f97316);display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;box-shadow:0 4px 14px rgba(245,158,11,0.3);}
+.award-year{font-size:.65rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:3px;}
+.award-title{font-size:.88rem;font-weight:700;color:var(--primary);margin-bottom:3px;}
+.award-org{font-size:.75rem;color:var(--muted);}
+
+/* ════════ PARTNERS ════════ */
+.partners-section{background:linear-gradient(180deg,#f3eaff,#ecdcfe);}
+.partners-header{text-align:center;margin-bottom:40px;}
+.partners-row{display:flex;gap:16px;flex-wrap:wrap;justify-content:center;align-items:center;}
+.partner-pill{
+  display:flex;align-items:center;gap:10px;
+  background:rgba(255,255,255,0.72);backdrop-filter:blur(8px);
+  border:1.5px solid rgba(255,255,255,0.85);
+  border-radius:40px;padding:12px 20px;
+  box-shadow:0 4px 16px rgba(91,33,182,0.08);
+  font-size:.84rem;font-weight:600;color:var(--primary);
+  transition:transform var(--t),box-shadow var(--t);
+}
+.partner-pill:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(91,33,182,0.14);}
+.partner-emoji{font-size:1.3rem;}
+
+/* ════════ CTA ════════ */
+.cta-section{
+  padding:90px 5%;
+  background:linear-gradient(135deg,#082567 0%,#1e1b4b 100%);
+  position:relative;overflow:hidden;text-align:center;
+}
+.cta-orb1{position:absolute;width:320px;height:320px;background:radial-gradient(#7c3aed,transparent 70%);top:-80px;right:5%;opacity:.3;border-radius:50%;filter:blur(70px);}
+.cta-orb2{position:absolute;width:240px;height:240px;background:radial-gradient(#ec4899,transparent 70%);bottom:-60px;left:8%;opacity:.22;border-radius:50%;filter:blur(60px);}
+.cta-section h2{font-family:'Playfair Display',serif;font-size:clamp(1.9rem,3.5vw,2.9rem);font-weight:900;color:#fff;margin-bottom:14px;position:relative;z-index:1;}
+.cta-section h2 em{font-style:italic;color:#c4b5fd;}
+.cta-section p{font-size:1rem;color:rgba(255,255,255,0.6);max-width:500px;margin:0 auto 34px;line-height:1.7;position:relative;z-index:1;}
+.cta-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;position:relative;z-index:1;}
+.btn-cta-white{padding:13px 28px;background:#fff;color:var(--primary);font-family:'Poppins',sans-serif;font-size:.93rem;font-weight:700;border:none;border-radius:13px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:8px;transition:transform var(--t),box-shadow var(--t);}
+.btn-cta-white:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,0.25);}
+.btn-cta-outline{padding:13px 28px;background:rgba(255,255,255,0.1);color:#fff;font-family:'Poppins',sans-serif;font-size:.93rem;font-weight:600;border:1.5px solid rgba(255,255,255,0.25);border-radius:13px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:8px;backdrop-filter:blur(8px);transition:background var(--t),border-color var(--t);}
+.btn-cta-outline:hover{background:rgba(255,255,255,0.18);border-color:rgba(255,255,255,0.45);}
+
+/* ════════ FOOTER ════════ */
+footer{background:#0a0a1a;color:rgba(255,255,255,0.7);padding:60px 5% 30px;}
+.footer-inner{max-width:1200px;margin:0 auto;}
+.footer-grid{display:grid;grid-template-columns:1.8fr 1fr 1fr 1fr;gap:40px;margin-bottom:48px;}
+.footer-brand p{font-size:.84rem;line-height:1.7;color:rgba(255,255,255,0.5);margin:14px 0 18px;max-width:260px;}
+.social-links{display:flex;gap:10px;}
+.social-btn{width:36px;height:36px;border-radius:10px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;font-size:.95rem;cursor:pointer;text-decoration:none;transition:background var(--t),transform var(--t);}
+.social-btn:hover{background:rgba(124,58,237,0.4);transform:translateY(-2px);}
+.footer-col h4{font-size:.85rem;font-weight:700;color:#fff;margin-bottom:14px;}
+.footer-col a{display:block;font-size:.82rem;color:rgba(255,255,255,0.5);text-decoration:none;margin-bottom:8px;transition:color var(--t);}
+.footer-col a:hover{color:rgba(255,255,255,0.9);}
+.newsletter-form{display:flex;gap:8px;margin-top:4px;}
+.newsletter-input{flex:1;padding:10px 14px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:10px;color:#fff;font-family:'Poppins',sans-serif;font-size:.82rem;outline:none;transition:border-color var(--t);}
+.newsletter-input::placeholder{color:rgba(255,255,255,0.35);}
+.newsletter-input:focus{border-color:rgba(124,58,237,0.6);}
+.newsletter-btn{padding:10px 14px;background:linear-gradient(135deg,#7c3aed,#4338ca);color:#fff;border:none;border-radius:10px;cursor:pointer;font-size:.82rem;font-weight:600;white-space:nowrap;transition:transform var(--t);}
+.newsletter-btn:hover{transform:scale(1.04);}
+.footer-bottom{border-top:1px solid rgba(255,255,255,0.08);padding-top:24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;font-size:.78rem;color:rgba(255,255,255,0.35);}
+
+/* ════════ RESPONSIVE ════════ */
+@media(max-width:1000px){
+  .hero-inner,.story-grid{grid-template-columns:1fr;}
+  .hero-visual,.mc1,.mc2,.mc3{display:none;}
+  .numbers-grid{grid-template-columns:repeat(2,1fr);}
+  .values-grid{grid-template-columns:repeat(2,1fr);}
+  .team-grid{grid-template-columns:repeat(2,1fr);}
+  .founder-row{grid-template-columns:1fr;}
+  .footer-grid{grid-template-columns:1fr 1fr;}
+}
+@media(max-width:700px){
+  .nav-links,.btn-apply-nav,.btn-login-nav{display:none;}
+  .hamburger{display:flex;}
+  .numbers-grid{grid-template-columns:1fr 1fr;}
+  .values-grid{grid-template-columns:1fr;}
+  .team-grid{grid-template-columns:1fr 1fr;}
+  .footer-grid{grid-template-columns:1fr;}
+  .footer-bottom{flex-direction:column;text-align:center;}
+  .team-header{flex-direction:column;align-items:flex-start;gap:14px;}
+}
+@media(max-width:480px){
+  .team-grid{grid-template-columns:1fr;}
+  .numbers-grid{grid-template-columns:1fr 1fr;}
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════ NAVBAR ══════════ -->
+<nav id="navbar">
+  <a class="nav-logo" href="index.html">
+    <div class="logo-mark">TT</div>
+    <span class="logo-text">Tagore<span>Tunes</span></span>
+  </a>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="courses.html">Courses</a>
+    <a href="teachers.html">Teachers</a>
+    <a href="aboutus.html" class="active">About</a>
+    <a href="contactus.html">Contact</a>
+  </div>
+  <div style="display:flex;align-items:center;gap:10px;">
+    <a href="index.html#apply" class="btn-apply-nav">Apply as Teacher</a>
+    <a href="login.html" class="btn-login-nav">Login / Sign Up</a>
+    <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="index.html">Home</a>
+  <a href="courses.html">Courses</a>
+  <a href="teachers.html">Teachers</a>
+  <a href="about.html">About</a>
+  <a href="index.html#apply">Apply as Teacher 🎓</a>
+  <a href="login.html">Login / Sign Up</a>
+</div>
+
+<!-- ══════════ HERO ══════════ -->
+<section class="hero">
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+  <div class="orb orb3"></div>
+  <div class="hero-inner">
+    <div>
+      <div class="hero-badge"><span class="dot"></span> Est. 2018 · Mumbai, India</div>
+      <h1>Music Is Not<br>a Hobby — It's<br>a <em>Way of Life</em></h1>
+      <p class="hero-desc">TagoreTunes was born from a simple belief: that every person deserves access to a great music teacher. We've spent 7 years building the platform, the faculty, and the community to make that real.</p>
+      <div class="hero-btns">
+        <a href="courses.html" class="btn-primary">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+          Explore Courses
+        </a>
+        <a href="index.html#apply" class="btn-secondary">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          Join Our Faculty
+        </a>
+      </div>
+      <div class="founded-badge">
+        <div class="founded-year">2018</div>
+        <div class="founded-sep"></div>
+        <div class="founded-text"><strong>Founded in Mumbai</strong>with 3 teachers & 12 students</div>
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <div class="mini-card mc1">🎵 Live sessions daily</div>
+      <div class="mini-card mc2">⭐ 4.9 avg. rating</div>
+      <div class="mini-card mc3">🌍 Students in 18 cities</div>
+      <div class="hero-img-wrap">
+        <svg class="hero-svg" viewBox="0 0 400 380" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#7c3aed"/><stop offset="100%" stop-color="#4338ca"/></linearGradient>
+            <linearGradient id="g2" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#ec4899"/><stop offset="100%" stop-color="#be185d"/></linearGradient>
+          </defs>
+          <!-- Central note -->
+          <circle cx="200" cy="190" r="130" fill="url(#g1)" opacity=".1"/>
+          <text x="200" y="230" text-anchor="middle" font-size="110" fill="url(#g1)" opacity=".7">♪</text>
+          <!-- Decorative notes -->
+          <text x="68" y="110" font-size="32" fill="#7c3aed" opacity=".35">♫</text>
+          <text x="310" y="100" font-size="26" fill="#ec4899" opacity=".4">♩</text>
+          <text x="50" y="280" font-size="22" fill="#7c3aed" opacity=".3">♬</text>
+          <text x="330" y="300" font-size="24" fill="#f59e0b" opacity=".4">♭</text>
+          <text x="160" y="360" font-size="18" fill="#ec4899" opacity=".3">♮</text>
+          <text x="290" y="360" font-size="20" fill="#7c3aed" opacity=".28">♯</text>
+          <!-- Wave bars at bottom -->
+          <rect x="100" y="310" width="10" height="22" rx="5" fill="#7c3aed" opacity=".6"><animate attributeName="height" values="22;38;16;30;22" dur="1.1s" repeatCount="indefinite"/><animate attributeName="y" values="310;302;318;306;310" dur="1.1s" repeatCount="indefinite"/></rect>
+          <rect x="118" y="305" width="10" height="30" rx="5" fill="#7c3aed" opacity=".75"><animate attributeName="height" values="30;16;38;22;30" dur=".9s" repeatCount="indefinite"/><animate attributeName="y" values="305;314;297;308;305" dur=".9s" repeatCount="indefinite"/></rect>
+          <rect x="136" y="312" width="10" height="18" rx="5" fill="#ec4899" opacity=".65"><animate attributeName="height" values="18;32;12;26;18" dur="1.3s" repeatCount="indefinite"/><animate attributeName="y" values="312;305;318;308;312" dur="1.3s" repeatCount="indefinite"/></rect>
+          <rect x="154" y="303" width="10" height="32" rx="5" fill="#7c3aed" opacity=".8"><animate attributeName="height" values="32;18;40;24;32" dur="1.0s" repeatCount="indefinite"/><animate attributeName="y" values="303;311;295;307;303" dur="1.0s" repeatCount="indefinite"/></rect>
+          <rect x="172" y="309" width="10" height="20" rx="5" fill="#ec4899" opacity=".7"><animate attributeName="height" values="20;36;14;28;20" dur="1.2s" repeatCount="indefinite"/><animate attributeName="y" values="309;301;315;305;309" dur="1.2s" repeatCount="indefinite"/></rect>
+          <rect x="190" y="304" width="10" height="28" rx="5" fill="#7c3aed" opacity=".75"><animate attributeName="height" values="28;14;36;20;28" dur="1.4s" repeatCount="indefinite"/><animate attributeName="y" values="304;312;296;308;304" dur="1.4s" repeatCount="indefinite"/></rect>
+          <rect x="208" y="312" width="10" height="18" rx="5" fill="#ec4899" opacity=".6"><animate attributeName="height" values="18;30;12;24;18" dur="1.1s" repeatCount="indefinite"/><animate attributeName="y" values="312;306;318;312;312" dur="1.1s" repeatCount="indefinite"/></rect>
+          <rect x="226" y="306" width="10" height="26" rx="5" fill="#7c3aed" opacity=".7"><animate attributeName="height" values="26;12;34;18;26" dur=".95s" repeatCount="indefinite"/><animate attributeName="y" values="306;314;298;310;306" dur=".95s" repeatCount="indefinite"/></rect>
+          <rect x="244" y="310" width="10" height="20" rx="5" fill="#ec4899" opacity=".65"><animate attributeName="height" values="20;34;14;28;20" dur="1.2s" repeatCount="indefinite"/><animate attributeName="y" values="310;303;316;306;310" dur="1.2s" repeatCount="indefinite"/></rect>
+          <rect x="262" y="308" width="10" height="24" rx="5" fill="#7c3aed" opacity=".7"><animate attributeName="height" values="24;38;18;30;24" dur="1.0s" repeatCount="indefinite"/><animate attributeName="y" values="308;300;314;306;308" dur="1.0s" repeatCount="indefinite"/></rect>
+          <rect x="280" y="313" width="10" height="16" rx="5" fill="#ec4899" opacity=".6"><animate attributeName="height" values="16;28;10;22;16" dur="1.3s" repeatCount="indefinite"/><animate attributeName="y" values="313;307;319;311;313" dur="1.3s" repeatCount="indefinite"/></rect>
+        </svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ STORY / TIMELINE ══════════ -->
+<section class="section story-section">
+  <div class="section-inner">
+    <div class="story-grid">
+      <div class="story-visual reveal-left">
+        <div class="section-label">Our Journey</div>
+        <h2 class="section-title" style="margin-bottom:32px;">How <em>TagoreTunes</em><br>Came to Be</h2>
+        <div class="timeline">
+          <div class="tl-item">
+            <div class="tl-dot-wrap"><div class="tl-dot">🌱</div></div>
+            <div class="tl-content">
+              <div class="tl-year">2018</div>
+              <div class="tl-title">The Spark</div>
+              <div class="tl-desc">Founder Ravi Krishnan, frustrated by the lack of quality music education in Indian cities, started TagoreTunes with 3 teachers and a borrowed studio in Bandra, Mumbai.</div>
+            </div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot-wrap"><div class="tl-dot">📱</div></div>
+            <div class="tl-content">
+              <div class="tl-year">2020</div>
+              <div class="tl-title">Going Digital</div>
+              <div class="tl-desc">When the pandemic hit, we pivoted entirely to online. Instead of shrinking, we grew — expanding to 14 new cities in 8 months and tripling our student base.</div>
+            </div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot-wrap"><div class="tl-dot">🏆</div></div>
+            <div class="tl-content">
+              <div class="tl-year">2022</div>
+              <div class="tl-title">National Recognition</div>
+              <div class="tl-desc">Won the "Best EdTech Platform — Arts & Culture" award at the India Education Summit. Crossed 2,000 active students and 60 teachers across India.</div>
+            </div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot-wrap"><div class="tl-dot">🌍</div></div>
+            <div class="tl-content">
+              <div class="tl-year">2025</div>
+              <div class="tl-title">Today & Beyond</div>
+              <div class="tl-desc">4,800+ students, 120+ teachers, 18 instruments, 18 cities. We're now launching our first international cohort for Indian diaspora students worldwide.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="story-text-col reveal-right">
+        <div class="section-label">Our Mission</div>
+        <h2 class="section-title">Music for<br><em>Every Student,</em><br>Everywhere</h2>
+        <p class="section-sub" style="margin-bottom:20px;">We believe the gap between a student and a great music teacher should be zero — not geography, not income, not availability. That's the problem we're solving, one lesson at a time.</p>
+        <p style="font-size:.9rem;color:var(--muted);line-height:1.75;margin-bottom:24px;">Every teacher on TagoreTunes is handpicked through a rigorous 3-stage audition and pedagogy review. We don't just hire musicians — we hire people who love to teach as much as they love to play.</p>
+
+        <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:28px;">
+          <div style="display:flex;align-items:center;gap:12px;font-size:.88rem;color:var(--primary);font-weight:500;">
+            <span style="width:28px;height:28px;border-radius:8px;background:rgba(124,58,237,0.12);display:flex;align-items:center;justify-content:center;font-size:.85rem;flex-shrink:0;">✓</span>
+            Rigorous 3-stage teacher audition process
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;font-size:.88rem;color:var(--primary);font-weight:500;">
+            <span style="width:28px;height:28px;border-radius:8px;background:rgba(124,58,237,0.12);display:flex;align-items:center;justify-content:center;font-size:.85rem;flex-shrink:0;">✓</span>
+            Background verification for every instructor
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;font-size:.88rem;color:var(--primary);font-weight:500;">
+            <span style="width:28px;height:28px;border-radius:8px;background:rgba(124,58,237,0.12);display:flex;align-items:center;justify-content:center;font-size:.85rem;flex-shrink:0;">✓</span>
+            Pedagogy training for all new faculty members
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;font-size:.88rem;color:var(--primary);font-weight:500;">
+            <span style="width:28px;height:28px;border-radius:8px;background:rgba(124,58,237,0.12);display:flex;align-items:center;justify-content:center;font-size:.85rem;flex-shrink:0;">✓</span>
+            Monthly quality reviews and student feedback loops
+          </div>
+        </div>
+
+        <div class="story-quote">
+          <p>"Music gave me a language when I had none. I started TagoreTunes so that no child grows up without that language."</p>
+          <div class="quote-author">
+            <div class="quote-avatar">👨‍🎤</div>
+            <div>
+              <div class="quote-name">Ravi Krishnan</div>
+              <div class="quote-role">Founder & CEO, TagoreTunes Music Academy</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ NUMBERS ══════════ -->
+<section class="section numbers-section">
+  <div class="n-orb1"></div>
+  <div class="n-orb2"></div>
+  <div class="section-inner">
+    <div class="numbers-header reveal">
+      <div class="section-label">By The Numbers</div>
+      <h2 class="section-title">TagoreTunes in <em>Numbers</em></h2>
+    </div>
+    <div class="numbers-grid">
+      <div class="num-card reveal delay-1">
+        <div class="num-icon">👨‍🎓</div>
+        <div class="num-value">4,800<span>+</span></div>
+        <div class="num-label">Active Students</div>
+      </div>
+      <div class="num-card reveal delay-2">
+        <div class="num-icon">👩‍🏫</div>
+        <div class="num-value">120<span>+</span></div>
+        <div class="num-label">Verified Teachers</div>
+      </div>
+      <div class="num-card reveal delay-3">
+        <div class="num-icon">🎵</div>
+        <div class="num-value">18</div>
+        <div class="num-label">Instruments Taught</div>
+      </div>
+      <div class="num-card reveal delay-4">
+        <div class="num-icon">🌆</div>
+        <div class="num-value">18</div>
+        <div class="num-label">Cities Across India</div>
+      </div>
+      <div class="num-card reveal delay-1">
+        <div class="num-icon">⭐</div>
+        <div class="num-value">4.9<span>/5</span></div>
+        <div class="num-label">Average Rating</div>
+      </div>
+      <div class="num-card reveal delay-2">
+        <div class="num-icon">🎓</div>
+        <div class="num-value">94<span>%</span></div>
+        <div class="num-label">Course Completion Rate</div>
+      </div>
+      <div class="num-card reveal delay-3">
+        <div class="num-icon">🎭</div>
+        <div class="num-value">320<span>+</span></div>
+        <div class="num-label">Student Performances</div>
+      </div>
+      <div class="num-card reveal delay-4">
+        <div class="num-icon">📅</div>
+        <div class="num-value">7</div>
+        <div class="num-label">Years of Excellence</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ VALUES ══════════ -->
+<section class="section values-section">
+  <div class="section-inner">
+    <div class="section-header" style="text-align:center;margin-bottom:48px;" class="reveal">
+      <div class="section-label reveal" style="justify-content:center;">What We Stand For</div>
+      <h2 class="section-title reveal">Our Core <em>Values</em></h2>
+      <p class="section-sub reveal" style="margin:0 auto;">These aren't wall posters — they're the actual principles that guide how we hire teachers, design courses, and serve students every single day.</p>
+    </div>
+    <div class="values-grid">
+      <div class="value-card reveal delay-1">
+        <div class="value-icon">🎯</div>
+        <div class="value-title">Excellence First</div>
+        <p class="value-desc">We'd rather have 100 extraordinary teachers than 1,000 average ones. Quality is non-negotiable at every touchpoint — from teacher auditions to platform design.</p>
+      </div>
+      <div class="value-card reveal delay-2">
+        <div class="value-icon">🌱</div>
+        <div class="value-title">Accessible to All</div>
+        <p class="value-desc">Great music education shouldn't be a privilege. We offer EMI options, scholarships for deserving students, and a free first session for everyone — no exceptions.</p>
+      </div>
+      <div class="value-card reveal delay-3">
+        <div class="value-icon">🤝</div>
+        <div class="value-title">Teacher-First Culture</div>
+        <p class="value-desc">Our teachers are our product. We pay fairly, treat respectfully, and invest in their growth. A happy teacher makes a great student — it's that simple.</p>
+      </div>
+      <div class="value-card reveal delay-1">
+        <div class="value-icon">💡</div>
+        <div class="value-title">Always Improving</div>
+        <p class="value-desc">We read every review, act on every complaint, and ship improvements weekly. TagoreTunes in 2025 is dramatically better than TagoreTunes in 2018, and 2026 will be better still.</p>
+      </div>
+      <div class="value-card reveal delay-2">
+        <div class="value-icon">🎭</div>
+        <div class="value-title">Celebrate the Stage</div>
+        <p class="value-desc">Learning without performing is incomplete. We host quarterly recitals, annual concerts, and open-mic events so every student gets their moment in the spotlight.</p>
+      </div>
+      <div class="value-card reveal delay-3">
+        <div class="value-icon">🌍</div>
+        <div class="value-title">Cultural Roots</div>
+        <p class="value-desc">India's musical heritage is our greatest asset. From Carnatic ragas to Hindustani thaats, we honour classical traditions while embracing every modern style too.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ TEAM ══════════ -->
+<section class="section team-section">
+  <div class="section-inner">
+    <div class="team-header reveal">
+      <div>
+        <div class="section-label">The People</div>
+        <h2 class="section-title">Meet the <em>Team</em></h2>
+      </div>
+      <a href="index.html#apply" class="btn-primary">Join Our Team →</a>
+    </div>
+
+    <!-- Founders row -->
+    <div class="founder-row">
+      <div class="founder-card reveal delay-1">
+        <div class="founder-avatar">👨‍🎤</div>
+        <div class="founder-info">
+          <div class="founder-badge">⭐ Co-Founder & CEO</div>
+          <div class="founder-name">Ravi Krishnan</div>
+          <div class="founder-role">Visionary, Guitarist, Chief Music Officer</div>
+          <div class="founder-bio">Berklee alumnus. Performed in 6 countries. Built TagoreTunes from a 3-teacher studio into India's leading music ed-tech platform.</div>
+        </div>
+      </div>
+      <div class="founder-card reveal delay-2">
+        <div class="founder-avatar">👩‍💼</div>
+        <div class="founder-info">
+          <div class="founder-badge">⭐ Co-Founder & COO</div>
+          <div class="founder-name">Ananya Sharma</div>
+          <div class="founder-role">Operations, Product & Teacher Experience</div>
+          <div class="founder-bio">IIM Bangalore MBA. Former Byju's product lead. Designed the teacher selection framework and platform architecture from scratch.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Core team -->
+    <div class="team-grid">
+      <div class="team-card reveal delay-1">
+        <div class="team-avatar">🧑‍💻</div>
+        <div class="team-dept">Engineering</div>
+        <div class="team-name">Kiran Patel</div>
+        <div class="team-role">Head of Technology</div>
+        <div class="team-socials">
+          <a href="#" class="tsoc">💼</a>
+          <a href="#" class="tsoc">🐦</a>
+        </div>
+      </div>
+      <div class="team-card reveal delay-2">
+        <div class="team-avatar">👩‍🎨</div>
+        <div class="team-dept">Design</div>
+        <div class="team-name">Simran Kaur</div>
+        <div class="team-role">Lead Product Designer</div>
+        <div class="team-socials">
+          <a href="#" class="tsoc">💼</a>
+          <a href="#" class="tsoc">🎨</a>
+        </div>
+      </div>
+      <div class="team-card reveal delay-3">
+        <div class="team-avatar">👨‍🏫</div>
+        <div class="team-dept">Academics</div>
+        <div class="team-name">Dr. Suresh Nair</div>
+        <div class="team-role">Academic Director</div>
+        <div class="team-socials">
+          <a href="#" class="tsoc">💼</a>
+          <a href="#" class="tsoc">📚</a>
+        </div>
+      </div>
+      <div class="team-card reveal delay-4">
+        <div class="team-avatar">👩‍💬</div>
+        <div class="team-dept">Community</div>
+        <div class="team-name">Pooja Mehta</div>
+        <div class="team-role">Head of Student Success</div>
+        <div class="team-socials">
+          <a href="#" class="tsoc">💼</a>
+          <a href="#" class="tsoc">📸</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ MILESTONES TIMELINE ══════════ -->
+<section class="section milestones-section">
+  <div class="section-inner">
+    <div style="text-align:center;margin-bottom:40px;" class="reveal">
+      <div class="section-label" style="justify-content:center;">7 Years in Music</div>
+      <h2 class="section-title">Our <em>Milestones</em></h2>
+    </div>
+    <div class="milestones-track reveal">
+      <div class="milestone-item">
+        <div class="ms-dot">🌱</div>
+        <div class="ms-year">2018</div>
+        <div class="ms-title">Founded in Mumbai</div>
+        <div class="ms-desc">3 teachers, 12 students, 1 rented studio in Bandra.</div>
+      </div>
+      <div class="milestone-item">
+        <div class="ms-dot">📈</div>
+        <div class="ms-year">2019</div>
+        <div class="ms-title">First 500 Students</div>
+        <div class="ms-desc">Expanded to Pune and Bangalore with offline studios.</div>
+      </div>
+      <div class="milestone-item">
+        <div class="ms-dot">💻</div>
+        <div class="ms-year">2020</div>
+        <div class="ms-title">Went 100% Online</div>
+        <div class="ms-desc">Pandemic pivot — built the live platform in 3 weeks.</div>
+      </div>
+      <div class="milestone-item">
+        <div class="ms-dot">🏙️</div>
+        <div class="ms-year">2021</div>
+        <div class="ms-title">14 Cities</div>
+        <div class="ms-desc">Crossed 2,000 students and launched hybrid mode classes.</div>
+      </div>
+      <div class="milestone-item">
+        <div class="ms-dot">🏆</div>
+        <div class="ms-year">2022</div>
+        <div class="ms-title">National Award</div>
+        <div class="ms-desc">Best EdTech — Arts & Culture, India Education Summit.</div>
+      </div>
+      <div class="milestone-item">
+        <div class="ms-dot">🎓</div>
+        <div class="ms-year">2023</div>
+        <div class="ms-title">100 Teachers</div>
+        <div class="ms-desc">Crossed 100 verified teachers and launched Tabla, Sitar.</div>
+      </div>
+      <div class="milestone-item">
+        <div class="ms-dot">🚀</div>
+        <div class="ms-year">2024</div>
+        <div class="ms-title">4,000 Students</div>
+        <div class="ms-desc">Launched performance certification programme.</div>
+      </div>
+      <div class="milestone-item">
+        <div class="ms-dot">🌍</div>
+        <div class="ms-year">2025</div>
+        <div class="ms-title">Going Global</div>
+        <div class="ms-desc">First international cohort for Indian diaspora students worldwide.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ AWARDS ══════════ -->
+<section class="section awards-section">
+  <div class="section-inner">
+    <div style="text-align:center;margin-bottom:44px;" class="reveal">
+      <div class="section-label" style="justify-content:center;">Recognition</div>
+      <h2 class="section-title">Awards & <em>Accolades</em></h2>
+    </div>
+    <div class="awards-grid">
+      <div class="award-card reveal delay-1">
+        <div class="award-icon">🏆</div>
+        <div><div class="award-year">2022</div><div class="award-title">Best EdTech — Arts & Culture</div><div class="award-org">India Education Summit, New Delhi</div></div>
+      </div>
+      <div class="award-card reveal delay-2">
+        <div class="award-icon">🌟</div>
+        <div><div class="award-year">2023</div><div class="award-title">Top 10 EdTech Startups India</div><div class="award-org">Inc42 Media Annual Report</div></div>
+      </div>
+      <div class="award-card reveal delay-3">
+        <div class="award-icon">🎖️</div>
+        <div><div class="award-year">2023</div><div class="award-title">Cultural Innovation Award</div><div class="award-org">Ministry of Culture, Govt. of India</div></div>
+      </div>
+      <div class="award-card reveal delay-1">
+        <div class="award-icon">💡</div>
+        <div><div class="award-year">2024</div><div class="award-title">Most Trusted Music Platform</div><div class="award-org">Consumer Voice India Survey</div></div>
+      </div>
+      <div class="award-card reveal delay-2">
+        <div class="award-icon">🎵</div>
+        <div><div class="award-year">2024</div><div class="award-title">Excellence in Online Arts Education</div><div class="award-org">South Asia EdTech Awards</div></div>
+      </div>
+      <div class="award-card reveal delay-3">
+        <div class="award-icon">🤝</div>
+        <div><div class="award-year">2025</div><div class="award-title">Best Teacher Support Platform</div><div class="award-org">EdTech India Forum, Bangalore</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ PARTNERS ══════════ -->
+<section class="section partners-section">
+  <div class="section-inner">
+    <div class="partners-header reveal">
+      <div class="section-label" style="justify-content:center;">Trusted Partners</div>
+      <h2 class="section-title">Organisations That <em>Believe in Us</em></h2>
+      <p class="section-sub" style="margin:0 auto;text-align:center;">We collaborate with leading institutions, music boards, and cultural organisations to deliver world-class music education.</p>
+    </div>
+    <div class="partners-row reveal">
+      <div class="partner-pill"><span class="partner-emoji">🎓</span> Trinity College London</div>
+      <div class="partner-pill"><span class="partner-emoji">🎵</span> ABRSM India</div>
+      <div class="partner-pill"><span class="partner-emoji">🏛️</span> Sangeet Natak Akademi</div>
+      <div class="partner-pill"><span class="partner-emoji">🎼</span> Berklee Online</div>
+      <div class="partner-pill"><span class="partner-emoji">📻</span> All India Radio</div>
+      <div class="partner-pill"><span class="partner-emoji">🎭</span> Spic Macay</div>
+      <div class="partner-pill"><span class="partner-emoji">🌐</span> Google for Startups</div>
+      <div class="partner-pill"><span class="partner-emoji">🚀</span> Sequoia Surge</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ CTA ══════════ -->
+<section class="cta-section">
+  <div class="cta-orb1"></div>
+  <div class="cta-orb2"></div>
+  <div class="reveal">
+    <h2>Be Part of the<br><em>TagoreTunes Story</em></h2>
+    <p>Whether you're here to learn, to teach, or simply to discover music — there's a place for you in this community.</p>
+    <div class="cta-btns">
+      <a href="register.html" class="btn-cta-white">🎶 Start Learning Free</a>
+      <a href="index.html#apply" class="btn-cta-outline">🎓 Apply as Teacher</a>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ FOOTER ══════════ -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="logo-mark" style="margin-bottom:14px;">TT</div>
+        <p>TagoreTunes Music Academy — where passion meets expertise. Teaching music across India since 2018.</p>
+        <div class="social-links">
+          <a href="#" class="social-btn">📸</a>
+          <a href="#" class="social-btn">▶️</a>
+          <a href="#" class="social-btn">💬</a>
+          <a href="#" class="social-btn">🐦</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Quick Links</h4>
+        <a href="index.html">Home</a>
+        <a href="courses.html">Courses</a>
+        <a href="teachers.html">Teachers</a>
+        <a href="about.html">About Us</a>
+        <a href="index.html#apply">Apply as Teacher</a>
+        <a href="login.html">Student Login</a>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <a href="#">Our Story</a>
+        <a href="#">Careers</a>
+        <a href="#">Press Kit</a>
+        <a href="#">Blog</a>
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+      </div>
+      <div class="footer-col">
+        <h4>Newsletter</h4>
+        <a href="#" style="pointer-events:none;margin-bottom:12px;display:block;">Get tips, free lessons & events in your inbox.</a>
+        <div class="newsletter-form">
+          <input class="newsletter-input" type="email" placeholder="Your email">
+          <button class="newsletter-btn">Join</button>
+        </div>
+        <div style="margin-top:16px;">
+          <a href="mailto:hello@TagoreTunes.in">📩 hello@TagoreTunes.in</a>
+          <a href="tel:+919876543210">📞 +91 98765 43210</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 TagoreTunes Music Academy. All rights reserved.</span>
+      <span style="display:flex;gap:18px;">
+        <a href="#" style="color:rgba(255,255,255,.35);text-decoration:none;">Privacy Policy</a>
+        <a href="#" style="color:rgba(255,255,255,.35);text-decoration:none;">Terms of Service</a>
+      </span>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ── Navbar hamburger ── */
+const ham = document.getElementById('hamburger');
+const mob = document.getElementById('mobileMenu');
+ham.addEventListener('click', () => { ham.classList.toggle('open'); mob.classList.toggle('open'); });
+mob.querySelectorAll('a').forEach(a => a.addEventListener('click', () => { ham.classList.remove('open'); mob.classList.remove('open'); }));
+
+/* ── Scroll reveal ── */
+const revealEls = document.querySelectorAll('.reveal, .reveal-left, .reveal-right');
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } });
+}, { threshold: 0.1 });
+revealEls.forEach(el => io.observe(el));
+
+/* ── Animated counters ── */
+function animateCounter(el, target, suffix='', duration=1800) {
+  let start = 0;
+  const step = target / (duration / 16);
+  const timer = setInterval(() => {
+    start += step;
+    if (start >= target) { start = target; clearInterval(timer); }
+    el.querySelector('.num-value').innerHTML = Math.floor(start).toLocaleString() + (suffix ? `<span>${suffix}</span>` : '');
+  }, 16);
+}
+
+const numCards = document.querySelectorAll('.num-card');
+const numData = [
+  {val:4800, suffix:'+'}, {val:120, suffix:'+'}, {val:18, suffix:''}, {val:18, suffix:''},
+  {val:4.9, suffix:'/5', isFloat:true}, {val:94, suffix:'%'}, {val:320, suffix:'+'}, {val:7, suffix:''}
+];
+const numObserver = new IntersectionObserver((entries) => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      const card = e.target;
+      const idx = [...numCards].indexOf(card);
+      const d = numData[idx];
+      if (d) {
+        if (d.isFloat) {
+          let s = 0;
+          const timer = setInterval(() => {
+            s += 0.05;
+            if (s >= d.val) { s = d.val; clearInterval(timer); }
+            card.querySelector('.num-value').innerHTML = s.toFixed(1) + `<span>${d.suffix}</span>`;
+          }, 20);
+        } else {
+          animateCounter(card, d.val, d.suffix);
+        }
+      }
+      numObserver.unobserve(card);
+    }
+  });
+}, { threshold: 0.3 });
+numCards.forEach(c => numObserver.observe(c));
+</script>
+</body>
+</html>

@@ -1,0 +1,1109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student Dashboard — Harmonia</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#f4f0ff;
+  --sidebar-w:260px;
+  --primary:#082567;
+  --accent:#7c3aed;
+  --gold:#f59e0b;
+  --green:#10b981;
+  --red:#ef4444;
+  --pink:#f472b6;
+  --cyan:#06b6d4;
+  --card:rgba(255,255,255,0.82);
+  --border:rgba(8,37,103,0.1);
+  --muted:#6b7b9c;
+  --t:0.28s ease;
+  --radius:18px;
+}
+html{scroll-behavior:smooth;}
+body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--primary);min-height:100vh;overflow-x:hidden;}
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:rgba(124,58,237,0.2);border-radius:2px;}
+
+/* ════════ SIDEBAR ════════ */
+.sidebar{
+  position:fixed;top:0;left:0;bottom:0;width:var(--sidebar-w);
+  background:linear-gradient(180deg,#0d1b4b 0%,#1a1340 100%);
+  display:flex;flex-direction:column;z-index:200;
+  overflow:hidden;transition:transform var(--t);
+}
+.sidebar::before{content:'';position:absolute;top:-80px;right:-80px;width:220px;height:220px;background:radial-gradient(#7c3aed,transparent 70%);opacity:.22;border-radius:50%;pointer-events:none;}
+.sidebar::after{content:'';position:absolute;bottom:-60px;left:-60px;width:180px;height:180px;background:radial-gradient(#ec4899,transparent 70%);opacity:.15;border-radius:50%;pointer-events:none;}
+
+.sb-logo{display:flex;align-items:center;gap:10px;padding:24px 20px 18px;border-bottom:1px solid rgba(255,255,255,0.07);text-decoration:none;flex-shrink:0;}
+.sb-logo-mark{width:38px;height:38px;background:linear-gradient(135deg,#7c3aed,#4338ca);border-radius:10px;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:1rem;font-weight:900;color:#fff;box-shadow:0 4px 14px rgba(124,58,237,0.4);flex-shrink:0;}
+.sb-logo-text{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;color:#fff;}
+.sb-logo-text span{color:#c4b5fd;}
+
+.sb-nav{flex:1;overflow-y:auto;padding:10px 10px;scrollbar-width:none;}
+.sb-nav::-webkit-scrollbar{display:none;}
+.sb-section{font-size:.58rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.28);padding:14px 12px 5px;}
+.sb-item{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 12px;border-radius:11px;
+  font-size:.83rem;font-weight:500;color:rgba(255,255,255,0.55);
+  cursor:pointer;transition:background var(--t),color var(--t);margin-bottom:2px;
+  position:relative;border:none;background:transparent;width:100%;text-align:left;
+}
+.sb-item:hover{background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.85);}
+.sb-item.active{background:rgba(124,58,237,0.3);color:#fff;font-weight:600;}
+.sb-item.active::before{content:'';position:absolute;left:-10px;top:50%;transform:translateY(-50%);width:3px;height:18px;background:linear-gradient(180deg,#7c3aed,#ec4899);border-radius:0 3px 3px 0;}
+.sb-icon{width:17px;height:17px;flex-shrink:0;opacity:.65;}
+.sb-item.active .sb-icon{opacity:1;}
+.sb-badge{margin-left:auto;background:linear-gradient(135deg,#7c3aed,#ec4899);color:#fff;font-size:.58rem;font-weight:700;padding:2px 6px;border-radius:20px;min-width:18px;text-align:center;}
+
+.sb-user{padding:12px 14px;border-top:1px solid rgba(255,255,255,.07);display:flex;align-items:center;gap:9px;flex-shrink:0;position:relative;z-index:1;}
+.sb-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#ecdcfe,#c4b5fd);display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;border:2px solid rgba(255,255,255,0.18);}
+.sb-uname{font-size:.8rem;font-weight:700;color:#fff;line-height:1.2;}
+.sb-urole{font-size:.65rem;color:rgba(255,255,255,.4);}
+.sb-logout{margin-left:auto;width:28px;height:28px;border-radius:8px;background:rgba(255,255,255,0.07);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background var(--t);color:rgba(255,255,255,.45);}
+.sb-logout:hover{background:rgba(255,255,255,.15);color:#fff;}
+.sb-logout svg{width:13px;height:13px;}
+
+/* mobile hamburger */
+.mob-btn{display:none;position:fixed;top:14px;left:14px;z-index:300;width:40px;height:40px;border-radius:10px;background:var(--primary);border:none;cursor:pointer;flex-direction:column;align-items:center;justify-content:center;gap:4px;box-shadow:0 4px 14px rgba(8,37,103,0.3);}
+.mob-btn span{display:block;width:18px;height:2px;background:#fff;border-radius:2px;transition:all .3s;}
+.mob-btn.open span:first-child{transform:translateY(6px) rotate(45deg);}
+.mob-btn.open span:nth-child(2){opacity:0;}
+.mob-btn.open span:last-child{transform:translateY(-6px) rotate(-45deg);}
+.sb-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:190;}
+.sb-overlay.show{display:block;}
+
+/* ════════ MAIN ════════ */
+.main{margin-left:var(--sidebar-w);min-height:100vh;display:flex;flex-direction:column;}
+
+/* topbar */
+.topbar{
+  position:sticky;top:0;z-index:100;
+  background:rgba(244,240,255,.92);backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--border);
+  padding:0 28px;height:62px;
+  display:flex;align-items:center;justify-content:space-between;gap:14px;
+}
+.topbar-title{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:700;color:var(--primary);}
+.topbar-title em{font-style:italic;color:var(--accent);}
+.topbar-right{display:flex;align-items:center;gap:8px;}
+.tb-search{display:flex;align-items:center;gap:8px;background:#fff;border:1.5px solid var(--border);border-radius:10px;padding:7px 13px;width:210px;transition:border-color var(--t),box-shadow var(--t);}
+.tb-search:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px rgba(124,58,237,0.1);}
+.tb-search input{border:none;outline:none;background:transparent;font-family:'Poppins',sans-serif;font-size:.83rem;color:var(--primary);width:100%;}
+.tb-search input::placeholder{color:var(--muted);}
+.tb-icon-btn{width:36px;height:36px;border-radius:10px;background:#fff;border:1.5px solid var(--border);cursor:pointer;display:flex;align-items:center;justify-content:center;position:relative;transition:all var(--t);}
+.tb-icon-btn:hover{border-color:var(--accent);box-shadow:0 3px 10px rgba(124,58,237,0.12);}
+.tb-dot{position:absolute;top:6px;right:6px;width:7px;height:7px;border-radius:50%;background:var(--red);border:1.5px solid var(--bg);}
+
+/* content wrapper */
+.content{flex:1;padding:26px 28px 60px;}
+.section-page{display:none;}
+.section-page.active{display:block;animation:sectionIn .38s cubic-bezier(.22,1,.36,1) both;}
+@keyframes sectionIn{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
+
+/* ════════ SHARED COMPONENTS ════════ */
+.page-header{margin-bottom:24px;}
+.page-header h2{font-family:'Playfair Display',serif;font-size:1.7rem;font-weight:900;color:var(--primary);margin-bottom:4px;}
+.page-header h2 em{font-style:italic;color:var(--accent);}
+.page-header p{font-size:.87rem;color:var(--muted);}
+.sec-label{display:inline-flex;align-items:center;gap:7px;font-size:.65rem;font-weight:700;letter-spacing:1.8px;text-transform:uppercase;color:var(--accent);margin-bottom:10px;}
+.sec-label::before{content:'';width:12px;height:2px;background:var(--accent);border-radius:2px;}
+.card{background:var(--card);backdrop-filter:blur(12px);border:1.5px solid rgba(255,255,255,.88);border-radius:var(--radius);box-shadow:0 4px 18px rgba(91,33,182,.07);}
+.card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;}
+.card-title{font-size:1rem;font-weight:700;color:var(--primary);}
+.see-all{font-size:.75rem;font-weight:600;color:var(--accent);cursor:pointer;text-decoration:none;transition:color var(--t);}
+.see-all:hover{color:var(--primary);}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px;}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+.fade-in{animation:fadeUp .45s cubic-bezier(.22,1,.36,1) both;}
+
+/* stat card */
+.stat-card{padding:20px;display:flex;align-items:flex-start;gap:13px;transition:transform var(--t),box-shadow var(--t);}
+.stat-card:hover{transform:translateY(-3px);box-shadow:0 12px 30px rgba(91,33,182,.12);}
+.stat-icon{width:46px;height:46px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:1.25rem;flex-shrink:0;}
+.si-p{background:rgba(124,58,237,0.12);}
+.si-g{background:rgba(245,158,11,0.12);}
+.si-gr{background:rgba(16,185,129,0.12);}
+.si-pk{background:rgba(244,114,182,0.12);}
+.si-cy{background:rgba(6,182,212,0.12);}
+.stat-val{font-family:'Playfair Display',serif;font-size:1.65rem;font-weight:900;color:var(--primary);line-height:1;}
+.stat-lbl{font-size:.7rem;color:var(--muted);margin-top:3px;}
+.stat-change{display:inline-flex;align-items:center;gap:3px;font-size:.66rem;font-weight:600;padding:2px 7px;border-radius:20px;margin-top:5px;}
+.up{background:rgba(16,185,129,.1);color:var(--green);}
+.down{background:rgba(239,68,38,.1);color:var(--red);}
+
+/* progress bar */
+.pbar-track{height:7px;background:rgba(8,37,103,.08);border-radius:4px;overflow:hidden;}
+.pbar-fill{height:100%;border-radius:4px;transition:width 1.1s cubic-bezier(.22,1,.36,1);}
+
+/* tag chips */
+.tag{display:inline-flex;font-size:.62rem;font-weight:600;padding:3px 8px;border-radius:8px;}
+.tag-accent{background:rgba(124,58,237,.1);color:var(--accent);}
+.tag-green{background:rgba(16,185,129,.1);color:var(--green);}
+.tag-gold{background:rgba(245,158,11,.1);color:#d97706;}
+.tag-red{background:rgba(239,68,68,.1);color:var(--red);}
+.tag-cyan{background:rgba(6,182,212,.1);color:var(--cyan);}
+
+/* action buttons */
+.btn{display:inline-flex;align-items:center;gap:6px;font-family:'Poppins',sans-serif;font-size:.8rem;font-weight:600;border:none;border-radius:10px;cursor:pointer;padding:9px 16px;transition:transform var(--t),box-shadow var(--t);}
+.btn-primary{background:linear-gradient(135deg,#7c3aed,#4338ca);color:#fff;box-shadow:0 3px 12px rgba(124,58,237,.35);}
+.btn-primary:hover{transform:scale(1.03);box-shadow:0 5px 16px rgba(124,58,237,.45);}
+.btn-outline{background:transparent;color:var(--muted);border:1.5px solid var(--border);}
+.btn-outline:hover{border-color:var(--accent);color:var(--accent);}
+.btn-green{background:linear-gradient(135deg,#10b981,#059669);color:#fff;box-shadow:0 3px 10px rgba(16,185,129,.3);}
+.btn-green:hover{transform:scale(1.03);}
+.btn-sm{padding:6px 12px;font-size:.73rem;}
+
+/* ════════════════════════════════ DASHBOARD ════════════════════════════════ */
+/* streak */
+.streak-wrap{background:linear-gradient(135deg,#0d1b4b,#1a1340);border-radius:var(--radius);padding:22px;position:relative;overflow:hidden;margin-bottom:20px;}
+.streak-wrap::before{content:'';position:absolute;top:-50px;right:-50px;width:160px;height:160px;background:radial-gradient(#7c3aed,transparent 70%);opacity:.25;border-radius:50%;}
+.streak-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;position:relative;z-index:1;}
+.streak-num{font-family:'Playfair Display',serif;font-size:2.6rem;font-weight:900;color:#fff;line-height:1;}
+.streak-lbl{font-size:.75rem;color:rgba(255,255,255,.55);margin-top:2px;}
+.streak-days{display:flex;gap:6px;position:relative;z-index:1;}
+.sd{display:flex;flex-direction:column;align-items:center;gap:4px;flex:1;}
+.sd-circle{width:30px;height:30px;border-radius:50%;border:2px solid rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;font-size:.65rem;color:rgba(255,255,255,.35);font-weight:700;transition:all .3s;}
+.sd-circle.done{background:linear-gradient(135deg,#7c3aed,#ec4899);border-color:transparent;color:#fff;box-shadow:0 2px 8px rgba(124,58,237,.4);}
+.sd-circle.today{border-color:#f59e0b;color:#f59e0b;}
+.sd-lbl{font-size:.55rem;color:rgba(255,255,255,.35);font-weight:500;}
+
+/* upcoming mini */
+.upcoming-item{display:flex;align-items:center;gap:11px;padding:10px 0;border-bottom:1px solid var(--border);}
+.upcoming-item:last-child{border-bottom:none;padding-bottom:0;}
+.ui-time{min-width:46px;text-align:center;background:rgba(124,58,237,.08);border-radius:9px;padding:6px 4px;flex-shrink:0;}
+.ui-time-h{font-family:'Playfair Display',serif;font-size:.95rem;font-weight:900;color:var(--accent);line-height:1;}
+.ui-time-p{font-size:.55rem;color:var(--muted);}
+.ui-info{flex:1;min-width:0;}
+.ui-title{font-size:.8rem;font-weight:600;color:var(--primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.ui-teacher{font-size:.68rem;color:var(--muted);}
+.ui-status{font-size:.6rem;font-weight:700;padding:2px 8px;border-radius:20px;white-space:nowrap;flex-shrink:0;}
+.us-live{background:rgba(239,68,68,.1);color:var(--red);}
+.us-soon{background:rgba(245,158,11,.1);color:#d97706;}
+.us-today{background:rgba(124,58,237,.1);color:var(--accent);}
+.us-tmr{background:rgba(16,185,129,.1);color:var(--green);}
+
+/* course mini card */
+.course-mini{display:flex;gap:12px;align-items:flex-start;padding:14px 0;border-bottom:1px solid var(--border);cursor:pointer;transition:background var(--t);border-radius:10px;}
+.course-mini:last-child{border-bottom:none;}
+.course-mini:hover{background:rgba(124,58,237,.03);padding-left:8px;padding-right:8px;}
+.cm-thumb{width:50px;height:50px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;}
+.cm-info{flex:1;min-width:0;}
+.cm-title{font-size:.83rem;font-weight:700;color:var(--primary);margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.cm-teacher{font-size:.7rem;color:var(--muted);margin-bottom:6px;}
+.cm-pct{font-size:.68rem;font-weight:700;text-align:right;margin-top:3px;}
+
+/* achievements mini */
+.ach-badge{text-align:center;padding:14px 8px;border-radius:12px;background:rgba(255,255,255,.7);border:1.5px solid var(--border);cursor:default;transition:transform var(--t),box-shadow var(--t);}
+.ach-badge:hover{transform:translateY(-2px);box-shadow:0 7px 20px rgba(91,33,182,.1);}
+.ach-badge.locked{opacity:.4;filter:grayscale(.6);}
+.ach-emoji{font-size:1.6rem;margin-bottom:5px;}
+.ach-name{font-size:.65rem;font-weight:700;color:var(--primary);}
+
+/* practice bars */
+.pb-wrap{display:flex;align-items:flex-end;gap:7px;height:75px;}
+.pb-col{display:flex;flex-direction:column;align-items:center;gap:4px;flex:1;}
+.pb-bar{width:100%;border-radius:4px 4px 0 0;transition:height .9s cubic-bezier(.22,1,.36,1);}
+.pb-day{font-size:.58rem;color:var(--muted);font-weight:500;}
+
+/* ════════════════════════════════ MY COURSES ════════════════════════════════ */
+.course-card-full{padding:20px;display:flex;gap:16px;align-items:flex-start;margin-bottom:16px;transition:transform var(--t),box-shadow var(--t);cursor:pointer;}
+.course-card-full:hover{transform:translateY(-3px);box-shadow:0 14px 36px rgba(91,33,182,.12);}
+.ccf-thumb{width:72px;height:72px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:2rem;flex-shrink:0;}
+.ccf-body{flex:1;min-width:0;}
+.ccf-title{font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:700;color:var(--primary);margin-bottom:4px;}
+.ccf-teacher{font-size:.75rem;color:var(--muted);margin-bottom:8px;display:flex;align-items:center;gap:6px;}
+.ccf-tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;}
+.ccf-progress-row{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+.ccf-pct{font-size:.72rem;font-weight:700;color:var(--primary);white-space:nowrap;min-width:30px;}
+.ccf-actions{display:flex;gap:8px;flex-shrink:0;flex-direction:column;align-items:flex-end;}
+
+/* ════════════════════════════════ SCHEDULE ════════════════════════════════ */
+.cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;}
+.cal-month{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:700;color:var(--primary);}
+.cal-nav{display:flex;gap:6px;}
+.cal-nav-btn{width:32px;height:32px;border-radius:9px;border:1.5px solid var(--border);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all var(--t);}
+.cal-nav-btn:hover{border-color:var(--accent);background:rgba(124,58,237,.06);}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;}
+.cal-day-lbl{text-align:center;font-size:.65rem;font-weight:700;color:var(--muted);padding-bottom:6px;text-transform:uppercase;letter-spacing:.5px;}
+.cal-day{
+  aspect-ratio:1;border-radius:10px;display:flex;align-items:center;justify-content:center;
+  font-size:.8rem;font-weight:500;color:var(--primary);cursor:pointer;
+  transition:all var(--t);position:relative;border:1.5px solid transparent;
+}
+.cal-day:hover{background:rgba(124,58,237,.08);}
+.cal-day.other{color:rgba(8,37,103,.25);}
+.cal-day.today{background:linear-gradient(135deg,#7c3aed,#4338ca);color:#fff;font-weight:700;box-shadow:0 3px 10px rgba(124,58,237,.35);}
+.cal-day.has-event::after{content:'';position:absolute;bottom:4px;left:50%;transform:translateX(-50%);width:4px;height:4px;border-radius:50%;background:#ec4899;}
+.cal-day.today::after{background:#fff;}
+.cal-day.selected{border-color:var(--accent);background:rgba(124,58,237,.08);}
+
+.schedule-list{margin-top:20px;}
+.sch-item{display:flex;gap:14px;align-items:flex-start;padding:16px;border-radius:14px;background:rgba(255,255,255,.7);border:1.5px solid var(--border);margin-bottom:10px;transition:transform var(--t),border-color var(--t);cursor:pointer;}
+.sch-item:hover{transform:translateX(3px);border-color:rgba(124,58,237,.25);}
+.sch-item.live{border-left:3px solid var(--red);}
+.sch-time-col{min-width:64px;text-align:center;}
+.sch-time{font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:900;color:var(--primary);}
+.sch-period{font-size:.6rem;color:var(--muted);}
+.sch-info{flex:1;min-width:0;}
+.sch-title{font-size:.88rem;font-weight:700;color:var(--primary);margin-bottom:3px;}
+.sch-meta{font-size:.72rem;color:var(--muted);margin-bottom:6px;}
+.sch-actions{display:flex;gap:7px;flex-shrink:0;}
+
+/* ════════════════════════════════ FIND TEACHERS ════════════════════════════════ */
+.teacher-filter-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:22px;}
+.t-chip{padding:7px 14px;border-radius:20px;border:1.5px solid var(--border);background:transparent;font-family:'Poppins',sans-serif;font-size:.75rem;font-weight:500;color:var(--muted);cursor:pointer;transition:all var(--t);}
+.t-chip:hover{border-color:var(--accent);color:var(--accent);}
+.t-chip.active{background:linear-gradient(135deg,#7c3aed,#4338ca);color:#fff;border-color:transparent;box-shadow:0 3px 10px rgba(124,58,237,.28);}
+
+.teacher-card{padding:22px;transition:transform var(--t),box-shadow var(--t);cursor:pointer;}
+.teacher-card:hover{transform:translateY(-4px);box-shadow:0 16px 40px rgba(91,33,182,.13);}
+.tc-top{display:flex;align-items:flex-start;gap:14px;margin-bottom:14px;}
+.tc-ava{width:60px;height:60px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.6rem;flex-shrink:0;background:linear-gradient(135deg,#ecdcfe,#ddd6fe);border:2.5px solid rgba(255,255,255,.9);box-shadow:0 4px 14px rgba(91,33,182,.15);}
+.tc-info{flex:1;}
+.tc-name{font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:700;color:var(--primary);margin-bottom:2px;}
+.tc-spec{font-size:.73rem;color:var(--accent);font-weight:600;margin-bottom:6px;}
+.tc-meta{display:flex;gap:10px;flex-wrap:wrap;}
+.tc-meta-item{font-size:.68rem;color:var(--muted);display:flex;align-items:center;gap:3px;}
+.tc-rating{display:flex;align-items:center;gap:5px;margin-bottom:10px;}
+.tc-stars{color:var(--gold);font-size:.8rem;}
+.tc-rnum{font-size:.78rem;font-weight:700;color:var(--primary);}
+.tc-rcount{font-size:.7rem;color:var(--muted);}
+.tc-bio{font-size:.79rem;color:var(--muted);line-height:1.65;margin-bottom:14px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.tc-footer{display:flex;align-items:center;justify-content:space-between;}
+.tc-fee{font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:900;color:var(--primary);}
+.tc-fee-lbl{font-size:.62rem;color:var(--muted);}
+
+/* ════════════════════════════════ EXPLORE COURSES ════════════════════════════════ */
+.explore-card{overflow:hidden;transition:transform var(--t),box-shadow var(--t);cursor:pointer;}
+.explore-card:hover{transform:translateY(-5px);box-shadow:0 16px 40px rgba(91,33,182,.14);}
+.ec-thumb{height:120px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
+.ec-emoji{font-size:3rem;opacity:.65;transition:transform var(--t);}
+.explore-card:hover .ec-emoji{transform:scale(1.12) rotate(-5deg);}
+.ec-badge{position:absolute;top:9px;left:9px;padding:3px 8px;border-radius:12px;font-size:.6rem;font-weight:700;}
+.ecb-popular{background:linear-gradient(135deg,#f59e0b,#f97316);color:#fff;}
+.ecb-new{background:#082567;color:#fff;}
+.ecb-free{background:linear-gradient(135deg,#10b981,#059669);color:#fff;}
+.ecb-top{background:linear-gradient(135deg,#7c3aed,#ec4899);color:#fff;}
+.ec-body{padding:14px;}
+.ec-instrument{font-size:.62rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--accent);margin-bottom:3px;}
+.ec-title{font-size:.88rem;font-weight:700;color:var(--primary);margin-bottom:5px;line-height:1.3;}
+.ec-teacher{font-size:.7rem;color:var(--muted);margin-bottom:7px;}
+.ec-rating{display:flex;align-items:center;gap:4px;margin-bottom:7px;}
+.ec-stars{color:var(--gold);font-size:.72rem;}
+.ec-rnum{font-size:.72rem;font-weight:700;color:var(--primary);}
+.ec-footer{display:flex;align-items:center;justify-content:space-between;padding-top:9px;border-top:1px solid var(--border);}
+.ec-price{font-family:'Playfair Display',serif;font-size:1rem;font-weight:900;color:var(--primary);}
+.ec-price.free{color:var(--green);}
+.ec-enroll{padding:6px 13px;background:linear-gradient(135deg,#7c3aed,#4338ca);color:#fff;font-family:'Poppins',sans-serif;font-size:.7rem;font-weight:600;border:none;border-radius:8px;cursor:pointer;transition:transform var(--t);}
+.ec-enroll:hover{transform:scale(1.04);}
+
+/* ════════════════════════════════ MESSAGES ════════════════════════════════ */
+.messages-layout{display:grid;grid-template-columns:280px 1fr;gap:0;height:calc(100vh - 160px);min-height:500px;background:var(--card);border-radius:var(--radius);overflow:hidden;border:1.5px solid rgba(255,255,255,.88);box-shadow:0 4px 18px rgba(91,33,182,.07);}
+.msg-sidebar{border-right:1px solid var(--border);display:flex;flex-direction:column;}
+.msg-sb-header{padding:16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.msg-sb-title{font-size:.9rem;font-weight:700;color:var(--primary);}
+.msg-search{padding:10px 14px;border-bottom:1px solid var(--border);}
+.msg-search-input{width:100%;padding:8px 12px;background:var(--bg);border:1.5px solid var(--border);border-radius:10px;font-family:'Poppins',sans-serif;font-size:.78rem;color:var(--primary);outline:none;transition:border-color var(--t);}
+.msg-search-input:focus{border-color:var(--accent);}
+.msg-search-input::placeholder{color:var(--muted);}
+.msg-list{flex:1;overflow-y:auto;}
+.msg-contact{display:flex;gap:10px;padding:12px 14px;cursor:pointer;transition:background var(--t);border-bottom:1px solid rgba(8,37,103,.05);}
+.msg-contact:hover,.msg-contact.active{background:rgba(124,58,237,.06);}
+.msg-contact.active{background:rgba(124,58,237,.1);}
+.mc-ava{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#ecdcfe,#ddd6fe);display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;position:relative;}
+.mc-online{position:absolute;bottom:0;right:0;width:10px;height:10px;border-radius:50%;background:var(--green);border:2px solid #fff;}
+.mc-info{flex:1;min-width:0;}
+.mc-name{font-size:.8rem;font-weight:700;color:var(--primary);margin-bottom:2px;}
+.mc-last{font-size:.7rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.mc-meta{display:flex;flex-direction:column;align-items:flex-end;gap:3px;flex-shrink:0;}
+.mc-time{font-size:.62rem;color:var(--muted);}
+.mc-unread{width:18px;height:18px;border-radius:50%;background:var(--accent);color:#fff;font-size:.58rem;font-weight:700;display:flex;align-items:center;justify-content:center;}
+
+.msg-area{display:flex;flex-direction:column;}
+.msg-header{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;}
+.msg-header-ava{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#ecdcfe,#ddd6fe);display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;}
+.msg-header-name{font-size:.88rem;font-weight:700;color:var(--primary);}
+.msg-header-status{font-size:.7rem;color:var(--green);}
+.msg-header-actions{margin-left:auto;display:flex;gap:6px;}
+.msg-body{flex:1;overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:12px;background:rgba(244,240,255,.5);}
+.msg-bubble{max-width:72%;padding:10px 14px;border-radius:14px;font-size:.82rem;line-height:1.6;}
+.mb-them{background:#fff;color:var(--primary);border-radius:4px 14px 14px 14px;align-self:flex-start;box-shadow:0 2px 8px rgba(8,37,103,.07);}
+.mb-me{background:linear-gradient(135deg,#7c3aed,#4338ca);color:#fff;border-radius:14px 4px 14px 14px;align-self:flex-end;}
+.mb-time{font-size:.62rem;margin-top:4px;opacity:.6;}
+.mb-them .mb-time{text-align:left;}
+.mb-me .mb-time{text-align:right;}
+.msg-input-area{padding:14px 18px;border-top:1px solid var(--border);display:flex;gap:10px;align-items:flex-end;}
+.msg-input{flex:1;padding:11px 14px;background:var(--bg);border:1.5px solid var(--border);border-radius:12px;font-family:'Poppins',sans-serif;font-size:.83rem;color:var(--primary);outline:none;resize:none;max-height:90px;transition:border-color var(--t);}
+.msg-input:focus{border-color:var(--accent);}
+.msg-send{padding:11px 16px;background:linear-gradient(135deg,#7c3aed,#4338ca);color:#fff;border:none;border-radius:11px;cursor:pointer;font-size:.8rem;font-weight:600;font-family:'Poppins',sans-serif;transition:transform var(--t),box-shadow var(--t);display:flex;align-items:center;gap:6px;flex-shrink:0;}
+.msg-send:hover{transform:scale(1.04);box-shadow:0 4px 12px rgba(124,58,237,.38);}
+
+/* ════════════════════════════════ TRANSACTIONS ════════════════════════════════ */
+.txn-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px;}
+.txn-sum-card{padding:22px;text-align:center;}
+.txn-sum-icon{font-size:1.8rem;margin-bottom:8px;}
+.txn-sum-val{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:900;color:var(--primary);}
+.txn-sum-lbl{font-size:.72rem;color:var(--muted);margin-top:3px;}
+.txn-filters{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;}
+.txn-table{width:100%;border-collapse:separate;border-spacing:0;}
+.txn-table th{font-size:.68rem;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--muted);padding:10px 16px;background:rgba(244,240,255,.7);text-align:left;}
+.txn-table th:first-child{border-radius:10px 0 0 10px;}
+.txn-table th:last-child{border-radius:0 10px 10px 0;}
+.txn-table td{padding:13px 16px;border-bottom:1px solid var(--border);font-size:.82rem;color:var(--primary);vertical-align:middle;}
+.txn-table tr:last-child td{border-bottom:none;}
+.txn-table tr:hover td{background:rgba(124,58,237,.03);}
+.txn-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;}
+.txn-desc{font-weight:600;}
+.txn-sub{font-size:.7rem;color:var(--muted);}
+.txn-amount{font-family:'Playfair Display',serif;font-size:.95rem;font-weight:700;}
+.txn-amount.credit{color:var(--green);}
+.txn-amount.debit{color:var(--primary);}
+.txn-status{display:inline-flex;font-size:.62rem;font-weight:700;padding:3px 8px;border-radius:20px;}
+.ts-success{background:rgba(16,185,129,.1);color:var(--green);}
+.ts-pending{background:rgba(245,158,11,.1);color:#d97706;}
+.ts-failed{background:rgba(239,68,68,.1);color:var(--red);}
+
+/* ════════════════════════════════ PROFILE ════════════════════════════════ */
+.profile-hero{background:linear-gradient(135deg,#0d1b4b,#1a1340);border-radius:var(--radius);padding:28px;position:relative;overflow:hidden;margin-bottom:20px;}
+.profile-hero::before{content:'';position:absolute;top:-60px;right:-60px;width:200px;height:200px;background:radial-gradient(#7c3aed,transparent 70%);opacity:.28;border-radius:50%;}
+.profile-hero::after{content:'';position:absolute;bottom:-40px;left:-40px;width:160px;height:160px;background:radial-gradient(#ec4899,transparent 70%);opacity:.18;border-radius:50%;}
+.profile-top{display:flex;align-items:flex-start;gap:20px;position:relative;z-index:1;}
+.profile-ava{width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,#ecdcfe,#c4b5fd);display:flex;align-items:center;justify-content:center;font-size:2rem;flex-shrink:0;border:3px solid rgba(255,255,255,.25);box-shadow:0 6px 20px rgba(0,0,0,.2);}
+.profile-name{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:900;color:#fff;margin-bottom:3px;}
+.profile-joined{font-size:.75rem;color:rgba(255,255,255,.5);margin-bottom:8px;}
+.profile-tags{display:flex;gap:7px;flex-wrap:wrap;}
+.ptag{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.8);font-size:.65rem;font-weight:600;padding:3px 9px;border-radius:20px;}
+.profile-stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-top:1px solid rgba(255,255,255,.08);margin-top:20px;padding-top:20px;position:relative;z-index:1;}
+.profile-stat{text-align:center;padding:0 10px;border-right:1px solid rgba(255,255,255,.08);}
+.profile-stat:last-child{border-right:none;}
+.ps-val{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:900;color:#fff;}
+.ps-lbl{font-size:.65rem;color:rgba(255,255,255,.45);margin-top:2px;}
+
+.profile-form{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.pf-group{display:flex;flex-direction:column;gap:5px;}
+.pf-group.full{grid-column:1/-1;}
+.pf-label{font-size:.72rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;}
+.pf-input,.pf-select,.pf-textarea{width:100%;padding:11px 14px;background:rgba(255,255,255,.7);border:1.5px solid var(--border);border-radius:12px;font-family:'Poppins',sans-serif;font-size:.85rem;color:var(--primary);outline:none;transition:border-color var(--t),box-shadow var(--t);}
+.pf-input:focus,.pf-select:focus,.pf-textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(124,58,237,.1);background:#fff;}
+.pf-textarea{resize:none;min-height:80px;line-height:1.6;}
+.pf-select{cursor:pointer;appearance:none;}
+
+/* ════════ NOTIFICATIONS PANEL ════════ */
+.notif-panel{position:fixed;top:0;right:0;bottom:0;width:310px;background:#fff;box-shadow:-8px 0 30px rgba(8,37,103,.1);z-index:500;transform:translateX(100%);transition:transform .35s cubic-bezier(.22,1,.36,1);display:flex;flex-direction:column;}
+.notif-panel.open{transform:translateX(0);}
+.np-header{padding:18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.np-title{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--primary);}
+.np-close{width:28px;height:28px;border:none;background:var(--bg);border-radius:8px;cursor:pointer;font-size:.9rem;display:flex;align-items:center;justify-content:center;}
+.np-list{flex:1;overflow-y:auto;padding:10px;}
+.np-item{display:flex;gap:10px;padding:11px;border-radius:11px;margin-bottom:5px;cursor:pointer;transition:background var(--t);}
+.np-item:hover,.np-item.unread{background:rgba(124,58,237,.05);}
+.np-icon{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:.95rem;flex-shrink:0;}
+.ni-p{background:rgba(124,58,237,.1);}.ni-g{background:rgba(245,158,11,.1);}.ni-gr{background:rgba(16,185,129,.1);}.ni-r{background:rgba(239,68,68,.1);}
+.np-text{flex:1;}
+.np-msg{font-size:.78rem;color:var(--primary);line-height:1.5;margin-bottom:2px;}
+.np-msg strong{font-weight:700;}
+.np-time{font-size:.64rem;color:var(--muted);}
+.np-dot{width:6px;height:6px;border-radius:50%;background:var(--accent);flex-shrink:0;margin-top:5px;}
+
+/* ════════ TOAST ════════ */
+#toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--primary);color:#fff;padding:11px 22px;border-radius:40px;font-size:.82rem;font-weight:500;box-shadow:0 8px 24px rgba(8,37,103,.3);transition:transform .4s cubic-bezier(.22,1,.36,1),opacity .4s;opacity:0;z-index:9999;white-space:nowrap;pointer-events:none;}
+
+/* ════════ RESPONSIVE ════════ */
+@media(max-width:1100px){.grid-4{grid-template-columns:repeat(2,1fr);}.profile-form{grid-template-columns:1fr;}.pf-group.full{grid-column:1;}.txn-summary{grid-template-columns:1fr 1fr;}}
+@media(max-width:900px){.messages-layout{grid-template-columns:1fr;}.msg-sidebar{display:none;}.grid-3{grid-template-columns:1fr 1fr;}}
+@media(max-width:800px){.sidebar{transform:translateX(-100%);}.sidebar.open{transform:translateX(0);}.main{margin-left:0;}.mob-btn{display:flex;}.topbar{padding:0 16px;}.content{padding:16px 16px 50px;}.grid-2{grid-template-columns:1fr;}.grid-3{grid-template-columns:1fr;}.profile-stats-row{grid-template-columns:repeat(2,1fr);}.txn-summary{grid-template-columns:1fr;}}
+@media(max-width:480px){.grid-4{grid-template-columns:1fr;}.tb-search{display:none;}}
+</style>
+</head>
+<body>
+
+<!-- ════════ SIDEBAR ════════ -->
+<aside class="sidebar" id="sidebar">
+  <a class="sb-logo" href="index.html">
+    <div class="sb-logo-mark">H</div>
+    <span class="sb-logo-text">Har<span>monia</span></span>
+  </a>
+  <nav class="sb-nav">
+    <div class="sb-section">Main</div>
+    <button class="sb-item active" data-section="dashboard">
+      <svg class="sb-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      Dashboard
+    </button>
+    <button class="sb-item" data-section="my-courses">
+      <svg class="sb-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+      My Courses
+      <span class="sb-badge">3</span>
+    </button>
+    <button class="sb-item" data-section="schedule">
+      <svg class="sb-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      Schedule
+    </button>
+    <div class="sb-section">Discover</div>
+    <button class="sb-item" data-section="find-teachers">
+      <svg class="sb-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+      Find Teachers
+    </button>
+    <button class="sb-item" data-section="explore">
+      <svg class="sb-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      Explore Courses
+    </button>
+    <div class="sb-section">Communication</div>
+    <button class="sb-item" data-section="messages">
+      <svg class="sb-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      Messages
+      <span class="sb-badge">4</span>
+    </button>
+    <div class="sb-section">Account</div>
+    <button class="sb-item" data-section="transactions">
+      <svg class="sb-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+      Transactions
+    </button>
+    <button class="sb-item" data-section="profile">
+      <svg class="sb-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      Profile
+    </button>
+  </nav>
+  <div class="sb-user">
+    <div class="sb-avatar">🎵</div>
+    <div><div class="sb-uname">Aryan Singh</div><div class="sb-urole">Student · Premium</div></div>
+    <button class="sb-logout" onclick="window.location.href='login.html'" title="Sign Out">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+    </button>
+  </div>
+</aside>
+
+<div class="sb-overlay" id="sbOverlay"></div>
+<button class="mob-btn" id="mobBtn"><span></span><span></span><span></span></button>
+
+<!-- ════════ MAIN ════════ -->
+<div class="main">
+  <!-- Top bar -->
+  <div class="topbar">
+    <div class="topbar-title" id="topbarTitle">Good Morning, <em>Aryan</em> 👋</div>
+    <div class="topbar-right">
+      <div class="tb-search">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6b7b9c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" placeholder="Search…">
+      </div>
+      <button class="tb-icon-btn" id="notifBtn" title="Notifications">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        <span class="tb-dot" id="notifDot"></span>
+      </button>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- ════════ DASHBOARD ════════ -->
+    <div class="section-page active" id="sec-dashboard">
+      <div class="page-header">
+        <h2>Your <em>Dashboard</em></h2>
+        <p>Tuesday, 06 May 2026 · You have 2 classes today</p>
+      </div>
+      <!-- Stats -->
+      <div class="grid-4" style="margin-bottom:20px;" id="dashStats"></div>
+      <!-- Main grid -->
+      <div class="grid-2" style="margin-bottom:20px;">
+        <!-- My Courses widget -->
+        <div class="card" style="padding:20px;">
+          <div class="card-header"><div class="card-title">📚 My Courses</div><span class="see-all" onclick="switchSection('my-courses')">See all →</span></div>
+          <div id="dashCourses"></div>
+        </div>
+        <!-- Right col -->
+        <div>
+          <div class="streak-wrap" id="dashStreak"></div>
+          <div class="card" style="padding:18px;">
+            <div class="card-header"><div class="card-title">📅 Upcoming Classes</div><span class="see-all" onclick="switchSection('schedule')">Full schedule →</span></div>
+            <div id="dashUpcoming"></div>
+          </div>
+        </div>
+      </div>
+      <!-- Bottom grid -->
+      <div class="grid-3" style="margin-bottom:20px;">
+        <div class="card" style="padding:18px;">
+          <div class="card-header"><div class="card-title">🏆 Achievements</div></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;" id="dashAch"></div>
+        </div>
+        <div class="card" style="padding:18px;">
+          <div class="card-header"><div class="card-title">🎯 Practice Log</div></div>
+          <div class="pb-wrap" id="dashPractice"></div>
+          <div style="font-size:.77rem;color:var(--muted);margin-top:8px;">This week: <strong style="color:var(--primary);" id="dashPracticeTotal"></strong></div>
+        </div>
+        <div class="card" style="padding:18px;">
+          <div class="card-header"><div class="card-title">🏅 Leaderboard</div></div>
+          <div id="dashLeader"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════ MY COURSES ════════ -->
+    <div class="section-page" id="sec-my-courses">
+      <div class="page-header"><h2>My <em>Courses</em></h2><p>Track progress, resume lessons, and manage your enrolled courses.</p></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px;" id="mcFilter"></div>
+      <div id="myCoursesGrid"></div>
+    </div>
+
+    <!-- ════════ SCHEDULE ════════ -->
+    <div class="section-page" id="sec-schedule">
+      <div class="page-header"><h2>My <em>Schedule</em></h2><p>View, manage, and join your upcoming classes.</p></div>
+      <div class="grid-2" style="align-items:start;">
+        <div class="card" style="padding:22px;">
+          <div class="cal-header">
+            <div class="cal-month" id="calMonth"></div>
+            <div class="cal-nav">
+              <button class="cal-nav-btn" onclick="changeMonth(-1)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg></button>
+              <button class="cal-nav-btn" onclick="changeMonth(1)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></button>
+            </div>
+          </div>
+          <div class="cal-grid" id="calGrid"></div>
+        </div>
+        <div>
+          <div style="font-size:.82rem;color:var(--muted);margin-bottom:14px;" id="selectedDayLabel">Classes for <strong>Today</strong></div>
+          <div id="scheduleList"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════ FIND TEACHERS ════════ -->
+    <div class="section-page" id="sec-find-teachers">
+      <div class="page-header"><h2>Find <em>Teachers</em></h2><p>Browse certified instructors and book a trial lesson — first session always free.</p></div>
+      <div class="teacher-filter-row" id="teacherChips"></div>
+      <div class="grid-3" id="teachersGrid"></div>
+    </div>
+
+    <!-- ════════ EXPLORE COURSES ════════ -->
+    <div class="section-page" id="sec-explore">
+      <div class="page-header"><h2>Explore <em>Courses</em></h2><p>Discover new instruments, styles, and skills taught by Harmonia's expert faculty.</p></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px;" id="exploreChips"></div>
+      <div class="grid-4" id="exploreGrid"></div>
+    </div>
+
+    <!-- ════════ MESSAGES ════════ -->
+    <div class="section-page" id="sec-messages">
+      <div class="page-header"><h2>Your <em>Messages</em></h2><p>Chat with your teachers and fellow students.</p></div>
+      <div class="messages-layout" id="messagesLayout"></div>
+    </div>
+
+    <!-- ════════ TRANSACTIONS ════════ -->
+    <div class="section-page" id="sec-transactions">
+      <div class="page-header"><h2>Transactions &amp; <em>Billing</em></h2><p>Track your payments, invoices, and subscription status.</p></div>
+      <div class="txn-summary" id="txnSummary"></div>
+      <div class="card" style="padding:22px;">
+        <div class="card-header" style="margin-bottom:16px;"><div class="card-title">Transaction History</div><button class="btn btn-outline btn-sm" onclick="showToast('📄 Downloading statement…')">Download PDF</button></div>
+        <div class="txn-filters" id="txnFilters"></div>
+        <div style="overflow-x:auto;"><table class="txn-table" id="txnTable"></table></div>
+      </div>
+    </div>
+
+    <!-- ════════ PROFILE ════════ -->
+    <div class="section-page" id="sec-profile">
+      <div class="page-header"><h2>My <em>Profile</em></h2><p>Manage your personal information, preferences, and account settings.</p></div>
+      <div class="profile-hero" id="profileHero"></div>
+      <div class="grid-2" style="align-items:start;">
+        <div class="card" style="padding:22px;">
+          <div class="card-header" style="margin-bottom:18px;"><div class="card-title">Edit Information</div></div>
+          <div class="profile-form" id="profileForm"></div>
+          <div style="margin-top:18px;display:flex;gap:10px;">
+            <button class="btn btn-primary" onclick="showToast('✅ Profile updated successfully!')">Save Changes</button>
+            <button class="btn btn-outline" onclick="showToast('Changes discarded')">Cancel</button>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:16px;">
+          <div class="card" style="padding:20px;" id="profileSubscription"></div>
+          <div class="card" style="padding:20px;" id="profilePreferences"></div>
+          <div class="card" style="padding:20px;" id="profileSecurity"></div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+
+<!-- Notifications Panel -->
+<div class="notif-panel" id="notifPanel">
+  <div class="np-header">
+    <div class="np-title">Notifications</div>
+    <button class="np-close" onclick="closeNotif()">✕</button>
+  </div>
+  <div class="np-list" id="npList"></div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+/* ═══════════════ DATA ═══════════════ */
+const COURSES_DATA = [
+  {id:1,title:'Guitar Mastery: Zero to Hero',teacher:'Arjun Mehta',teacherEmoji:'👨‍🎤',emoji:'🎸',bg:'linear-gradient(135deg,#fef3c7,#fde68a)',color:'#f59e0b',progress:62,total:48,done:30,next:'Barre Chords — F Major',mode:'Online',level:'Beginner',instrument:'guitar',rating:4.9,nextDate:'Today 10:00 AM'},
+  {id:2,title:'Classical Vocal Training — Hindustani',teacher:'Priya Sharma',teacherEmoji:'👩‍🎤',emoji:'🎤',bg:'linear-gradient(135deg,#fce7f3,#fbcfe8)',color:'#ec4899',progress:35,total:72,done:25,next:'Raga Yaman — Alaap',mode:'Online',level:'All Levels',instrument:'vocal',rating:5.0,nextDate:'Today 4:30 PM'},
+  {id:3,title:'Jazz Piano & Improvisation',teacher:'Rohan Das',teacherEmoji:'🧑‍🎼',emoji:'🎹',bg:'linear-gradient(135deg,#ede9fe,#ddd6fe)',color:'#7c3aed',progress:88,total:20,done:18,next:'ii-V-I Bebop Runs',mode:'Online',level:'Intermediate',instrument:'piano',rating:4.8,nextDate:'Tomorrow 11:00 AM'},
+];
+const UPCOMING_DATA = [
+  {title:'Guitar — Barre Chords',teacher:'Arjun Mehta',time:'10:00',period:'AM',status:'live',emoji:'🎸'},
+  {title:'Vocal — Raga Yaman',teacher:'Priya Sharma',time:'4:30',period:'PM',status:'today',emoji:'🎤'},
+  {title:'Piano — Jazz Voicings',teacher:'Rohan Das',time:'11:00',period:'AM',status:'tomorrow',emoji:'🎹'},
+  {title:'Guitar — Fingerpicking',teacher:'Arjun Mehta',time:'3:00',period:'PM',status:'tomorrow',emoji:'🎸'},
+];
+const PRACTICE_DATA = [
+  {day:'Mon',min:25},{day:'Tue',min:45},{day:'Wed',min:20},{day:'Thu',min:60},{day:'Fri',min:35},{day:'Sat',min:0},{day:'Sun',min:30},
+];
+const ACHIEVEMENTS_DATA = [
+  {emoji:'🔥',name:'14-Day Streak',locked:false},{emoji:'🎸',name:'First Chord',locked:false},
+  {emoji:'⭐',name:'Star Student',locked:false},{emoji:'🎯',name:'Goal Crusher',locked:false},
+  {emoji:'🏆',name:'Performer',locked:true},{emoji:'🎓',name:'Graduate',locked:true},
+];
+const LEADERS_DATA = [
+  {rank:1,name:'Preethi N.',emoji:'👩‍🎤',pts:2840,pct:100,me:false},
+  {rank:2,name:'Rahul M.',emoji:'🧑‍🎸',pts:2610,pct:92,me:false},
+  {rank:3,name:'Aryan Singh',emoji:'🎵',pts:2390,pct:84,me:true},
+  {rank:4,name:'Sneha K.',emoji:'👩‍🎵',pts:2150,pct:76,me:false},
+];
+const TEACHERS_DATA = [
+  {id:1,name:'Arjun Mehta',emoji:'👨‍🎤',spec:'Guitar & Composition',instrument:'guitar',exp:12,students:1240,rating:4.9,reviews:312,modes:['Online','Offline'],lang:'English',fee:'₹800/session',bio:'Berklee certified. Performed in 6 countries. Patient, structured, transformative teaching style.'},
+  {id:2,name:'Priya Sharma',emoji:'👩‍🎤',spec:'Hindustani Classical Vocals',instrument:'vocal',exp:9,students:1580,rating:5.0,reviews:421,modes:['Online'],lang:'Hindi, English',fee:'₹900/session',bio:'Disciple of Pandit Venkatesh Kumar. AIR top position holder. Rated 5.0 by 421 students.'},
+  {id:3,name:'Rohan Das',emoji:'🧑‍🎼',spec:'Piano, Keyboard & Jazz Theory',instrument:'piano',exp:15,students:820,rating:4.8,reviews:198,modes:['Online','Offline'],lang:'English',fee:'₹1,000/session',bio:'Trinity College London Grade 8. Blends classical rigor with jazz improvisation uniquely.'},
+  {id:4,name:'Meera Iyer',emoji:'👩‍🎶',spec:'Violin — Western & Carnatic',instrument:'violin',exp:11,students:560,rating:4.9,reviews:143,modes:['Online','Offline'],lang:'English, Tamil',fee:'₹950/session',bio:'Royal College of Music graduate. Bridges both Western and Carnatic violin traditions.'},
+  {id:5,name:'Dev Malhotra',emoji:'🧑‍🎸',spec:'Drums & Percussion',instrument:'drums',exp:8,students:340,rating:4.7,reviews:89,modes:['Offline'],lang:'Hindi, English',fee:'₹750/session',bio:'Bollywood soundtrack session drummer. Makes rhythm feel natural from day one.'},
+  {id:6,name:'Kavita Nair',emoji:'👩‍🎵',spec:'Bansuri Flute — Hindustani',instrument:'flute',exp:14,students:290,rating:4.8,reviews:76,modes:['Online'],lang:'Hindi, Malayalam',fee:'₹700/session',bio:'Senior disciple of Pandit Hariprasad Chaurasia\'s gharana. Sawai Gandharva performer.'},
+];
+const EXPLORE_DATA = [
+  {id:1,title:'Guitar Mastery: Zero to Hero',instrument:'guitar',teacher:'Arjun Mehta',emoji:'🎸',bg:'linear-gradient(135deg,#fef3c7,#fde68a)',price:'₹4,999',oldPrice:'₹7,999',rating:4.9,reviews:312,badge:'bestseller',level:'Beginner',enrolled:true},
+  {id:2,title:'Piano Foundations & Music Theory',instrument:'piano',teacher:'Rohan Das',emoji:'🎹',bg:'linear-gradient(135deg,#ede9fe,#ddd6fe)',price:'₹5,999',oldPrice:'₹9,999',rating:4.8,reviews:198,badge:'popular',level:'Beginner',enrolled:false},
+  {id:3,title:'Classical Vocal — Hindustani',instrument:'vocal',teacher:'Priya Sharma',emoji:'🎤',bg:'linear-gradient(135deg,#fce7f3,#fbcfe8)',price:'₹6,999',oldPrice:'₹11,999',rating:5.0,reviews:421,badge:'bestseller',level:'All Levels',enrolled:true},
+  {id:4,title:'Violin for Beginners',instrument:'violin',teacher:'Meera Iyer',emoji:'🎻',bg:'linear-gradient(135deg,#d1fae5,#a7f3d0)',price:'₹7,499',oldPrice:'₹12,000',rating:4.9,reviews:143,badge:'new',level:'Beginner',enrolled:false},
+  {id:5,title:'Drums & Rhythm — Rock & Pop',instrument:'drums',teacher:'Dev Malhotra',emoji:'🥁',bg:'linear-gradient(135deg,#fee2e2,#fecaca)',price:'₹4,499',oldPrice:'₹6,999',rating:4.7,reviews:89,badge:null,level:'Beginner',enrolled:false},
+  {id:6,title:'Bansuri Flute — Indian Classical',instrument:'flute',teacher:'Kavita Nair',emoji:'🪈',bg:'linear-gradient(135deg,#cffafe,#a5f3fc)',price:'₹3,999',oldPrice:'₹5,999',rating:4.8,reviews:76,badge:null,level:'Intermediate',enrolled:false},
+  {id:7,title:'Jazz Piano & Improvisation',instrument:'piano',teacher:'Rohan Das',emoji:'🎹',bg:'linear-gradient(135deg,#ede9fe,#ddd6fe)',price:'FREE',oldPrice:null,rating:4.6,reviews:52,badge:'free',level:'Intermediate',enrolled:true},
+  {id:8,title:'Western Pop Vocal',instrument:'vocal',teacher:'Aisha Roy',emoji:'🎤',bg:'linear-gradient(135deg,#fce7f3,#fbcfe8)',price:'₹5,999',oldPrice:'₹8,999',rating:4.8,reviews:167,badge:'popular',level:'Intermediate',enrolled:false},
+];
+const MESSAGES_DATA = [
+  {id:1,name:'Arjun Mehta',emoji:'👨‍🎤',role:'Guitar Teacher',online:true,time:'2m',unread:2,messages:[
+    {from:'them',text:'Great practice session today! Your barre chord transitions are improving quickly.',time:'10:32 AM'},
+    {from:'them',text:'For tomorrow, please practice the F major barre chord for 15 minutes before class.',time:'10:33 AM'},
+    {from:'me',text:'Thank you sir! I have been practising the finger placement. Will definitely do that tonight.',time:'10:45 AM'},
+    {from:'them',text:'Excellent! See you tomorrow at 10 AM. Don\'t forget to warm up.',time:'10:47 AM'},
+  ]},
+  {id:2,name:'Priya Sharma',emoji:'👩‍🎤',role:'Vocal Teacher',online:true,time:'1h',unread:1,messages:[
+    {from:'them',text:'Aryan, I listened to your alaap recording. Your sur is much more stable now!',time:'9:15 AM'},
+    {from:'me',text:'Thank you ma\'am! I\'ve been doing the exercises you suggested every morning.',time:'9:30 AM'},
+    {from:'them',text:'It shows! For today\'s class, we will work on Raga Yaman\'s vilambit bandish.',time:'9:32 AM'},
+  ]},
+  {id:3,name:'Rohan Das',emoji:'🧑‍🎼',role:'Piano Teacher',online:false,time:'Yesterday',unread:0,messages:[
+    {from:'me',text:'Rohan sir, could you share the sheet music for the ii-V-I exercise?',time:'Yesterday'},
+    {from:'them',text:'Sure! I\'ll upload it to your course materials before our next class.',time:'Yesterday'},
+  ]},
+  {id:4,name:'Harmonia Support',emoji:'🎵',role:'Support Team',online:true,time:'2d',unread:0,messages:[
+    {from:'them',text:'Welcome to Harmonia, Aryan! We\'re excited to have you on board. 🎉',time:'2 days ago'},
+    {from:'them',text:'Your premium membership is now active. Enjoy unlimited course access!',time:'2 days ago'},
+  ]},
+];
+const TXN_DATA = [
+  {id:'INV-2026-041',desc:'Guitar Mastery Course',sub:'3-month enrollment',icon:'🎸',iconBg:'rgba(245,158,11,.1)',date:'May 1, 2026',amount:'₹4,999',type:'debit',status:'success'},
+  {id:'INV-2026-038',desc:'Premium Membership',sub:'Monthly — Auto Renew',icon:'⭐',iconBg:'rgba(124,58,237,.1)',date:'Apr 28, 2026',amount:'₹499',type:'debit',status:'success'},
+  {id:'INV-2026-035',desc:'Scholarship Credit',sub:'Merit-based award',icon:'🏆',iconBg:'rgba(16,185,129,.1)',date:'Apr 20, 2026',amount:'₹1,000',type:'credit',status:'success'},
+  {id:'INV-2026-031',desc:'Classical Vocal Course',sub:'6-month enrollment',icon:'🎤',iconBg:'rgba(244,114,182,.1)',date:'Apr 15, 2026',amount:'₹6,999',type:'debit',status:'success'},
+  {id:'INV-2026-028',desc:'Jazz Piano Course',sub:'Free course',icon:'🎹',iconBg:'rgba(6,182,212,.1)',date:'Apr 10, 2026',amount:'FREE',type:'credit',status:'success'},
+  {id:'INV-2026-022',desc:'Premium Membership',sub:'Monthly — Auto Renew',icon:'⭐',iconBg:'rgba(124,58,237,.1)',date:'Mar 28, 2026',amount:'₹499',type:'debit',status:'success'},
+];
+const NOTIFICATIONS_DATA = [
+  {icon:'🎸',bg:'ni-p',msg:'<strong>Arjun Mehta</strong> sent feedback on your barre chord recording.',time:'2 min ago',unread:true},
+  {icon:'🔔',bg:'ni-g',msg:'Your class <strong>Guitar — Barre Chords</strong> starts in 30 minutes.',time:'28 min ago',unread:true},
+  {icon:'🏆',bg:'ni-g',msg:'You unlocked the <strong>14-Day Streak</strong> achievement!',time:'1 hr ago',unread:true},
+  {icon:'📋',bg:'ni-r',msg:'Assignment <strong>Raga Yaman alaap</strong> is due tomorrow.',time:'3 hrs ago',unread:false},
+  {icon:'💬',bg:'ni-gr',msg:'<strong>Priya Sharma</strong> replied to your question about sur.',time:'Yesterday',unread:false},
+  {icon:'🎓',bg:'ni-p',msg:'New lesson unlocked: <strong>Fingerpicking patterns</strong>.',time:'Yesterday',unread:false},
+];
+
+/* ═══════════════ STATE ═══════════════ */
+let activeMsgId = 1;
+let exploreFilter = 'all';
+let teacherFilter = 'all';
+let mcFilter = 'all';
+let calDate = new Date(2026, 4, 6); // May 2026
+let selectedCalDay = 6;
+
+/* ═══════════════ RENDER: DASHBOARD ═══════════════ */
+function renderDashboard() {
+  // Stats
+  const stats = [
+    {icon:'🎵',bg:'si-p',val:3,lbl:'Active Courses',change:'↑ 1 this month',up:true},
+    {icon:'🔥',bg:'si-g',val:14,lbl:'Day Streak',change:'↑ Personal best!',up:true},
+    {icon:'⏱',bg:'si-gr',val:68,lbl:'Hours Practised',change:'↑ 4 hrs this week',up:true},
+    {icon:'🏆',bg:'si-pk',val:7,lbl:'Badges Earned',change:'↑ 2 new',up:true},
+  ];
+  document.getElementById('dashStats').innerHTML = stats.map((s,i)=>`
+    <div class="card stat-card fade-in" style="animation-delay:${i*.07}s">
+      <div class="stat-icon ${s.bg}">${s.icon}</div>
+      <div><div class="stat-val" data-target="${s.val}">0</div><div class="stat-lbl">${s.lbl}</div><span class="stat-change ${s.up?'up':'down'}">${s.change}</span></div>
+    </div>`).join('');
+  setTimeout(animateCounters, 100);
+
+  // Courses
+  document.getElementById('dashCourses').innerHTML = COURSES_DATA.map(c=>`
+    <div class="course-mini fade-in" onclick="switchSection('my-courses')">
+      <div class="cm-thumb" style="background:${c.bg}">${c.emoji}</div>
+      <div class="cm-info">
+        <div class="cm-title">${c.title}</div>
+        <div class="cm-teacher">with ${c.teacher}</div>
+        <div class="pbar-track" style="margin-top:2px;"><div class="pbar-fill" id="dpb${c.id}" style="width:0%;background:${c.color};"></div></div>
+        <div class="cm-pct" style="color:${c.color}">${c.progress}%</div>
+      </div>
+    </div>`).join('');
+  setTimeout(()=>COURSES_DATA.forEach(c=>{const el=document.getElementById('dpb'+c.id);if(el)el.style.width=c.progress+'%';}),400);
+
+  // Streak
+  const days=['M','T','W','T','F','S','S'];
+  document.getElementById('dashStreak').innerHTML=`
+    <div class="streak-top"><div><div class="streak-num">14</div><div class="streak-lbl">Day Practice Streak</div></div><div style="font-size:2rem;">🔥</div></div>
+    <div class="streak-days">${days.map((d,i)=>`<div class="sd"><div class="sd-circle ${i<5?'done':i===5?'today':''}">${i<5?'✓':d}</div><div class="sd-lbl">${d}</div></div>`).join('')}</div>`;
+
+  // Upcoming
+  const statusMap={live:{cls:'us-live',lbl:'🔴 Live'},today:{cls:'us-today',lbl:'Today'},tomorrow:{cls:'us-tmr',lbl:'Tomorrow'},soon:{cls:'us-soon',lbl:'Soon'}};
+  document.getElementById('dashUpcoming').innerHTML=UPCOMING_DATA.map(u=>{
+    const s=statusMap[u.status]||statusMap.today;
+    return`<div class="upcoming-item" onclick="switchSection('schedule')"><div class="ui-time"><div class="ui-time-h">${u.time}</div><div class="ui-time-p">${u.period}</div></div><div class="ui-info"><div class="ui-title">${u.emoji} ${u.title}</div><div class="ui-teacher">with ${u.teacher}</div></div><span class="ui-status ${s.cls}">${s.lbl}</span></div>`;
+  }).join('');
+
+  // Achievements
+  document.getElementById('dashAch').innerHTML=ACHIEVEMENTS_DATA.map(a=>`
+    <div class="ach-badge${a.locked?' locked':''}" title="${a.name}"><div class="ach-emoji">${a.emoji}</div><div class="ach-name">${a.name}</div></div>`).join('');
+
+  // Practice bars
+  const maxM=Math.max(...PRACTICE_DATA.map(d=>d.min),1);
+  const totalM=PRACTICE_DATA.reduce((s,d)=>s+d.min,0);
+  const barColors=['#7c3aed','#ec4899','#7c3aed','#10b981','#7c3aed','#9ca3af','#7c3aed'];
+  document.getElementById('dashPractice').innerHTML=PRACTICE_DATA.map((d,i)=>`
+    <div class="pb-col"><div class="pb-bar" id="pb_d${i}" style="height:0;background:${d.min?barColors[i]:'rgba(8,37,103,.07)'};" ></div><div class="pb-day">${d.day}</div></div>`).join('');
+  document.getElementById('dashPracticeTotal').textContent=totalM+' min';
+  setTimeout(()=>PRACTICE_DATA.forEach((d,i)=>{const el=document.getElementById('pb_d'+i);if(el){el.style.transition='height .9s cubic-bezier(.22,1,.36,1)';el.style.height=(d.min/maxM*68)+'px';}}),500);
+
+  // Leaderboard
+  const rankIco=['🥇','🥈','🥉'];
+  document.getElementById('dashLeader').innerHTML=LEADERS_DATA.map(l=>`
+    <div class="upcoming-item" style="padding:8px 0;">
+      <div style="width:22px;text-align:center;font-size:.9rem;">${l.rank<=3?rankIco[l.rank-1]:l.rank}</div>
+      <div class="ui-info"><div class="ui-title" style="${l.me?'color:var(--accent);font-weight:700;':''}">${l.name}${l.me?' (You)':''}</div><div class="ui-teacher">${l.pts.toLocaleString()} pts</div></div>
+      <div style="width:50px;"><div class="pbar-track"><div class="pbar-fill" style="width:${l.pct}%;background:linear-gradient(90deg,#7c3aed,#ec4899);"></div></div></div>
+    </div>`).join('');
+}
+
+/* ═══════════════ RENDER: MY COURSES ═══════════════ */
+function renderMyCourses() {
+  const filters=['all','guitar','vocal','piano'];
+  document.getElementById('mcFilter').innerHTML=filters.map(f=>`<button class="t-chip${mcFilter===f?' active':''}" onclick="setMCFilter('${f}')">${f==='all'?'All Courses':f.charAt(0).toUpperCase()+f.slice(1)}</button>`).join('');
+  const filtered=COURSES_DATA.filter(c=>mcFilter==='all'||c.instrument===mcFilter);
+  document.getElementById('myCoursesGrid').innerHTML=filtered.map((c,i)=>`
+    <div class="card course-card-full fade-in" style="animation-delay:${i*.08}s" onclick="showToast('▶ Opening ${c.emoji} ${c.title}')">
+      <div class="ccf-thumb" style="background:${c.bg}">${c.emoji}</div>
+      <div class="ccf-body">
+        <div class="ccf-title">${c.title}</div>
+        <div class="ccf-teacher"><span style="font-size:.9rem;">${c.teacherEmoji}</span>${c.teacher} · ${c.mode}</div>
+        <div class="ccf-tags"><span class="tag tag-accent">${c.level}</span><span class="tag tag-green">${c.mode}</span><span class="tag tag-gold">Next: ${c.next}</span></div>
+        <div class="ccf-progress-row">
+          <div class="pbar-track" style="flex:1;"><div class="pbar-fill" id="mcp${c.id}" style="width:0%;background:${c.color};"></div></div>
+          <span class="ccf-pct" style="color:${c.color}">${c.progress}%</span>
+        </div>
+        <div style="font-size:.72rem;color:var(--muted);">${c.done} of ${c.total} lessons completed</div>
+      </div>
+      <div class="ccf-actions">
+        <button class="btn btn-primary btn-sm" onclick="event.stopPropagation();showToast('▶ Resuming — ${c.next}')">Resume</button>
+        <button class="btn btn-outline btn-sm" onclick="event.stopPropagation();showToast('Next class: ${c.nextDate}')">Schedule</button>
+      </div>
+    </div>`).join('');
+  setTimeout(()=>filtered.forEach(c=>{const el=document.getElementById('mcp'+c.id);if(el)el.style.width=c.progress+'%';}),300);
+}
+function setMCFilter(f){mcFilter=f;renderMyCourses();}
+
+/* ═══════════════ RENDER: SCHEDULE ═══════════════ */
+const EVENT_DAYS=[2,5,6,9,12,13,16,19,20,23];
+function renderCalendar(){
+  const y=calDate.getFullYear(),m=calDate.getMonth();
+  const monthNames=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  document.getElementById('calMonth').textContent=monthNames[m]+' '+y;
+  const firstDay=(new Date(y,m,1).getDay()+6)%7;
+  const daysInMonth=new Date(y,m+1,0).getDate();
+  const daysInPrev=new Date(y,m,0).getDate();
+  const today=new Date();
+  const dayLabels=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  let html=dayLabels.map(d=>`<div class="cal-day-lbl">${d}</div>`).join('');
+  for(let i=0;i<firstDay;i++)html+=`<div class="cal-day other">${daysInPrev-firstDay+1+i}</div>`;
+  for(let d=1;d<=daysInMonth;d++){
+    const isToday=d===today.getDate()&&m===today.getMonth()&&y===today.getFullYear();
+    const hasEvent=EVENT_DAYS.includes(d);
+    const isSel=d===selectedCalDay;
+    html+=`<div class="cal-day${isToday?' today':''}${hasEvent?' has-event':''}${isSel&&!isToday?' selected':''}" onclick="selectDay(${d})">${d}</div>`;
+  }
+  const remaining=(7-((firstDay+daysInMonth)%7))%7;
+  for(let i=1;i<=remaining;i++)html+=`<div class="cal-day other">${i}</div>`;
+  document.getElementById('calGrid').innerHTML=html;
+  renderScheduleList();
+}
+function changeMonth(dir){calDate.setMonth(calDate.getMonth()+dir);renderCalendar();}
+function selectDay(d){selectedCalDay=d;renderCalendar();}
+function renderScheduleList(){
+  const dayClasses={5:[{title:'Guitar — Barre Chords',teacher:'Arjun Mehta',time:'10:00',period:'AM',emoji:'🎸',mode:'Online',live:true},{title:'Vocal — Raga Yaman',teacher:'Priya Sharma',time:'4:30',period:'PM',emoji:'🎤',mode:'Online',live:false}],6:[{title:'Piano — Jazz Voicings',teacher:'Rohan Das',time:'11:00',period:'AM',emoji:'🎹',mode:'Online',live:false}],9:[{title:'Guitar — Fingerpicking',teacher:'Arjun Mehta',time:'3:00',period:'PM',emoji:'🎸',mode:'Online',live:false}],12:[{title:'Vocal — Bhairavi Raga',teacher:'Priya Sharma',time:'10:00',period:'AM',emoji:'🎤',mode:'Online',live:false}]};
+  const classes=dayClasses[selectedCalDay]||[];
+  document.getElementById('selectedDayLabel').innerHTML=`Classes for <strong>May ${selectedCalDay}, 2026</strong>`;
+  document.getElementById('scheduleList').innerHTML=classes.length?classes.map(c=>`
+    <div class="sch-item${c.live?' live':''}" onclick="showToast(c.live?'🔴 Joining live class…':'📅 Class on ${c.time} ${c.period}')">
+      <div class="sch-time-col"><div class="sch-time">${c.time}</div><div class="sch-period">${c.period}</div></div>
+      <div class="sch-info"><div class="sch-title">${c.emoji} ${c.title}</div><div class="sch-meta">with ${c.teacher} · ${c.mode}</div>${c.live?'<span class="tag tag-red">🔴 Live Now</span>':'<span class="tag tag-accent">Upcoming</span>'}</div>
+      <div class="sch-actions">${c.live?'<button class="btn btn-primary btn-sm" onclick="event.stopPropagation();showToast(\'Joining class…\')">Join Now</button>':'<button class="btn btn-outline btn-sm" onclick="event.stopPropagation();showToast(\'Reminder set!\')">Remind Me</button>'}</div>
+    </div>`).join(''):`<div style="text-align:center;padding:30px;color:var(--muted);font-size:.85rem;">📭 No classes scheduled for this day.</div>`;
+}
+
+/* ═══════════════ RENDER: FIND TEACHERS ═══════════════ */
+function renderFindTeachers(){
+  const filters=['all','guitar','piano','vocal','violin','drums','flute'];
+  document.getElementById('teacherChips').innerHTML=filters.map(f=>`<button class="t-chip${teacherFilter===f?' active':''}" onclick="setTeacherFilter('${f}')">${f==='all'?'All':f.charAt(0).toUpperCase()+f.slice(1)}</button>`).join('');
+  const filtered=TEACHERS_DATA.filter(t=>teacherFilter==='all'||t.instrument===teacherFilter);
+  document.getElementById('teachersGrid').innerHTML=filtered.map((t,i)=>`
+    <div class="card teacher-card fade-in" style="animation-delay:${i*.07}s">
+      <div class="tc-top">
+        <div class="tc-ava">${t.emoji}</div>
+        <div class="tc-info">
+          <div class="tc-name">${t.name}</div>
+          <div class="tc-spec">${t.spec}</div>
+          <div class="tc-meta"><span class="tc-meta-item">🎓 ${t.exp} yrs</span><span class="tc-meta-item">👥 ${t.students.toLocaleString()}</span></div>
+        </div>
+      </div>
+      <div class="tc-rating"><span class="tc-stars">★★★★★</span><span class="tc-rnum">${t.rating}</span><span class="tc-rcount">(${t.reviews})</span></div>
+      <div class="tc-bio">${t.bio}</div>
+      <div class="tc-footer">
+        <div><div class="tc-fee-lbl">Per session</div><div class="tc-fee">${t.fee}</div></div>
+        <button class="btn btn-primary btn-sm" onclick="showToast('📅 Booking trial with ${t.name}…')">Book Trial</button>
+      </div>
+    </div>`).join('');
+}
+function setTeacherFilter(f){teacherFilter=f;renderFindTeachers();}
+
+/* ═══════════════ RENDER: EXPLORE COURSES ═══════════════ */
+function renderExplore(){
+  const filters=['all','guitar','piano','vocal','violin','drums','flute'];
+  document.getElementById('exploreChips').innerHTML=filters.map(f=>`<button class="t-chip${exploreFilter===f?' active':''}" onclick="setExploreFilter('${f}')">${f==='all'?'All':f.charAt(0).toUpperCase()+f.slice(1)}</button>`).join('');
+  const filtered=EXPLORE_DATA.filter(c=>exploreFilter==='all'||c.instrument===exploreFilter);
+  const badgeMap={bestseller:{cls:'ecb-top',lbl:'🏆 Bestseller'},popular:{cls:'ecb-popular',lbl:'🔥 Popular'},new:{cls:'ecb-new',lbl:'✨ New'},free:{cls:'ecb-free',lbl:'🎁 Free'}};
+  document.getElementById('exploreGrid').innerHTML=filtered.map((c,i)=>{
+    const b=c.badge?badgeMap[c.badge]:null;
+    return`<div class="card explore-card fade-in" style="animation-delay:${i*.06}s">
+      <div class="ec-thumb" style="background:${c.bg}">
+        ${b?`<span class="ec-badge ${b.cls}">${b.lbl}</span>`:''}
+        <div class="ec-emoji">${c.emoji}</div>
+        ${c.enrolled?'<span class="ec-badge" style="top:auto;bottom:9px;left:9px;background:rgba(16,185,129,.15);color:var(--green);border:1px solid rgba(16,185,129,.3);">✓ Enrolled</span>':''}
+      </div>
+      <div class="ec-body">
+        <div class="ec-instrument">${c.instrument}</div>
+        <div class="ec-title">${c.title}</div>
+        <div class="ec-teacher">by ${c.teacher}</div>
+        <div class="ec-rating"><span class="ec-stars">★★★★★</span><span class="ec-rnum">${c.rating}</span><span style="font-size:.68rem;color:var(--muted);margin-left:4px;">(${c.reviews})</span></div>
+        <div class="ec-footer">
+          <div><span class="ec-price${c.price==='FREE'?' free':''}">${c.price}</span>${c.oldPrice?`<span style="font-size:.68rem;color:var(--muted);text-decoration:line-through;margin-left:6px;">${c.oldPrice}</span>`:''}</div>
+          ${c.enrolled?`<button class="ec-enroll" style="background:linear-gradient(135deg,#10b981,#059669);" onclick="event.stopPropagation();switchSection('my-courses')">Resume →</button>`:`<button class="ec-enroll" onclick="event.stopPropagation();showToast('🎉 Enrolling in ${c.title}…')">Enroll</button>`}
+        </div>
+      </div>
+    </div>`;}).join('');
+}
+function setExploreFilter(f){exploreFilter=f;renderExplore();}
+
+/* ═══════════════ RENDER: MESSAGES ═══════════════ */
+function renderMessages(){
+  const contacts=MESSAGES_DATA.map((m,i)=>`
+    <div class="msg-contact${m.id===activeMsgId?' active':''}" onclick="setActiveMsg(${m.id})">
+      <div class="mc-ava">${m.emoji}${m.online?'<div class="mc-online"></div>':''}</div>
+      <div class="mc-info"><div class="mc-name">${m.name}</div><div class="mc-last">${m.messages[m.messages.length-1].text}</div></div>
+      <div class="mc-meta"><div class="mc-time">${m.time}</div>${m.unread?`<div class="mc-unread">${m.unread}</div>`:''}</div>
+    </div>`).join('');
+  const active=MESSAGES_DATA.find(m=>m.id===activeMsgId);
+  const bubbles=active.messages.map(msg=>`
+    <div>
+      <div class="msg-bubble ${msg.from==='me'?'mb-me':'mb-them'}">${msg.text}<div class="mb-time">${msg.time}</div></div>
+    </div>`).join('');
+  document.getElementById('messagesLayout').innerHTML=`
+    <div class="msg-sidebar">
+      <div class="msg-sb-header"><div class="msg-sb-title">Messages</div><button class="btn btn-primary btn-sm" onclick="showToast('💬 New message…')">+ New</button></div>
+      <div class="msg-search"><input class="msg-search-input" placeholder="Search conversations…"></div>
+      <div class="msg-list">${contacts}</div>
+    </div>
+    <div class="msg-area">
+      <div class="msg-header">
+        <div class="msg-header-ava">${active.emoji}</div>
+        <div><div class="msg-header-name">${active.name}</div><div class="msg-header-status">${active.online?'🟢 Online':'⚫ Offline'}</div></div>
+        <div class="msg-header-actions">
+          <button class="tb-icon-btn" onclick="showToast('📞 Starting call…')" title="Voice call"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.38 2 2 0 0 1 3.58 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 9.91a16 16 0 0 0 6.18 6.18l.91-.91a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg></button>
+          <button class="tb-icon-btn" onclick="showToast('📹 Starting video call…')" title="Video call"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg></button>
+        </div>
+      </div>
+      <div class="msg-body" id="msgBody">${bubbles}</div>
+      <div class="msg-input-area">
+        <textarea class="msg-input" id="msgInput" placeholder="Type a message…" rows="1" onkeydown="handleMsgKey(event)"></textarea>
+        <button class="msg-send" onclick="sendMessage()">Send <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>
+      </div>
+    </div>`;
+  const body=document.getElementById('msgBody');
+  if(body)body.scrollTop=body.scrollHeight;
+}
+function setActiveMsg(id){activeMsgId=id;renderMessages();}
+function sendMessage(){
+  const inp=document.getElementById('msgInput');
+  const txt=inp.value.trim();
+  if(!txt)return;
+  const active=MESSAGES_DATA.find(m=>m.id===activeMsgId);
+  active.messages.push({from:'me',text:txt,time:new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'})});
+  inp.value='';
+  renderMessages();
+}
+function handleMsgKey(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMessage();}}
+
+/* ═══════════════ RENDER: TRANSACTIONS ═══════════════ */
+function renderTransactions(){
+  document.getElementById('txnSummary').innerHTML=`
+    <div class="card txn-sum-card"><div class="txn-sum-icon">💳</div><div class="txn-sum-val">₹12,997</div><div class="txn-sum-lbl">Total Spent</div></div>
+    <div class="card txn-sum-card"><div class="txn-sum-icon">🏆</div><div class="txn-sum-val">₹1,000</div><div class="txn-sum-lbl">Scholarship Credits</div></div>
+    <div class="card txn-sum-card"><div class="txn-sum-icon">⭐</div><div class="txn-sum-val">Premium</div><div class="txn-sum-lbl">Current Plan</div></div>`;
+  const filters=['All','Payments','Credits','Subscription'];
+  document.getElementById('txnFilters').innerHTML=filters.map((f,i)=>`<button class="t-chip${i===0?' active':''}" onclick="showToast('Filtering by ${f}…')">${f}</button>`).join('');
+  document.getElementById('txnTable').innerHTML=`
+    <thead><tr><th>Description</th><th>Date</th><th>Reference</th><th>Amount</th><th>Status</th></tr></thead>
+    <tbody>${TXN_DATA.map(t=>`
+      <tr>
+        <td><div style="display:flex;align-items:center;gap:10px;"><div class="txn-icon" style="background:${t.iconBg}">${t.icon}</div><div><div class="txn-desc">${t.desc}</div><div class="txn-sub">${t.sub}</div></div></div></td>
+        <td style="color:var(--muted);font-size:.78rem;">${t.date}</td>
+        <td style="color:var(--muted);font-size:.74rem;">${t.id}</td>
+        <td><span class="txn-amount ${t.type}">${t.type==='credit'?'+':'-'} ${t.amount}</span></td>
+        <td><span class="txn-status ts-${t.status}">${t.status.charAt(0).toUpperCase()+t.status.slice(1)}</span></td>
+      </tr>`).join('')}</tbody>`;
+}
+
+/* ═══════════════ RENDER: PROFILE ═══════════════ */
+function renderProfile(){
+  document.getElementById('profileHero').innerHTML=`
+    <div class="profile-top">
+      <div class="profile-ava">🎵</div>
+      <div>
+        <div class="profile-name">Aryan Singh</div>
+        <div class="profile-joined">Member since January 2026 · Premium Plan</div>
+        <div class="profile-tags"><span class="ptag">🎸 Guitar</span><span class="ptag">🎤 Vocals</span><span class="ptag">🎹 Piano</span><span class="ptag">Premium</span></div>
+      </div>
+      <button class="btn btn-outline btn-sm" style="margin-left:auto;background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.2);color:#fff;" onclick="showToast('📸 Upload photo…')">Change Photo</button>
+    </div>
+    <div class="profile-stats-row">
+      <div class="profile-stat"><div class="ps-val">3</div><div class="ps-lbl">Courses</div></div>
+      <div class="profile-stat"><div class="ps-val">14</div><div class="ps-lbl">Day Streak</div></div>
+      <div class="profile-stat"><div class="ps-val">68h</div><div class="ps-lbl">Practised</div></div>
+      <div class="profile-stat"><div class="ps-val">7</div><div class="ps-lbl">Badges</div></div>
+    </div>`;
+
+  document.getElementById('profileForm').innerHTML=`
+    <div class="pf-group"><div class="pf-label">First Name</div><input class="pf-input" value="Aryan" type="text"></div>
+    <div class="pf-group"><div class="pf-label">Last Name</div><input class="pf-input" value="Singh" type="text"></div>
+    <div class="pf-group"><div class="pf-label">Email Address</div><input class="pf-input" value="aryan.singh@email.com" type="email"></div>
+    <div class="pf-group"><div class="pf-label">Phone Number</div><input class="pf-input" value="+91 98765 43210" type="tel"></div>
+    <div class="pf-group"><div class="pf-label">City</div><input class="pf-input" value="Kolkata, West Bengal" type="text"></div>
+    <div class="pf-group"><div class="pf-label">Date of Birth</div><input class="pf-input" value="2002-04-15" type="date"></div>
+    <div class="pf-group full"><div class="pf-label">Bio / About You</div><textarea class="pf-textarea" rows="3">Music enthusiast learning Guitar, Vocals and Piano at Harmonia. Love Hindustani classical and rock music.</textarea></div>
+    <div class="pf-group"><div class="pf-label">Preferred Language</div><select class="pf-select"><option>English</option><option>Hindi</option><option>Bengali</option></select></div>
+    <div class="pf-group"><div class="pf-label">Learning Goal</div><select class="pf-select"><option>Hobby / Fun</option><option selected>Skill Development</option><option>Professional</option><option>Performance</option></select></div>`;
+
+  document.getElementById('profileSubscription').innerHTML=`
+    <div class="card-header" style="margin-bottom:14px;"><div class="card-title">📦 Subscription</div></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+      <div><div style="font-size:.88rem;font-weight:700;color:var(--primary);">Premium Plan</div><div style="font-size:.72rem;color:var(--muted);">Renews on Jun 1, 2026</div></div>
+      <span class="tag tag-accent">Active</span>
+    </div>
+    <div style="font-size:.78rem;color:var(--muted);margin-bottom:14px;">₹499/month · Unlimited course access · Priority support</div>
+    <button class="btn btn-outline btn-sm" onclick="showToast('⚙️ Managing subscription…')">Manage Plan</button>`;
+
+  document.getElementById('profilePreferences').innerHTML=`
+    <div class="card-header" style="margin-bottom:14px;"><div class="card-title">🔔 Notifications</div></div>
+    ${[{lbl:'Class reminders',on:true},{lbl:'Assignment due dates',on:true},{lbl:'Teacher messages',on:true},{lbl:'Weekly progress report',on:false},{lbl:'Promotional offers',on:false}].map(n=>`
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
+      <span style="font-size:.82rem;color:var(--primary);">${n.lbl}</span>
+      <div onclick="this.classList.toggle('on');showToast('Preference updated')" class="toggle-sw${n.on?' on':''}" style="width:38px;height:20px;border-radius:10px;background:${n.on?'linear-gradient(135deg,#7c3aed,#4338ca)':'rgba(8,37,103,.15)'};cursor:pointer;position:relative;transition:background .3s;flex-shrink:0;">
+        <div style="position:absolute;top:2px;left:${n.on?'18px':'2px'};width:16px;height:16px;border-radius:50%;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.2);transition:left .3s;"></div>
+      </div>
+    </div>`).join('')}`;
+
+  document.getElementById('profileSecurity').innerHTML=`
+    <div class="card-header" style="margin-bottom:14px;"><div class="card-title">🔐 Security</div></div>
+    <button class="btn btn-outline btn-sm" style="width:100%;margin-bottom:8px;" onclick="showToast('🔑 Password reset email sent!')">Change Password</button>
+    <button class="btn btn-outline btn-sm" style="width:100%;margin-bottom:8px;" onclick="showToast('📱 2FA setup…')">Enable 2FA</button>
+    <button class="btn btn-sm" style="width:100%;background:rgba(239,68,68,.1);color:var(--red);border:1.5px solid rgba(239,68,68,.2);" onclick="showToast('⚠️ Account deletion requires confirmation.')">Delete Account</button>`;
+}
+
+/* ═══════════════ RENDER: NOTIFICATIONS ═══════════════ */
+function renderNotifications(){
+  document.getElementById('npList').innerHTML=NOTIFICATIONS_DATA.map((n,i)=>`
+    <div class="np-item${n.unread?' unread':''}" onclick="markRead(${i})">
+      <div class="np-icon ${n.bg}">${n.icon}</div>
+      <div class="np-text"><div class="np-msg">${n.msg}</div><div class="np-time">${n.time}</div></div>
+      ${n.unread?'<div class="np-dot"></div>':''}
+    </div>`).join('');
+}
+function markRead(i){
+  NOTIFICATIONS_DATA[i].unread=false;
+  renderNotifications();
+  if(!NOTIFICATIONS_DATA.some(n=>n.unread))document.getElementById('notifDot').style.display='none';
+}
+
+/* ═══════════════ COUNTER ANIMATION ═══════════════ */
+function animateCounters(){
+  document.querySelectorAll('.stat-val[data-target]').forEach(el=>{
+    const target=+el.dataset.target;let cur=0;
+    const t=setInterval(()=>{cur=Math.min(cur+target/40,target);el.textContent=Math.floor(cur);if(cur>=target)clearInterval(t);},25);
+  });
+}
+
+/* ═══════════════ SECTION SWITCHING ═══════════════ */
+const SECTION_TITLES={dashboard:'Good Morning, <em>Aryan</em> 👋','my-courses':'My <em>Courses</em>',schedule:'My <em>Schedule</em>','find-teachers':'Find <em>Teachers</em>',explore:'Explore <em>Courses</em>',messages:'Your <em>Messages</em>',transactions:'Billing &amp; <em>Transactions</em>',profile:'My <em>Profile</em>'};
+const RENDER_FNS={dashboard:renderDashboard,'my-courses':renderMyCourses,schedule:()=>renderCalendar(),'find-teachers':renderFindTeachers,explore:renderExplore,messages:renderMessages,transactions:renderTransactions,profile:renderProfile};
+function switchSection(name){
+  document.querySelectorAll('.section-page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.sb-item').forEach(i=>i.classList.remove('active'));
+  document.getElementById('sec-'+name).classList.add('active');
+  document.querySelector(`[data-section="${name}"]`)?.classList.add('active');
+  document.getElementById('topbarTitle').innerHTML=SECTION_TITLES[name]||name;
+  if(RENDER_FNS[name])RENDER_FNS[name]();
+  window.scrollTo({top:0,behavior:'smooth'});
+  closeSidebar();
+}
+document.querySelectorAll('.sb-item[data-section]').forEach(btn=>{
+  btn.addEventListener('click',()=>switchSection(btn.dataset.section));
+});
+
+/* ═══════════════ MOBILE SIDEBAR ═══════════════ */
+function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.getElementById('sbOverlay').classList.remove('show');document.getElementById('mobBtn').classList.remove('open');}
+document.getElementById('mobBtn').addEventListener('click',()=>{
+  const open=document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('sbOverlay').classList.toggle('show',open);
+  document.getElementById('mobBtn').classList.toggle('open',open);
+});
+document.getElementById('sbOverlay').addEventListener('click',closeSidebar);
+
+/* ═══════════════ NOTIFICATIONS ═══════════════ */
+document.getElementById('notifBtn').addEventListener('click',()=>document.getElementById('notifPanel').classList.add('open'));
+function closeNotif(){document.getElementById('notifPanel').classList.remove('open');}
+document.addEventListener('click',e=>{if(!e.target.closest('#notifPanel')&&!e.target.closest('#notifBtn'))document.getElementById('notifPanel').classList.remove('open');});
+
+/* ═══════════════ TOAST ═══════════════ */
+let toastT;
+function showToast(msg,dur=3000){
+  const t=document.getElementById('toast');t.textContent=msg;t.style.opacity='1';t.style.transform='translateX(-50%) translateY(0)';
+  clearTimeout(toastT);toastT=setTimeout(()=>{t.style.opacity='0';t.style.transform='translateX(-50%) translateY(80px)';},dur);
+}
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeNotif();closeSidebar();}});
+
+/* ═══════════════ INIT ═══════════════ */
+renderDashboard();
+renderNotifications();
+</script>
+</body>
+</html>
