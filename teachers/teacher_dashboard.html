@@ -1,0 +1,1106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Teacher Dashboard — TagoreTunes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#f0eeff;
+  --sidebar-w:260px;
+  --primary:#082567;
+  --accent:#7c3aed;
+  --gold:#f59e0b;
+  --green:#10b981;
+  --red:#ef4444;
+  --pink:#f472b6;
+  --card:rgba(255,255,255,0.82);
+  --border:rgba(8,37,103,0.1);
+  --muted:#6b7b9c;
+  --t:0.28s ease;
+  --radius:18px;
+  --nav-h:62px;
+}
+html{scroll-behavior:smooth;}
+body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--primary);min-height:100vh;overflow-x:hidden;}
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:rgba(124,58,237,0.2);border-radius:2px;}
+
+/* ════════ SIDEBAR ════════ */
+.sidebar{
+  position:fixed;top:0;left:0;bottom:0;width:var(--sidebar-w);
+  background:linear-gradient(180deg,#0d1b4b 0%,#1a1340 100%);
+  display:flex;flex-direction:column;z-index:200;
+  overflow:hidden;transition:transform var(--t);
+}
+.sidebar::before{content:'';position:absolute;top:-80px;right:-80px;width:220px;height:220px;background:radial-gradient(#7c3aed,transparent 70%);opacity:.2;border-radius:50%;pointer-events:none;}
+.sidebar::after{content:'';position:absolute;bottom:-60px;left:-60px;width:180px;height:180px;background:radial-gradient(#ec4899,transparent 70%);opacity:.15;border-radius:50%;pointer-events:none;}
+
+.sb-logo{display:flex;align-items:center;gap:10px;padding:22px 18px 16px;border-bottom:1px solid rgba(255,255,255,0.07);text-decoration:none;flex-shrink:0;}
+.sb-logo-mark{width:38px;height:38px;background:linear-gradient(135deg,#7c3aed,#4338ca);border-radius:10px;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:1rem;font-weight:900;color:#fff;box-shadow:0 4px 14px rgba(124,58,237,0.4);flex-shrink:0;}
+.sb-brand{display:flex;flex-direction:column;}
+.sb-name{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:#fff;}
+.sb-name span{color:#c4b5fd;}
+.sb-role-badge{display:inline-flex;align-items:center;gap:4px;background:rgba(245,158,11,0.2);border:1px solid rgba(245,158,11,0.3);border-radius:10px;padding:2px 7px;font-size:.58rem;font-weight:700;color:#fbbf24;letter-spacing:.5px;text-transform:uppercase;margin-top:2px;}
+
+.sb-nav{flex:1;overflow-y:auto;padding:8px 10px;scrollbar-width:none;}
+.sb-nav::-webkit-scrollbar{display:none;}
+.sb-sec{font-size:.57rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.25);padding:14px 12px 5px;}
+.sb-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:11px;font-size:.82rem;font-weight:500;color:rgba(255,255,255,.55);cursor:pointer;transition:background var(--t),color var(--t);margin-bottom:2px;border:none;background:transparent;width:100%;text-align:left;position:relative;}
+.sb-item:hover{background:rgba(255,255,255,.07);color:rgba(255,255,255,.85);}
+.sb-item.active{background:rgba(124,58,237,.28);color:#fff;font-weight:600;}
+.sb-item.active::before{content:'';position:absolute;left:-10px;top:50%;transform:translateY(-50%);width:3px;height:18px;background:linear-gradient(180deg,#7c3aed,#ec4899);border-radius:0 3px 3px 0;}
+.sb-ico{width:17px;height:17px;flex-shrink:0;opacity:.6;}
+.sb-item.active .sb-ico{opacity:1;}
+.sb-badge{margin-left:auto;background:linear-gradient(135deg,#7c3aed,#ec4899);color:#fff;font-size:.57rem;font-weight:700;padding:2px 6px;border-radius:20px;min-width:18px;text-align:center;}
+
+.sb-user{padding:12px 14px;border-top:1px solid rgba(255,255,255,.07);display:flex;align-items:center;gap:9px;flex-shrink:0;position:relative;z-index:1;}
+.sb-avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#ecdcfe,#c4b5fd);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;border:2px solid rgba(255,255,255,.18);}
+.sb-uname{font-size:.8rem;font-weight:700;color:#fff;line-height:1.2;}
+.sb-urole{font-size:.63rem;color:rgba(255,255,255,.4);}
+.sb-logout{margin-left:auto;width:28px;height:28px;border-radius:8px;background:rgba(255,255,255,.07);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background var(--t);color:rgba(255,255,255,.4);}
+.sb-logout:hover{background:rgba(255,255,255,.15);color:#fff;}
+.sb-logout svg{width:13px;height:13px;}
+
+.mob-btn{display:none;position:fixed;top:13px;left:13px;z-index:300;width:38px;height:38px;border-radius:10px;background:var(--primary);border:none;cursor:pointer;flex-direction:column;align-items:center;justify-content:center;gap:4px;box-shadow:0 4px 14px rgba(8,37,103,.3);}
+.mob-btn span{display:block;width:17px;height:2px;background:#fff;border-radius:2px;transition:all .3s;}
+.mob-btn.open span:first-child{transform:translateY(6px) rotate(45deg);}
+.mob-btn.open span:nth-child(2){opacity:0;}
+.mob-btn.open span:last-child{transform:translateY(-6px) rotate(-45deg);}
+.sb-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:190;}
+.sb-overlay.show{display:block;}
+
+/* ════════ MAIN ════════ */
+.main{margin-left:var(--sidebar-w);min-height:100vh;display:flex;flex-direction:column;}
+.topbar{position:sticky;top:0;z-index:100;background:rgba(240,238,255,.92);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);padding:0 26px;height:var(--nav-h);display:flex;align-items:center;justify-content:space-between;gap:14px;}
+.tb-title{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;color:var(--primary);}
+.tb-title em{font-style:italic;color:var(--accent);}
+.tb-right{display:flex;align-items:center;gap:8px;}
+.tb-search{display:flex;align-items:center;gap:8px;background:#fff;border:1.5px solid var(--border);border-radius:10px;padding:7px 12px;width:200px;transition:border-color var(--t);}
+.tb-search:focus-within{border-color:var(--accent);}
+.tb-search input{border:none;outline:none;background:transparent;font-family:'Poppins',sans-serif;font-size:.82rem;color:var(--primary);width:100%;}
+.tb-search input::placeholder{color:var(--muted);}
+.tb-btn{width:36px;height:36px;border-radius:9px;background:#fff;border:1.5px solid var(--border);cursor:pointer;display:flex;align-items:center;justify-content:center;position:relative;transition:all var(--t);}
+.tb-btn:hover{border-color:var(--accent);box-shadow:0 3px 10px rgba(124,58,237,.1);}
+.tb-dot{position:absolute;top:6px;right:6px;width:7px;height:7px;border-radius:50%;background:var(--red);border:1.5px solid var(--bg);}
+
+.content{flex:1;padding:24px 26px 60px;}
+.sec-page{display:none;}
+.sec-page.active{display:block;animation:secIn .38s cubic-bezier(.22,1,.36,1) both;}
+@keyframes secIn{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
+
+/* ════════ SHARED ════════ */
+.page-hdr{margin-bottom:22px;}
+.page-hdr h2{font-family:'Playfair Display',serif;font-size:1.65rem;font-weight:900;color:var(--primary);margin-bottom:3px;}
+.page-hdr h2 em{font-style:italic;color:var(--accent);}
+.page-hdr p{font-size:.85rem;color:var(--muted);}
+.card{background:var(--card);backdrop-filter:blur(12px);border:1.5px solid rgba(255,255,255,.88);border-radius:var(--radius);box-shadow:0 4px 18px rgba(91,33,182,.06);}
+.card-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+.card-title{font-size:.97rem;font-weight:700;color:var(--primary);}
+.see-all{font-size:.74rem;font-weight:600;color:var(--accent);cursor:pointer;text-decoration:none;transition:color var(--t);}
+.see-all:hover{color:var(--primary);}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px;}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
+.fu{animation:fadeUp .45s cubic-bezier(.22,1,.36,1) both;}
+
+/* stat card */
+.stat-card{padding:20px;display:flex;align-items:flex-start;gap:13px;transition:transform var(--t),box-shadow var(--t);}
+.stat-card:hover{transform:translateY(-3px);box-shadow:0 12px 30px rgba(91,33,182,.11);}
+.sico{width:46px;height:46px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:1.25rem;flex-shrink:0;}
+.si-p{background:rgba(124,58,237,.12);} .si-g{background:rgba(245,158,11,.12);} .si-gr{background:rgba(16,185,129,.12);} .si-pk{background:rgba(244,114,182,.12);} .si-cy{background:rgba(6,182,212,.12);}
+.stat-val{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:900;color:var(--primary);line-height:1;}
+.stat-lbl{font-size:.7rem;color:var(--muted);margin-top:3px;}
+.stat-chg{display:inline-flex;align-items:center;gap:2px;font-size:.65rem;font-weight:600;padding:2px 7px;border-radius:20px;margin-top:5px;}
+.up{background:rgba(16,185,129,.1);color:var(--green);} .dn{background:rgba(239,68,68,.1);color:var(--red);}
+
+/* pbar */
+.pbar-track{height:6px;background:rgba(8,37,103,.08);border-radius:3px;overflow:hidden;}
+.pbar-fill{height:100%;border-radius:3px;transition:width 1.1s cubic-bezier(.22,1,.36,1);}
+
+/* tag */
+.tag{display:inline-flex;font-size:.62rem;font-weight:600;padding:3px 8px;border-radius:8px;}
+.ta{background:rgba(124,58,237,.1);color:var(--accent);} .tg{background:rgba(16,185,129,.1);color:var(--green);} .tgold{background:rgba(245,158,11,.1);color:#d97706;} .tr{background:rgba(239,68,68,.1);color:var(--red);} .tpk{background:rgba(244,114,182,.1);color:var(--pink);}
+
+/* btn */
+.btn{display:inline-flex;align-items:center;gap:6px;font-family:'Poppins',sans-serif;font-size:.79rem;font-weight:600;border:none;border-radius:10px;cursor:pointer;padding:8px 15px;transition:transform var(--t),box-shadow var(--t);}
+.btn-p{background:linear-gradient(135deg,#7c3aed,#4338ca);color:#fff;box-shadow:0 3px 12px rgba(124,58,237,.35);}
+.btn-p:hover{transform:scale(1.03);box-shadow:0 5px 16px rgba(124,58,237,.45);}
+.btn-o{background:transparent;color:var(--muted);border:1.5px solid var(--border);}
+.btn-o:hover{border-color:var(--accent);color:var(--accent);}
+.btn-g{background:linear-gradient(135deg,#10b981,#059669);color:#fff;box-shadow:0 3px 10px rgba(16,185,129,.3);}
+.btn-g:hover{transform:scale(1.03);}
+.btn-sm{padding:6px 12px;font-size:.72rem;}
+
+/* ════════ DASHBOARD ════════ */
+.student-row{display:flex;align-items:center;gap:11px;padding:10px 0;border-bottom:1px solid var(--border);}
+.student-row:last-child{border-bottom:none;padding-bottom:0;}
+.stu-ava{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#ecdcfe,#ddd6fe);display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0;border:2px solid rgba(124,58,237,.15);}
+.stu-info{flex:1;min-width:0;}
+.stu-name{font-size:.82rem;font-weight:600;color:var(--primary);margin-bottom:1px;}
+.stu-sub{font-size:.68rem;color:var(--muted);}
+.stu-pct{font-size:.72rem;font-weight:700;color:var(--accent);white-space:nowrap;flex-shrink:0;}
+
+.upcoming-item{display:flex;align-items:center;gap:11px;padding:10px 14px;border-radius:12px;background:rgba(255,255,255,.7);border:1.5px solid var(--border);margin-bottom:8px;cursor:pointer;transition:transform var(--t),border-color var(--t);}
+.upcoming-item:hover{transform:translateX(3px);border-color:rgba(124,58,237,.25);}
+.upcoming-item.live{border-left:3px solid var(--red);}
+.ui-time{min-width:46px;text-align:center;background:rgba(124,58,237,.08);border-radius:9px;padding:6px 4px;flex-shrink:0;}
+.ui-h{font-family:'Playfair Display',serif;font-size:.95rem;font-weight:900;color:var(--accent);line-height:1;}
+.ui-p{font-size:.55rem;color:var(--muted);}
+.ui-info{flex:1;min-width:0;}
+.ui-title{font-size:.8rem;font-weight:600;color:var(--primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.ui-stu{font-size:.68rem;color:var(--muted);}
+.ui-status{font-size:.6rem;font-weight:700;padding:2px 8px;border-radius:20px;white-space:nowrap;flex-shrink:0;}
+.us-live{background:rgba(239,68,68,.1);color:var(--red);}
+.us-soon{background:rgba(245,158,11,.1);color:#d97706;}
+.us-today{background:rgba(124,58,237,.1);color:var(--accent);}
+.us-tmr{background:rgba(16,185,129,.1);color:var(--green);}
+
+/* earnings chart bars */
+.earn-bars{display:flex;align-items:flex-end;gap:8px;height:80px;margin-bottom:10px;}
+.eb-col{display:flex;flex-direction:column;align-items:center;gap:4px;flex:1;}
+.eb-bar{width:100%;border-radius:5px 5px 0 0;background:linear-gradient(180deg,#7c3aed,#4338ca);}
+.eb-lbl{font-size:.58rem;color:var(--muted);font-weight:500;}
+
+/* ════════ MY STUDENTS ════════ */
+.student-card{padding:18px;display:flex;gap:14px;align-items:flex-start;margin-bottom:14px;transition:transform var(--t),box-shadow var(--t);cursor:pointer;}
+.student-card:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(91,33,182,.1);}
+.sc-ava{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#ecdcfe,#ddd6fe);display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;border:2.5px solid rgba(255,255,255,.9);box-shadow:0 3px 12px rgba(91,33,182,.15);}
+.sc-info{flex:1;min-width:0;}
+.sc-name{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--primary);margin-bottom:2px;}
+.sc-sub{font-size:.73rem;color:var(--muted);margin-bottom:7px;}
+.sc-tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;}
+.sc-progress-row{display:flex;align-items:center;gap:10px;margin-bottom:5px;}
+.sc-pct{font-size:.7rem;font-weight:700;color:var(--primary);white-space:nowrap;min-width:30px;}
+.sc-last{font-size:.68rem;color:var(--muted);}
+.sc-actions{display:flex;flex-direction:column;gap:6px;flex-shrink:0;align-items:flex-end;}
+
+/* ════════ SCHEDULE ════════ */
+.cal-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+.cal-month{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;color:var(--primary);}
+.cal-nav{display:flex;gap:6px;}
+.cal-nav-btn{width:30px;height:30px;border-radius:8px;border:1.5px solid var(--border);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all var(--t);}
+.cal-nav-btn:hover{border-color:var(--accent);background:rgba(124,58,237,.06);}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;}
+.cal-day-lbl{text-align:center;font-size:.6rem;font-weight:700;color:var(--muted);padding-bottom:5px;text-transform:uppercase;letter-spacing:.5px;}
+.cal-day{aspect-ratio:1;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:500;color:var(--primary);cursor:pointer;transition:all var(--t);position:relative;border:1.5px solid transparent;}
+.cal-day:hover{background:rgba(124,58,237,.08);}
+.cal-day.other{color:rgba(8,37,103,.25);}
+.cal-day.today{background:linear-gradient(135deg,#7c3aed,#4338ca);color:#fff;font-weight:700;box-shadow:0 3px 10px rgba(124,58,237,.35);}
+.cal-day.has-event::after{content:'';position:absolute;bottom:3px;left:50%;transform:translateX(-50%);width:4px;height:4px;border-radius:50%;background:#ec4899;}
+.cal-day.today::after{background:#fff;}
+.cal-day.selected{border-color:var(--accent);background:rgba(124,58,237,.07);}
+.avail-slot{display:flex;align-items:center;gap:10px;padding:10px;background:rgba(16,185,129,.05);border:1px solid rgba(16,185,129,.2);border-radius:11px;margin-bottom:8px;}
+.avail-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.avail-booked{background:var(--accent);}
+.avail-free{background:var(--green);}
+.avail-blocked{background:rgba(8,37,103,.2);}
+.avail-info{flex:1;font-size:.8rem;font-weight:600;color:var(--primary);}
+.avail-sub{font-size:.68rem;color:var(--muted);}
+
+/* ════════ COURSES ════════ */
+.course-card-t{padding:20px;display:flex;gap:15px;align-items:flex-start;margin-bottom:16px;transition:transform var(--t),box-shadow var(--t);cursor:pointer;}
+.course-card-t:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(91,33,182,.11);}
+.cct-thumb{width:64px;height:64px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:1.8rem;flex-shrink:0;}
+.cct-body{flex:1;min-width:0;}
+.cct-title{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--primary);margin-bottom:3px;}
+.cct-meta{font-size:.73rem;color:var(--muted);margin-bottom:7px;}
+.cct-tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;}
+.cct-stats{display:flex;gap:18px;flex-wrap:wrap;}
+.cct-stat{font-size:.75rem;color:var(--muted);display:flex;align-items:center;gap:4px;}
+.cct-stat strong{color:var(--primary);font-weight:700;}
+.cct-actions{display:flex;gap:7px;flex-shrink:0;flex-direction:column;align-items:flex-end;}
+
+/* ════════ ASSIGNMENTS ════════ */
+.assign-card{padding:16px;margin-bottom:10px;display:flex;align-items:center;gap:13px;transition:transform var(--t);}
+.assign-card:hover{transform:translateX(3px);}
+.asgn-ico{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;}
+.asgn-info{flex:1;min-width:0;}
+.asgn-title{font-size:.84rem;font-weight:600;color:var(--primary);margin-bottom:2px;}
+.asgn-meta{font-size:.7rem;color:var(--muted);}
+.asgn-status{font-size:.62rem;font-weight:700;padding:3px 9px;border-radius:20px;white-space:nowrap;flex-shrink:0;}
+.as-pending{background:rgba(245,158,11,.1);color:#d97706;}
+.as-graded{background:rgba(16,185,129,.1);color:var(--green);}
+.as-overdue{background:rgba(239,68,68,.1);color:var(--red);}
+
+/* ════════ MESSAGES ════════ */
+.msg-layout{display:grid;grid-template-columns:270px 1fr;height:calc(100vh - 155px);min-height:480px;background:var(--card);border-radius:var(--radius);overflow:hidden;border:1.5px solid rgba(255,255,255,.88);box-shadow:0 4px 18px rgba(91,33,182,.06);}
+.msg-sb{border-right:1px solid var(--border);display:flex;flex-direction:column;}
+.msg-sb-hdr{padding:14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.msg-sb-title{font-size:.88rem;font-weight:700;color:var(--primary);}
+.msg-srch{padding:10px 12px;border-bottom:1px solid var(--border);}
+.msg-srch-inp{width:100%;padding:8px 12px;background:var(--bg);border:1.5px solid var(--border);border-radius:10px;font-family:'Poppins',sans-serif;font-size:.77rem;color:var(--primary);outline:none;}
+.msg-srch-inp::placeholder{color:var(--muted);}
+.msg-list{flex:1;overflow-y:auto;}
+.msg-contact{display:flex;gap:10px;padding:11px 13px;cursor:pointer;transition:background var(--t);border-bottom:1px solid rgba(8,37,103,.04);}
+.msg-contact:hover,.msg-contact.active{background:rgba(124,58,237,.07);}
+.mc-ava{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#ecdcfe,#ddd6fe);display:flex;align-items:center;justify-content:center;font-size:.95rem;flex-shrink:0;position:relative;}
+.mc-online{position:absolute;bottom:0;right:0;width:9px;height:9px;border-radius:50%;background:var(--green);border:2px solid #fff;}
+.mc-info{flex:1;min-width:0;}
+.mc-name{font-size:.78rem;font-weight:700;color:var(--primary);margin-bottom:2px;}
+.mc-last{font-size:.68rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.mc-meta{display:flex;flex-direction:column;align-items:flex-end;gap:3px;flex-shrink:0;}
+.mc-time{font-size:.6rem;color:var(--muted);}
+.mc-unread{width:17px;height:17px;border-radius:50%;background:var(--accent);color:#fff;font-size:.57rem;font-weight:700;display:flex;align-items:center;justify-content:center;}
+.msg-area{display:flex;flex-direction:column;}
+.msg-hdr{padding:13px 17px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:11px;}
+.msg-hdr-ava{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#ecdcfe,#ddd6fe);display:flex;align-items:center;justify-content:center;font-size:.95rem;flex-shrink:0;}
+.msg-hdr-name{font-size:.85rem;font-weight:700;color:var(--primary);}
+.msg-hdr-status{font-size:.68rem;color:var(--green);}
+.msg-hdr-acts{margin-left:auto;display:flex;gap:6px;}
+.msg-body{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:11px;background:rgba(240,238,255,.5);}
+.msg-bubble{max-width:72%;padding:10px 13px;border-radius:13px;font-size:.81rem;line-height:1.6;}
+.mb-them{background:#fff;color:var(--primary);border-radius:4px 13px 13px 13px;align-self:flex-start;box-shadow:0 2px 8px rgba(8,37,103,.07);}
+.mb-me{background:linear-gradient(135deg,#7c3aed,#4338ca);color:#fff;border-radius:13px 4px 13px 13px;align-self:flex-end;}
+.mb-time{font-size:.6rem;margin-top:4px;opacity:.6;}
+.msg-inp-area{padding:13px 17px;border-top:1px solid var(--border);display:flex;gap:9px;align-items:flex-end;}
+.msg-inp{flex:1;padding:10px 13px;background:var(--bg);border:1.5px solid var(--border);border-radius:11px;font-family:'Poppins',sans-serif;font-size:.82rem;color:var(--primary);outline:none;resize:none;max-height:80px;transition:border-color var(--t);}
+.msg-inp:focus{border-color:var(--accent);}
+.msg-send{padding:10px 15px;background:linear-gradient(135deg,#7c3aed,#4338ca);color:#fff;border:none;border-radius:10px;cursor:pointer;font-size:.79rem;font-weight:600;font-family:'Poppins',sans-serif;transition:transform var(--t),box-shadow var(--t);display:flex;align-items:center;gap:5px;flex-shrink:0;}
+.msg-send:hover{transform:scale(1.04);box-shadow:0 4px 12px rgba(124,58,237,.38);}
+
+/* ════════ EARNINGS ════════ */
+.earn-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:22px;}
+.earn-sum-card{padding:20px;text-align:center;}
+.esv{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:900;color:var(--primary);}
+.esl{font-size:.7rem;color:var(--muted);margin-top:3px;}
+.txn-table{width:100%;border-collapse:separate;border-spacing:0;}
+.txn-table th{font-size:.65rem;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--muted);padding:9px 14px;background:rgba(240,238,255,.8);text-align:left;}
+.txn-table th:first-child{border-radius:10px 0 0 10px;}
+.txn-table th:last-child{border-radius:0 10px 10px 0;}
+.txn-table td{padding:12px 14px;border-bottom:1px solid var(--border);font-size:.81rem;color:var(--primary);vertical-align:middle;}
+.txn-table tr:last-child td{border-bottom:none;}
+.txn-table tr:hover td{background:rgba(124,58,237,.02);}
+.txn-ico{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:.95rem;flex-shrink:0;}
+.txn-desc{font-weight:600;}
+.txn-sub{font-size:.68rem;color:var(--muted);}
+.txn-amt{font-family:'Playfair Display',serif;font-size:.93rem;font-weight:700;}
+.credit{color:var(--green);}
+.txn-st{display:inline-flex;font-size:.6rem;font-weight:700;padding:3px 8px;border-radius:20px;}
+.ts-ok{background:rgba(16,185,129,.1);color:var(--green);}
+.ts-pend{background:rgba(245,158,11,.1);color:#d97706;}
+
+/* ════════ PROFILE ════════ */
+.profile-hero-t{background:linear-gradient(135deg,#0d1b4b,#1a1340);border-radius:var(--radius);padding:26px;position:relative;overflow:hidden;margin-bottom:20px;}
+.profile-hero-t::before{content:'';position:absolute;top:-50px;right:-50px;width:180px;height:180px;background:radial-gradient(#7c3aed,transparent 70%);opacity:.25;border-radius:50%;}
+.profile-hero-t::after{content:'';position:absolute;bottom:-40px;left:-40px;width:150px;height:150px;background:radial-gradient(#ec4899,transparent 70%);opacity:.18;border-radius:50%;}
+.ph-top{display:flex;align-items:flex-start;gap:18px;position:relative;z-index:1;}
+.ph-ava{width:76px;height:76px;border-radius:50%;background:linear-gradient(135deg,#ecdcfe,#c4b5fd);display:flex;align-items:center;justify-content:center;font-size:1.9rem;flex-shrink:0;border:3px solid rgba(255,255,255,.22);box-shadow:0 5px 18px rgba(0,0,0,.2);}
+.ph-name{font-family:'Playfair Display',serif;font-size:1.45rem;font-weight:900;color:#fff;margin-bottom:3px;}
+.ph-joined{font-size:.73rem;color:rgba(255,255,255,.45);margin-bottom:8px;}
+.ph-tags{display:flex;gap:7px;flex-wrap:wrap;}
+.ptag{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.8);font-size:.62rem;font-weight:600;padding:3px 9px;border-radius:20px;}
+.ph-stats{display:grid;grid-template-columns:repeat(5,1fr);gap:0;border-top:1px solid rgba(255,255,255,.08);margin-top:18px;padding-top:18px;position:relative;z-index:1;}
+.ph-stat{text-align:center;padding:0 8px;border-right:1px solid rgba(255,255,255,.07);}
+.ph-stat:last-child{border-right:none;}
+.ph-sv{font-family:'Playfair Display',serif;font-size:1.35rem;font-weight:900;color:#fff;}
+.ph-sl{font-size:.62rem;color:rgba(255,255,255,.4);margin-top:1px;}
+.pf-group{display:flex;flex-direction:column;gap:5px;margin-bottom:14px;}
+.pf-label{font-size:.7rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;}
+.pf-input,.pf-select,.pf-textarea{width:100%;padding:11px 13px;background:rgba(255,255,255,.7);border:1.5px solid var(--border);border-radius:11px;font-family:'Poppins',sans-serif;font-size:.84rem;color:var(--primary);outline:none;transition:border-color var(--t),box-shadow var(--t);}
+.pf-input:focus,.pf-select:focus,.pf-textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(124,58,237,.1);background:#fff;}
+.pf-textarea{resize:none;min-height:80px;line-height:1.6;}
+
+/* ════════ REVIEWS ════════ */
+.review-card{padding:18px;margin-bottom:12px;transition:transform var(--t);}
+.review-card:hover{transform:translateY(-2px);}
+.rv-top{display:flex;align-items:flex-start;gap:12px;margin-bottom:10px;}
+.rv-ava{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#ecdcfe,#ddd6fe);display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;}
+.rv-name{font-size:.84rem;font-weight:700;color:var(--primary);margin-bottom:2px;}
+.rv-meta{font-size:.7rem;color:var(--muted);}
+.rv-stars{display:flex;gap:2px;margin-left:auto;}
+.rv-star{color:var(--gold);font-size:.82rem;}
+.rv-text{font-size:.82rem;color:var(--muted);line-height:1.68;font-style:italic;margin-bottom:10px;}
+.rv-course{font-size:.7rem;color:var(--accent);font-weight:600;}
+.rv-reply{background:rgba(124,58,237,.05);border:1px solid rgba(124,58,237,.12);border-radius:10px;padding:10px 13px;margin-top:8px;}
+.rv-reply-lbl{font-size:.62rem;font-weight:700;color:var(--accent);margin-bottom:5px;letter-spacing:.5px;text-transform:uppercase;}
+.rv-reply-text{font-size:.79rem;color:var(--muted);line-height:1.6;}
+
+/* ════════ ANALYTICS ════════ */
+.analytics-kpi{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:20px;}
+.akpi{padding:20px;text-align:center;}
+.akpi-val{font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:900;color:var(--primary);margin-bottom:4px;}
+.akpi-lbl{font-size:.72rem;color:var(--muted);}
+.akpi-bar{height:4px;border-radius:2px;margin-top:10px;background:linear-gradient(90deg,#7c3aed,#ec4899);}
+.heatmap-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:14px;}
+.hm-cell{aspect-ratio:1;border-radius:4px;cursor:default;transition:transform .15s;}
+.hm-cell:hover{transform:scale(1.2);}
+.hm-0{background:rgba(124,58,237,.05);}
+.hm-1{background:rgba(124,58,237,.2);}
+.hm-2{background:rgba(124,58,237,.4);}
+.hm-3{background:rgba(124,58,237,.65);}
+.hm-4{background:#7c3aed;}
+
+/* ════════ NOTIFICATIONS ════════ */
+.notif-panel{position:fixed;top:0;right:0;bottom:0;width:300px;background:#fff;box-shadow:-8px 0 30px rgba(8,37,103,.1);z-index:500;transform:translateX(100%);transition:transform .35s cubic-bezier(.22,1,.36,1);display:flex;flex-direction:column;}
+.notif-panel.open{transform:translateX(0);}
+.np-hdr{padding:17px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.np-title{font-family:'Playfair Display',serif;font-size:.97rem;font-weight:700;color:var(--primary);}
+.np-close{width:26px;height:26px;border:none;background:var(--bg);border-radius:7px;cursor:pointer;font-size:.9rem;display:flex;align-items:center;justify-content:center;}
+.np-list{flex:1;overflow-y:auto;padding:8px;}
+.np-item{display:flex;gap:10px;padding:10px;border-radius:10px;margin-bottom:4px;cursor:pointer;transition:background var(--t);}
+.np-item:hover,.np-item.unread{background:rgba(124,58,237,.05);}
+.np-ico{width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0;}
+.ni-p{background:rgba(124,58,237,.1);}.ni-g{background:rgba(245,158,11,.1);}.ni-gr{background:rgba(16,185,129,.1);}.ni-r{background:rgba(239,68,68,.1);}
+.np-text{flex:1;}
+.np-msg{font-size:.77rem;color:var(--primary);line-height:1.5;margin-bottom:2px;}
+.np-msg strong{font-weight:700;}
+.np-time{font-size:.62rem;color:var(--muted);}
+.np-dot{width:6px;height:6px;border-radius:50%;background:var(--accent);flex-shrink:0;margin-top:5px;}
+
+/* ════════ TOAST ════════ */
+#toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--primary);color:#fff;padding:11px 22px;border-radius:40px;font-size:.82rem;font-weight:500;box-shadow:0 8px 24px rgba(8,37,103,.3);transition:transform .4s cubic-bezier(.22,1,.36,1),opacity .4s;opacity:0;z-index:9999;white-space:nowrap;pointer-events:none;}
+
+/* ════════ RESPONSIVE ════════ */
+@media(max-width:1100px){.g4{grid-template-columns:repeat(2,1fr);}.earn-summary{grid-template-columns:1fr 1fr;}.ph-stats{grid-template-columns:repeat(3,1fr);}.analytics-kpi{grid-template-columns:1fr 1fr;}}
+@media(max-width:900px){.g3{grid-template-columns:1fr 1fr;}.msg-layout{grid-template-columns:1fr;}.msg-sb{display:none;}}
+@media(max-width:800px){.sidebar{transform:translateX(-100%);}.sidebar.open{transform:translateX(0);}.main{margin-left:0;}.mob-btn{display:flex;}.topbar{padding:0 14px;}.content{padding:14px 14px 50px;}.g2{grid-template-columns:1fr;}.g3{grid-template-columns:1fr;}}
+@media(max-width:480px){.g4{grid-template-columns:1fr;}.earn-summary{grid-template-columns:1fr;}.ph-stats{grid-template-columns:repeat(2,1fr);}.analytics-kpi{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+
+<!-- ════════ SIDEBAR ════════ -->
+<aside class="sidebar" id="sidebar">
+  <a class="sb-logo" href="../index.html">
+    <div class="sb-logo-mark">TT</div>
+    <div class="sb-brand">
+      <div class="sb-name">Tagore<span>Tunes</span></div>
+      <div class="sb-role-badge">🎓 Teacher Portal</div>
+    </div>
+  </a>
+  <nav class="sb-nav">
+    <div class="sb-sec">Main</div>
+    <button class="sb-item active" data-sec="dashboard">
+      <svg class="sb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      Dashboard
+    </button>
+    <button class="sb-item" data-sec="students">
+      <svg class="sb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      My Students
+      <span class="sb-badge">12</span>
+    </button>
+    <button class="sb-item" data-sec="schedule">
+      <svg class="sb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      Schedule
+    </button>
+    <div class="sb-sec">Teaching</div>
+    <button class="sb-item" data-sec="courses">
+      <svg class="sb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+      My Courses
+      <span class="sb-badge">3</span>
+    </button>
+    <button class="sb-item" data-sec="assignments">
+      <svg class="sb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      Assignments
+      <span class="sb-badge">5</span>
+    </button>
+    <div class="sb-sec">Communication</div>
+    <button class="sb-item" data-sec="messages">
+      <svg class="sb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      Messages
+      <span class="sb-badge">3</span>
+    </button>
+    <div class="sb-sec">Finance & Growth</div>
+    <button class="sb-item" data-sec="earnings">
+      <svg class="sb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+      Earnings
+    </button>
+    <button class="sb-item" data-sec="reviews">
+      <svg class="sb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+      Reviews
+    </button>
+    <button class="sb-item" data-sec="analytics">
+      <svg class="sb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+      Analytics
+    </button>
+    <div class="sb-sec">Account</div>
+    <button class="sb-item" data-sec="profile">
+      <svg class="sb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      Profile
+    </button>
+  </nav>
+  <div class="sb-user">
+    <div class="sb-avatar">🎸</div>
+    <div><div class="sb-uname">Arjun Mehta</div><div class="sb-urole">Guitar · Verified Teacher</div></div>
+    <button class="sb-logout" onclick="window.location.href='teacher-login.html'" title="Sign Out">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+    </button>
+  </div>
+</aside>
+
+<div class="sb-overlay" id="sbOverlay"></div>
+<button class="mob-btn" id="mobBtn"><span></span><span></span><span></span></button>
+
+<!-- ════════ MAIN ════════ -->
+<div class="main">
+  <div class="topbar">
+    <div class="tb-title" id="tbTitle">Good Morning, <em>Arjun</em> 👋</div>
+    <div class="tb-right">
+      <div class="tb-search">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6b7b9c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" placeholder="Search students, courses…">
+      </div>
+      <button class="tb-btn" id="notifBtn" title="Notifications">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        <span class="tb-dot" id="notifDot"></span>
+      </button>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- ══ DASHBOARD ══ -->
+    <div class="sec-page active" id="sec-dashboard">
+      <div class="page-hdr"><h2>Teacher <em>Dashboard</em></h2><p>Tuesday, 06 May 2026 · 3 classes today · 5 assignments to review</p></div>
+      <div class="g4" style="margin-bottom:18px;" id="dashStats"></div>
+      <div class="g2" style="margin-bottom:18px;">
+        <div>
+          <div class="card" style="padding:20px;margin-bottom:18px;">
+            <div class="card-hdr"><div class="card-title">👥 Active Students</div><span class="see-all" onclick="switchSec('students')">View all →</span></div>
+            <div id="dashStudents"></div>
+          </div>
+          <div class="card" style="padding:20px;">
+            <div class="card-hdr"><div class="card-title">💰 Earnings This Month</div></div>
+            <div class="earn-bars" id="dashEarnBars"></div>
+            <div style="font-size:.8rem;color:var(--muted);">Total: <strong style="color:var(--primary);font-size:.95rem;" id="dashEarnTotal"></strong> · <span style="color:var(--green);font-weight:600;">↑ 18% vs last month</span></div>
+          </div>
+        </div>
+        <div>
+          <div class="card" style="padding:20px;margin-bottom:18px;">
+            <div class="card-hdr"><div class="card-title">📅 Today's Classes</div><span class="see-all" onclick="switchSec('schedule')">Full schedule →</span></div>
+            <div id="dashUpcoming"></div>
+          </div>
+          <div class="card" style="padding:20px;">
+            <div class="card-hdr"><div class="card-title">📝 Pending Reviews</div><span class="see-all" onclick="switchSec('assignments')">See all →</span></div>
+            <div id="dashPending"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ STUDENTS ══ -->
+    <div class="sec-page" id="sec-students">
+      <div class="page-hdr"><h2>My <em>Students</em></h2><p>Track progress, attendance, and performance of all your enrolled students.</p></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px;" id="stuFilter"></div>
+      <div id="studentsGrid"></div>
+    </div>
+
+    <!-- ══ SCHEDULE ══ -->
+    <div class="sec-page" id="sec-schedule">
+      <div class="page-hdr"><h2>My <em>Schedule</em></h2><p>Manage your availability, view upcoming classes, and set blocked times.</p></div>
+      <div class="g2" style="align-items:start;">
+        <div class="card" style="padding:20px;">
+          <div class="cal-hdr">
+            <div class="cal-month" id="calMonth"></div>
+            <div class="cal-nav">
+              <button class="cal-nav-btn" onclick="changeMonth(-1)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg></button>
+              <button class="cal-nav-btn" onclick="changeMonth(1)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></button>
+            </div>
+          </div>
+          <div class="cal-grid" id="calGrid"></div>
+          <div style="display:flex;gap:14px;margin-top:14px;flex-wrap:wrap;">
+            <div style="display:flex;align-items:center;gap:6px;font-size:.7rem;color:var(--muted);"><div style="width:10px;height:10px;border-radius:50%;background:var(--accent);"></div>Booked</div>
+            <div style="display:flex;align-items:center;gap:6px;font-size:.7rem;color:var(--muted);"><div style="width:10px;height:10px;border-radius:50%;background:var(--green);"></div>Available</div>
+            <div style="display:flex;align-items:center;gap:6px;font-size:.7rem;color:var(--muted);"><div style="width:10px;height:10px;border-radius:50%;background:rgba(8,37,103,.15);"></div>Blocked</div>
+          </div>
+        </div>
+        <div>
+          <div style="font-size:.82rem;color:var(--muted);margin-bottom:12px;" id="selDayLabel">Schedule for <strong>Today</strong></div>
+          <div id="scheduleSlots"></div>
+          <div style="margin-top:14px;">
+            <button class="btn btn-p" style="width:100%;" onclick="showToast('⚙️ Availability settings opening…')">⚙️ Manage Availability</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ COURSES ══ -->
+    <div class="sec-page" id="sec-courses">
+      <div class="page-hdr"><h2>My <em>Courses</em></h2><p>Create, manage, and publish your courses. Track enrollments and lesson progress.</p></div>
+      <div style="display:flex;justify-content:flex-end;margin-bottom:18px;">
+        <button class="btn btn-p" onclick="showToast('✏️ Course builder opening…')">+ Create New Course</button>
+      </div>
+      <div id="coursesGrid"></div>
+    </div>
+
+    <!-- ══ ASSIGNMENTS ══ -->
+    <div class="sec-page" id="sec-assignments">
+      <div class="page-hdr"><h2>Assignments &amp; <em>Feedback</em></h2><p>Create assignments, review student submissions, and provide detailed feedback.</p></div>
+      <div style="display:flex;justify-content:flex-end;margin-bottom:18px;">
+        <button class="btn btn-p" onclick="showToast('📝 Assignment creator opening…')">+ New Assignment</button>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;" id="asnFilter"></div>
+      <div class="card" style="padding:20px;" id="assignmentsList"></div>
+    </div>
+
+    <!-- ══ MESSAGES ══ -->
+    <div class="sec-page" id="sec-messages">
+      <div class="page-hdr"><h2>Your <em>Messages</em></h2><p>Communicate with your students — share notes, recordings, and feedback.</p></div>
+      <div class="msg-layout" id="msgLayout"></div>
+    </div>
+
+    <!-- ══ EARNINGS ══ -->
+    <div class="sec-page" id="sec-earnings">
+      <div class="page-hdr"><h2>Earnings &amp; <em>Payouts</em></h2><p>Track your income, manage payout preferences, and download invoices.</p></div>
+      <div class="earn-summary" id="earnSummary"></div>
+      <div class="card" style="padding:22px;">
+        <div class="card-hdr" style="margin-bottom:16px;"><div class="card-title">Transaction History</div><button class="btn btn-o btn-sm" onclick="showToast('📄 Downloading statement…')">Download PDF</button></div>
+        <div style="overflow-x:auto;"><table class="txn-table" id="earnTable"></table></div>
+      </div>
+    </div>
+
+    <!-- ══ REVIEWS ══ -->
+    <div class="sec-page" id="sec-reviews">
+      <div class="page-hdr"><h2>Student <em>Reviews</em></h2><p>See what your students say about your teaching — and respond to build trust.</p></div>
+      <div class="g2" style="align-items:start;margin-bottom:20px;">
+        <div class="card" style="padding:22px;text-align:center;">
+          <div style="font-size:3.5rem;font-weight:900;font-family:'Playfair Display',serif;color:var(--primary);line-height:1;">4.9</div>
+          <div style="color:var(--gold);font-size:1.2rem;letter-spacing:2px;margin:6px 0;">★★★★★</div>
+          <div style="font-size:.78rem;color:var(--muted);">Based on 312 reviews</div>
+          <div style="margin-top:18px;display:flex;flex-direction:column;gap:8px;" id="ratingBars"></div>
+        </div>
+        <div class="card" style="padding:22px;">
+          <div class="card-hdr" style="margin-bottom:14px;"><div class="card-title">Rating Breakdown</div></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;" id="ratingKpis"></div>
+        </div>
+      </div>
+      <div id="reviewsList"></div>
+    </div>
+
+    <!-- ══ ANALYTICS ══ -->
+    <div class="sec-page" id="sec-analytics">
+      <div class="page-hdr"><h2>Teaching <em>Analytics</em></h2><p>Understand your teaching patterns, student engagement, and performance trends.</p></div>
+      <div class="analytics-kpi" id="analyticsKpis"></div>
+      <div class="g2" style="margin-bottom:20px;">
+        <div class="card" style="padding:20px;">
+          <div class="card-hdr" style="margin-bottom:16px;"><div class="card-title">📅 Student Attendance Heatmap</div></div>
+          <div style="display:flex;gap:6px;margin-bottom:8px;font-size:.62rem;color:var(--muted);" id="heatmapDays"></div>
+          <div class="heatmap-grid" id="heatmap"></div>
+          <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;">
+            <div style="display:flex;align-items:center;gap:4px;font-size:.65rem;color:var(--muted);"><div class="hm-cell hm-0" style="width:12px;height:12px;aspect-ratio:unset;"></div>0 classes</div>
+            <div style="display:flex;align-items:center;gap:4px;font-size:.65rem;color:var(--muted);"><div class="hm-cell hm-2" style="width:12px;height:12px;aspect-ratio:unset;"></div>Some</div>
+            <div style="display:flex;align-items:center;gap:4px;font-size:.65rem;color:var(--muted);"><div class="hm-cell hm-4" style="width:12px;height:12px;aspect-ratio:unset;"></div>Full</div>
+          </div>
+        </div>
+        <div class="card" style="padding:20px;">
+          <div class="card-hdr" style="margin-bottom:16px;"><div class="card-title">📈 Monthly Revenue Trend</div></div>
+          <div class="earn-bars" style="height:120px;" id="revenueBars"></div>
+          <div style="display:flex;justify-content:space-between;font-size:.62rem;color:var(--muted);" id="revenueLabels"></div>
+        </div>
+      </div>
+      <div class="card" style="padding:20px;">
+        <div class="card-hdr" style="margin-bottom:14px;"><div class="card-title">🏆 Top Performing Students</div></div>
+        <div id="topStudents"></div>
+      </div>
+    </div>
+
+    <!-- ══ PROFILE ══ -->
+    <div class="sec-page" id="sec-profile">
+      <div class="page-hdr"><h2>My <em>Profile</em></h2><p>Manage your professional portfolio, credentials, and account settings.</p></div>
+      <div class="profile-hero-t" id="profileHero"></div>
+      <div class="g2" style="align-items:start;">
+        <div class="card" style="padding:22px;">
+          <div class="card-hdr" style="margin-bottom:16px;"><div class="card-title">Professional Information</div></div>
+          <div id="profileForm"></div>
+          <div style="margin-top:16px;display:flex;gap:10px;">
+            <button class="btn btn-p" onclick="showToast('✅ Profile updated!')">Save Changes</button>
+            <button class="btn btn-o" onclick="showToast('Changes discarded')">Cancel</button>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:16px;" id="profileSideCols"></div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+
+<!-- Notifications Panel -->
+<div class="notif-panel" id="notifPanel">
+  <div class="np-hdr"><div class="np-title">Notifications</div><button class="np-close" onclick="closeNotif()">✕</button></div>
+  <div class="np-list" id="npList"></div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+/* ════════════ DATA ════════════ */
+const STUDENTS=[
+  {id:1,name:'Aryan Singh',emoji:'🎵',course:'Guitar Mastery',progress:62,lastSeen:'Today 10:00 AM',status:'active',attendance:92,rating:4.9},
+  {id:2,name:'Sneha Kulkarni',emoji:'😊',course:'Guitar Mastery',progress:45,lastSeen:'Yesterday',status:'active',attendance:85,rating:4.8},
+  {id:3,name:'Rahul Mehta',emoji:'🙂',course:'Guitar Mastery',progress:88,lastSeen:'Today',status:'active',attendance:97,rating:5.0},
+  {id:4,name:'Priya Nair',emoji:'😄',course:'Advanced Fingerstyle',progress:34,lastSeen:'3 days ago',status:'lagging',attendance:68,rating:4.5},
+  {id:5,name:'Vikram Das',emoji:'🧑',course:'Guitar Mastery',progress:71,lastSeen:'Today',status:'active',attendance:90,rating:4.7},
+];
+const UPCOMING=[
+  {title:'Guitar — Barre Chords',student:'Aryan Singh',time:'10:00',period:'AM',status:'live',emoji:'🎸'},
+  {title:'Guitar — Chord Transitions',student:'Sneha Kulkarni',time:'12:00',period:'PM',status:'today',emoji:'🎸'},
+  {title:'Advanced Fingerpicking',student:'Rahul Mehta',time:'4:00',period:'PM',status:'today',emoji:'🎸'},
+  {title:'Guitar Basics — Week 3',student:'Priya Nair',time:'10:00',period:'AM',status:'tomorrow',emoji:'🎸'},
+];
+const COURSES=[
+  {id:1,title:'Guitar Mastery: Zero to Hero',emoji:'🎸',bg:'linear-gradient(135deg,#fef3c7,#fde68a)',color:'#f59e0b',students:38,lessons:48,completedLessons:30,mode:'Online',level:'Beginner',rating:4.9,revenue:'₹1,89,962',status:'active'},
+  {id:2,title:'Advanced Fingerstyle Guitar',emoji:'🎸',bg:'linear-gradient(135deg,#ede9fe,#ddd6fe)',color:'#7c3aed',students:14,lessons:36,completedLessons:22,mode:'Online',level:'Advanced',rating:4.9,revenue:'₹76,986',status:'active'},
+  {id:3,title:'Guitar for Absolute Beginners',emoji:'🎸',bg:'linear-gradient(135deg,#d1fae5,#a7f3d0)',color:'#10b981',students:8,lessons:24,completedLessons:8,mode:'Hybrid',level:'Beginner',rating:0,revenue:'₹35,992',status:'draft'},
+];
+const ASSIGNMENTS=[
+  {id:1,title:'Record Barre Chord progression — F, Bb, C',student:'Aryan Singh',studentEmoji:'🎵',course:'Guitar Mastery',due:'Due Today',status:'pending',icon:'🎸',iconBg:'rgba(245,158,11,.1)'},
+  {id:2,title:'Fingerpicking pattern — Travis style exercise',student:'Rahul Mehta',studentEmoji:'🙂',course:'Advanced Fingerstyle',due:'Submitted Today',status:'review',icon:'🎸',iconBg:'rgba(124,58,237,.1)'},
+  {id:3,title:'Chord transitions — G to C to D at 80 BPM',student:'Sneha Kulkarni',studentEmoji:'😊',course:'Guitar Mastery',due:'Submitted Yesterday',status:'review',icon:'🎸',iconBg:'rgba(16,185,129,.1)'},
+  {id:4,title:'Practice C major scale — 3 octaves',student:'Priya Nair',studentEmoji:'😄',course:'Guitar Mastery',due:'Overdue — 2 days',status:'overdue',icon:'🎸',iconBg:'rgba(239,68,68,.1)'},
+  {id:5,title:'Record improvisation over blues backing track',student:'Vikram Das',studentEmoji:'🧑',course:'Advanced Fingerstyle',due:'Due Tomorrow',status:'pending',icon:'🎸',iconBg:'rgba(6,182,212,.1)'},
+];
+const MESSAGES=[
+  {id:1,name:'Aryan Singh',emoji:'🎵',role:'Student · Guitar Mastery',online:true,time:'2m',unread:2,msgs:[
+    {from:'them',text:'Sir, I have been practising the F barre chord all week. Can you check my recording?',time:'10:05 AM'},
+    {from:'me',text:'Great work, Aryan! Send it over and I\'ll give you timestamped feedback before class.',time:'10:12 AM'},
+    {from:'them',text:'Uploaded to the assignments section. Thank you sir!',time:'10:15 AM'},
+  ]},
+  {id:2,name:'Sneha Kulkarni',emoji:'😊',role:'Student · Guitar Mastery',online:true,time:'1h',unread:1,msgs:[
+    {from:'them',text:'Sir, I\'m struggling with the G to D chord transition. My ring finger keeps slipping.',time:'9:00 AM'},
+    {from:'me',text:'That\'s a very common issue at your stage! Focus on anchoring your index finger on the 2nd string. I\'ll show you a drill tomorrow.',time:'9:10 AM'},
+  ]},
+  {id:3,name:'Rahul Mehta',emoji:'🙂',role:'Student · Advanced Fingerstyle',online:false,time:'Yesterday',unread:0,msgs:[
+    {from:'them',text:'Sir, I completed the Travis picking exercise. Feels much more natural now!',time:'Yesterday'},
+    {from:'me',text:'Excellent, Rahul! Your consistency is really showing. Let\'s move to alternating bass patterns next class.',time:'Yesterday'},
+  ]},
+];
+const EARNINGS_TXN=[
+  {desc:'Guitar Mastery — Aryan Singh',sub:'Session fee · May 6',icon:'🎸',iconBg:'rgba(245,158,11,.1)',date:'May 6, 2026',amount:'₹800',credit:true,status:'success'},
+  {desc:'Advanced Fingerstyle — Rahul',sub:'Session fee · May 5',icon:'🎸',iconBg:'rgba(124,58,237,.1)',date:'May 5, 2026',amount:'₹800',credit:true,status:'success'},
+  {desc:'Guitar Mastery — Sneha',sub:'Session fee · May 5',icon:'🎸',iconBg:'rgba(16,185,129,.1)',date:'May 5, 2026',amount:'₹800',credit:true,status:'success'},
+  {desc:'Monthly Payout',sub:'Apr 2026 — 42 sessions',icon:'💰',iconBg:'rgba(16,185,129,.1)',date:'May 1, 2026',amount:'₹33,600',credit:true,status:'success'},
+  {desc:'Platform Fee',sub:'Apr 2026 — 15%',icon:'📊',iconBg:'rgba(239,68,68,.1)',date:'May 1, 2026',amount:'₹5,040',credit:false,status:'success'},
+];
+const REVIEWS=[
+  {name:'Aryan Singh',emoji:'🎵',rating:5,date:'May 3, 2026',course:'Guitar Mastery',text:'Arjun sir is incredibly patient. I went from zero chords to playing full songs in 2 months. His breakdown of theory is genius — I finally understand what I\'m playing.',reply:'Thank you so much, Aryan! Your dedication and practice every day is what made this possible. Keep it up!'},
+  {name:'Rahul Mehta',emoji:'🙂',rating:5,date:'Apr 28, 2026',course:'Advanced Fingerstyle',text:'Best guitar teacher I have ever had. He doesn\'t just show you what to play — he explains the music theory behind everything. Changed how I think about the guitar entirely.',reply:'That means a lot, Rahul. Understanding the "why" is what separates good players from great ones. Excited to see where you go next!'},
+  {name:'Sneha Kulkarni',emoji:'😊',rating:4,date:'Apr 20, 2026',course:'Guitar Mastery',text:'Really good teacher — very patient and encouraging. Would love slightly more structured homework so I can practise more systematically between classes.',reply:null},
+];
+const NOTIFS=[
+  {icon:'📝',bg:'ni-g',msg:'<strong>Rahul Mehta</strong> submitted the Travis picking assignment. Review pending.',time:'5 min ago',unread:true},
+  {icon:'💬',bg:'ni-p',msg:'<strong>Aryan Singh</strong> sent you a message about today\'s class.',time:'22 min ago',unread:true},
+  {icon:'⭐',bg:'ni-g',msg:'<strong>Sneha Kulkarni</strong> left you a 4-star review.',time:'1 hr ago',unread:true},
+  {icon:'📅',bg:'ni-r',msg:'Class with <strong>Priya Nair</strong> is in 30 minutes.',time:'2 hrs ago',unread:false},
+  {icon:'💰',bg:'ni-gr',msg:'Your April payout of <strong>₹33,600</strong> has been processed.',time:'Yesterday',unread:false},
+];
+
+/* ════════ STATE ════════ */
+let activeMsgId=1;
+let stuFilter='all';
+let asnFilter='all';
+let calDate=new Date(2026,4,6);
+let selectedDay=6;
+
+/* ════════ RENDER: DASHBOARD ════════ */
+function renderDashboard(){
+  const stats=[
+    {icon:'👥',bg:'si-p',val:'12',lbl:'Total Students',chg:'↑ 2 this month',up:true},
+    {icon:'💰',bg:'si-gr',val:'₹28.4k',lbl:'This Month\'s Earnings',chg:'↑ 18% vs Apr',up:true},
+    {icon:'⭐',bg:'si-g',val:'4.9',lbl:'Average Rating',chg:'↑ 0.1 this month',up:true},
+    {icon:'📅',bg:'si-pk',val:'42',lbl:'Sessions This Month',chg:'↑ 6 vs last',up:true},
+  ];
+  document.getElementById('dashStats').innerHTML=stats.map((s,i)=>`
+    <div class="card stat-card fu" style="animation-delay:${i*.07}s">
+      <div class="sico ${s.bg}">${s.icon}</div>
+      <div><div class="stat-val">${s.val}</div><div class="stat-lbl">${s.lbl}</div><span class="stat-chg ${s.up?'up':'dn'}">${s.chg}</span></div>
+    </div>`).join('');
+
+  document.getElementById('dashStudents').innerHTML=STUDENTS.slice(0,4).map(s=>`
+    <div class="student-row">
+      <div class="stu-ava">${s.emoji}</div>
+      <div class="stu-info">
+        <div class="stu-name">${s.name}</div>
+        <div class="stu-sub">${s.course} · Last seen: ${s.lastSeen}</div>
+      </div>
+      <div class="stu-pct">${s.progress}%</div>
+    </div>`).join('');
+
+  const months=['Jan','Feb','Mar','Apr','May'];
+  const vals=[18,24,21,28,28];
+  const maxV=Math.max(...vals);
+  document.getElementById('dashEarnBars').innerHTML=vals.map((v,i)=>`
+    <div class="eb-col">
+      <div class="eb-bar" id="deb${i}" style="height:0;"></div>
+      <div class="eb-lbl">${months[i]}</div>
+    </div>`).join('');
+  document.getElementById('dashEarnTotal').textContent='₹28,400';
+  setTimeout(()=>vals.forEach((v,i)=>{const el=document.getElementById('deb'+i);if(el){el.style.transition='height .9s cubic-bezier(.22,1,.36,1)';el.style.height=(v/maxV*72)+'px';}}),400);
+
+  const sMap={live:{cls:'us-live',lbl:'🔴 Live'},today:{cls:'us-today',lbl:'Today'},tomorrow:{cls:'us-tmr',lbl:'Tomorrow'}};
+  document.getElementById('dashUpcoming').innerHTML=UPCOMING.map(u=>{
+    const s=sMap[u.status]||sMap.today;
+    return`<div class="upcoming-item${u.status==='live'?' live':''}" onclick="showToast('${u.status==='live'?'🔴 Joining live class…':'📅 Viewing class details…'}')">
+      <div class="ui-time"><div class="ui-h">${u.time}</div><div class="ui-p">${u.period}</div></div>
+      <div class="ui-info"><div class="ui-title">${u.emoji} ${u.title}</div><div class="ui-stu">Student: ${u.student}</div></div>
+      <span class="ui-status ${s.cls}">${s.lbl}</span>
+    </div>`;}).join('');
+
+  document.getElementById('dashPending').innerHTML=ASSIGNMENTS.filter(a=>a.status==='review').map(a=>`
+    <div class="student-row">
+      <div class="stu-ava">${a.studentEmoji}</div>
+      <div class="stu-info">
+        <div class="stu-name">${a.student}</div>
+        <div class="stu-sub" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${a.title}</div>
+      </div>
+      <button class="btn btn-p btn-sm" onclick="switchSec('assignments');showToast('Opening submission…')">Review</button>
+    </div>`).join('');
+}
+
+/* ════════ RENDER: STUDENTS ════════ */
+function renderStudents(){
+  const filters=['all','active','lagging'];
+  document.getElementById('stuFilter').innerHTML=filters.map(f=>`<button class="btn${f===stuFilter?' btn-p':' btn-o'}" onclick="setStuFilter('${f}')">${f==='all'?'All Students':f.charAt(0).toUpperCase()+f.slice(1)}</button>`).join('');
+  const filtered=STUDENTS.filter(s=>stuFilter==='all'||s.status===stuFilter);
+  document.getElementById('studentsGrid').innerHTML=filtered.map((s,i)=>`
+    <div class="card student-card fu" style="animation-delay:${i*.08}s">
+      <div class="sc-ava">${s.emoji}</div>
+      <div class="sc-info">
+        <div class="sc-name">${s.name}</div>
+        <div class="sc-sub">📚 ${s.course} · Last seen: ${s.lastSeen}</div>
+        <div class="sc-tags">
+          <span class="tag ${s.status==='active'?'tg':'tr'}">${s.status==='active'?'Active':'Needs Attention'}</span>
+          <span class="tag ta">Attendance: ${s.attendance}%</span>
+          <span class="tag tgold">⭐ ${s.rating}</span>
+        </div>
+        <div class="sc-progress-row">
+          <div class="pbar-track" style="flex:1;"><div class="pbar-fill" id="scp${s.id}" style="width:0%;background:${s.status==='active'?'linear-gradient(90deg,#7c3aed,#4338ca)':'linear-gradient(90deg,#ef4444,#dc2626)'}"></div></div>
+          <span class="sc-pct">${s.progress}%</span>
+        </div>
+        <div class="sc-last">Progress: ${s.progress} of 48 lessons</div>
+      </div>
+      <div class="sc-actions">
+        <button class="btn btn-p btn-sm" onclick="switchSec('messages');showToast('💬 Opening chat with ${s.name}')">Message</button>
+        <button class="btn btn-o btn-sm" onclick="showToast('📊 Opening ${s.name}\'s report…')">Report</button>
+      </div>
+    </div>`).join('');
+  setTimeout(()=>filtered.forEach(s=>{const el=document.getElementById('scp'+s.id);if(el)el.style.width=s.progress+'%';}),300);
+}
+function setStuFilter(f){stuFilter=f;renderStudents();}
+
+/* ════════ RENDER: SCHEDULE ════════ */
+const EVENT_DAYS=[5,6,9,12,13,16,19,20,23,26];
+function renderCalendar(){
+  const y=calDate.getFullYear(),m=calDate.getMonth();
+  const mNames=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  document.getElementById('calMonth').textContent=mNames[m]+' '+y;
+  const firstDay=(new Date(y,m,1).getDay()+6)%7;
+  const dim=new Date(y,m+1,0).getDate();
+  const prevDim=new Date(y,m,0).getDate();
+  const today=new Date();
+  const dlbls=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  let h=dlbls.map(d=>`<div class="cal-day-lbl">${d}</div>`).join('');
+  for(let i=0;i<firstDay;i++)h+=`<div class="cal-day other">${prevDim-firstDay+1+i}</div>`;
+  for(let d=1;d<=dim;d++){
+    const isToday=d===today.getDate()&&m===today.getMonth()&&y===today.getFullYear();
+    const hasEvent=EVENT_DAYS.includes(d);
+    h+=`<div class="cal-day${isToday?' today':''}${hasEvent?' has-event':''}${d===selectedDay&&!isToday?' selected':''}" onclick="selectDay(${d})">${d}</div>`;
+  }
+  const rem=(7-((firstDay+dim)%7))%7;
+  for(let i=1;i<=rem;i++)h+=`<div class="cal-day other">${i}</div>`;
+  document.getElementById('calGrid').innerHTML=h;
+  renderScheduleSlots();
+}
+function changeMonth(d){calDate.setMonth(calDate.getMonth()+d);renderCalendar();}
+function selectDay(d){selectedDay=d;renderCalendar();}
+function renderScheduleSlots(){
+  const daySlots={5:[
+    {time:'10:00 AM',student:'Aryan Singh',course:'Guitar Mastery',type:'booked',live:true},
+    {time:'12:00 PM',student:'Sneha Kulkarni',course:'Guitar Mastery',type:'booked',live:false},
+    {time:'2:00 PM',student:'',course:'',type:'free',live:false},
+    {time:'4:00 PM',student:'Rahul Mehta',course:'Advanced Fingerstyle',type:'booked',live:false},
+  ],6:[
+    {time:'10:00 AM',student:'Vikram Das',course:'Guitar Mastery',type:'booked',live:false},
+    {time:'12:00 PM',student:'',course:'',type:'free',live:false},
+    {time:'3:00 PM',student:'',course:'',type:'blocked',live:false},
+  ]};
+  const slots=daySlots[selectedDay]||[];
+  document.getElementById('selDayLabel').innerHTML=`Schedule for <strong>May ${selectedDay}, 2026</strong>`;
+  document.getElementById('scheduleSlots').innerHTML=slots.length?slots.map(sl=>`
+    <div class="avail-slot">
+      <div class="avail-dot ${sl.type==='booked'?'avail-booked':sl.type==='free'?'avail-free':'avail-blocked'}"></div>
+      <div class="avail-info">
+        <div>${sl.time}${sl.type==='booked'?` — <strong>${sl.student}</strong>`:sl.type==='free'?' — Available':' — Blocked'}</div>
+        <div class="avail-sub">${sl.course||sl.type}</div>
+      </div>
+      ${sl.live?'<button class="btn btn-p btn-sm" onclick="showToast(\'🔴 Joining live class…\')">Join Now</button>':
+        sl.type==='free'?'<button class="btn btn-g btn-sm" onclick="showToast(\'Slot opened for booking\')">Open</button>':''}
+    </div>`).join(''):`<div style="text-align:center;padding:24px;color:var(--muted);font-size:.84rem;">📭 No classes scheduled.</div>`;
+}
+
+/* ════════ RENDER: COURSES ════════ */
+function renderCourses(){
+  document.getElementById('coursesGrid').innerHTML=COURSES.map((c,i)=>`
+    <div class="card course-card-t fu" style="animation-delay:${i*.08}s">
+      <div class="cct-thumb" style="background:${c.bg}">${c.emoji}</div>
+      <div class="cct-body">
+        <div class="cct-title">${c.title}</div>
+        <div class="cct-meta">${c.level} · ${c.mode} · ${c.status==='active'?'Published':'Draft'}</div>
+        <div class="cct-tags">
+          <span class="tag ${c.status==='active'?'tg':'tgold'}">${c.status==='active'?'✓ Active':'✏️ Draft'}</span>
+          <span class="tag ta">${c.students} students</span>
+          ${c.rating?`<span class="tag tgold">⭐ ${c.rating}</span>`:'<span class="tag tr">Not rated yet</span>'}
+        </div>
+        <div class="cct-stats">
+          <span class="cct-stat">📚 <strong>${c.completedLessons}/${c.lessons}</strong> lessons done</span>
+          <span class="cct-stat">💰 <strong>${c.revenue}</strong> earned</span>
+        </div>
+      </div>
+      <div class="cct-actions">
+        <button class="btn btn-p btn-sm" onclick="showToast('✏️ Opening course editor…')">Edit</button>
+        <button class="btn btn-o btn-sm" onclick="showToast('📊 Opening analytics…')">Analytics</button>
+      </div>
+    </div>`).join('');
+}
+
+/* ════════ RENDER: ASSIGNMENTS ════════ */
+function renderAssignments(){
+  const filters=['all','pending','review','overdue'];
+  document.getElementById('asnFilter').innerHTML=filters.map(f=>`<button class="btn${f===asnFilter?' btn-p':' btn-o'}" onclick="setAsnFilter('${f}')">${f.charAt(0).toUpperCase()+f.slice(1)}</button>`).join('');
+  const filtered=ASSIGNMENTS.filter(a=>asnFilter==='all'||a.status===asnFilter||a.status==='review'&&asnFilter==='review');
+  const statusMap={pending:{cls:'as-pending',lbl:'Pending'},review:{cls:'as-pending',lbl:'📥 Needs Review'},overdue:{cls:'as-overdue',lbl:'⚠️ Overdue'}};
+  document.getElementById('assignmentsList').innerHTML=`<div class="card-hdr" style="margin-bottom:14px;"><div class="card-title">Assignments</div><span class="see-all">${filtered.length} shown</span></div>`+
+    filtered.map(a=>{const s=statusMap[a.status];return`
+    <div class="assign-card card" style="margin-bottom:10px;">
+      <div class="asgn-ico" style="background:${a.iconBg}">${a.icon}</div>
+      <div class="asgn-info">
+        <div class="asgn-title">${a.title}</div>
+        <div class="asgn-meta">${a.studentEmoji} ${a.student} · ${a.course} · ${a.due}</div>
+      </div>
+      <span class="asgn-status ${s.cls}">${s.lbl}</span>
+      ${a.status==='review'?`<button class="btn btn-p btn-sm" onclick="showToast('📝 Opening submission for review…')">Review</button>`:''}
+    </div>`;}).join('');
+}
+function setAsnFilter(f){asnFilter=f;renderAssignments();}
+
+/* ════════ RENDER: MESSAGES ════════ */
+function renderMessages(){
+  const contacts=MESSAGES.map(m=>`
+    <div class="msg-contact${m.id===activeMsgId?' active':''}" onclick="setActiveMsg(${m.id})">
+      <div class="mc-ava">${m.emoji}${m.online?'<div class="mc-online"></div>':''}</div>
+      <div class="mc-info"><div class="mc-name">${m.name}</div><div class="mc-last">${m.msgs[m.msgs.length-1].text}</div></div>
+      <div class="mc-meta"><div class="mc-time">${m.time}</div>${m.unread?`<div class="mc-unread">${m.unread}</div>`:''}</div>
+    </div>`).join('');
+  const active=MESSAGES.find(m=>m.id===activeMsgId);
+  const bubbles=active.msgs.map(msg=>`<div><div class="msg-bubble ${msg.from==='me'?'mb-me':'mb-them'}">${msg.text}<div class="mb-time">${msg.time}</div></div></div>`).join('');
+  document.getElementById('msgLayout').innerHTML=`
+    <div class="msg-sb">
+      <div class="msg-sb-hdr"><div class="msg-sb-title">Students</div></div>
+      <div class="msg-srch"><input class="msg-srch-inp" placeholder="Search students…"></div>
+      <div class="msg-list">${contacts}</div>
+    </div>
+    <div class="msg-area">
+      <div class="msg-hdr">
+        <div class="msg-hdr-ava">${active.emoji}</div>
+        <div><div class="msg-hdr-name">${active.name}</div><div class="msg-hdr-status">${active.online?'🟢 Online · '+active.role:'⚫ Offline · '+active.role}</div></div>
+        <div class="msg-hdr-acts">
+          <button class="tb-btn" onclick="showToast('📞 Starting call…')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.38 2 2 0 0 1 3.58 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 9.91a16 16 0 0 0 6.18 6.18l.91-.91a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg></button>
+        </div>
+      </div>
+      <div class="msg-body" id="msgBody">${bubbles}</div>
+      <div class="msg-inp-area">
+        <textarea class="msg-inp" id="msgInp" placeholder="Type a message…" rows="1" onkeydown="handleMsgKey(event)"></textarea>
+        <button class="msg-send" onclick="sendMsg()">Send <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>
+      </div>
+    </div>`;
+  const body=document.getElementById('msgBody');
+  if(body)body.scrollTop=body.scrollHeight;
+}
+function setActiveMsg(id){activeMsgId=id;renderMessages();}
+function sendMsg(){
+  const inp=document.getElementById('msgInp');
+  const txt=inp.value.trim();if(!txt)return;
+  const active=MESSAGES.find(m=>m.id===activeMsgId);
+  active.msgs.push({from:'me',text:txt,time:new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'})});
+  inp.value='';renderMessages();
+}
+function handleMsgKey(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMsg();}}
+
+/* ════════ RENDER: EARNINGS ════════ */
+function renderEarnings(){
+  document.getElementById('earnSummary').innerHTML=`
+    <div class="card earn-sum-card"><div class="txn-ico" style="margin:0 auto 8px;background:rgba(16,185,129,.1);font-size:1.5rem;">💰</div><div class="esv">₹28,400</div><div class="esl">This Month</div></div>
+    <div class="card earn-sum-card"><div class="txn-ico" style="margin:0 auto 8px;background:rgba(124,58,237,.1);font-size:1.5rem;">📊</div><div class="esv">₹3,02,940</div><div class="esl">Total Earned</div></div>
+    <div class="card earn-sum-card"><div class="txn-ico" style="margin:0 auto 8px;background:rgba(245,158,11,.1);font-size:1.5rem;">⏳</div><div class="esv">₹33,600</div><div class="esl">Pending Payout</div></div>
+    <div class="card earn-sum-card"><div class="txn-ico" style="margin:0 auto 8px;background:rgba(6,182,212,.1);font-size:1.5rem;">💳</div><div class="esv">₹800</div><div class="esl">Per Session</div></div>`;
+  document.getElementById('earnTable').innerHTML=`
+    <thead><tr><th>Description</th><th>Date</th><th>Amount</th><th>Status</th></tr></thead>
+    <tbody>${EARNINGS_TXN.map(t=>`<tr>
+      <td><div style="display:flex;align-items:center;gap:9px;"><div class="txn-ico" style="background:${t.iconBg}">${t.icon}</div><div><div class="txn-desc">${t.desc}</div><div class="txn-sub">${t.sub}</div></div></div></td>
+      <td style="color:var(--muted);font-size:.77rem;">${t.date}</td>
+      <td><span class="txn-amt ${t.credit?'credit':''}">${t.credit?'+':'-'} ${t.amount}</span></td>
+      <td><span class="txn-st ts-ok">${t.status}</span></td>
+    </tr>`).join('')}</tbody>`;
+}
+
+/* ════════ RENDER: REVIEWS ════════ */
+function renderReviews(){
+  const cats=[{lbl:'Teaching Quality',val:4.9},{lbl:'Communication',val:5.0},{lbl:'Punctuality',val:4.8},{lbl:'Course Content',val:4.9}];
+  document.getElementById('ratingKpis').innerHTML=cats.map(c=>`
+    <div><div style="font-size:.73rem;color:var(--muted);margin-bottom:5px;">${c.lbl}</div>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <div class="pbar-track" style="flex:1;"><div class="pbar-fill" style="width:${c.val/5*100}%;background:linear-gradient(90deg,#f59e0b,#f97316);"></div></div>
+      <span style="font-size:.75rem;font-weight:700;color:var(--primary);">${c.val}</span>
+    </div></div>`).join('');
+  const bars=[{s:'5★',pct:82},{s:'4★',pct:12},{s:'3★',pct:4},{s:'2★',pct:1},{s:'1★',pct:1}];
+  document.getElementById('ratingBars').innerHTML=bars.map(b=>`
+    <div style="display:flex;align-items:center;gap:8px;">
+      <span style="font-size:.7rem;color:var(--muted);width:22px;text-align:right;">${b.s}</span>
+      <div class="pbar-track" style="flex:1;"><div class="pbar-fill" style="width:${b.pct}%;background:linear-gradient(90deg,#f59e0b,#f97316);"></div></div>
+      <span style="font-size:.68rem;color:var(--muted);width:28px;">${b.pct}%</span>
+    </div>`).join('');
+  document.getElementById('reviewsList').innerHTML=REVIEWS.map((r,i)=>`
+    <div class="card review-card fu" style="animation-delay:${i*.08}s">
+      <div class="rv-top">
+        <div class="rv-ava">${r.emoji}</div>
+        <div><div class="rv-name">${r.name}</div><div class="rv-meta">${r.date}</div></div>
+        <div class="rv-stars">${'★'.repeat(r.rating)}${'☆'.repeat(5-r.rating)}</div>
+      </div>
+      <div class="rv-text">"${r.text}"</div>
+      <div class="rv-course">Course: ${r.course}</div>
+      ${r.reply?`<div class="rv-reply"><div class="rv-reply-lbl">Your Reply</div><div class="rv-reply-text">${r.reply}</div></div>`:`<button class="btn btn-o btn-sm" style="margin-top:10px;" onclick="showToast('💬 Reply box opening…')">Reply to Review</button>`}
+    </div>`).join('');
+}
+
+/* ════════ RENDER: ANALYTICS ════════ */
+function renderAnalytics(){
+  const kpis=[
+    {val:'94%',lbl:'Student Retention Rate',pct:94},
+    {val:'8.4h',lbl:'Avg. Practice/Student/Week',pct:70},
+    {val:'97%',lbl:'Class Attendance Rate',pct:97},
+    {val:'4.9★',lbl:'Overall Rating',pct:98},
+    {val:'12',lbl:'Active Students',pct:80},
+    {val:'42',lbl:'Sessions This Month',pct:85},
+  ];
+  document.getElementById('analyticsKpis').innerHTML=kpis.slice(0,3).map(k=>`
+    <div class="card akpi"><div class="akpi-val">${k.val}</div><div class="akpi-lbl">${k.lbl}</div><div class="akpi-bar" style="width:${k.pct}%;"></div></div>`).join('');
+  const hmData=Array.from({length:35},()=>Math.floor(Math.random()*5));
+  const dLabels=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  document.getElementById('heatmapDays').innerHTML=dLabels.map(d=>`<div style="flex:1;text-align:center;">${d}</div>`).join('');
+  document.getElementById('heatmap').innerHTML=hmData.map(v=>`<div class="hm-cell hm-${v}" title="${v} classes"></div>`).join('');
+  const revMonths=['Dec','Jan','Feb','Mar','Apr','May'];
+  const revVals=[18,21,19,24,28,28];
+  const maxRev=Math.max(...revVals);
+  document.getElementById('revenueBars').innerHTML=revVals.map((v,i)=>`
+    <div class="eb-col"><div class="eb-bar" id="rev${i}" style="height:0;"></div><div class="eb-lbl">${revMonths[i]}</div></div>`).join('');
+  document.getElementById('revenueLabels').innerHTML='';
+  setTimeout(()=>revVals.forEach((v,i)=>{const el=document.getElementById('rev'+i);if(el){el.style.transition='height .9s cubic-bezier(.22,1,.36,1) '+i*.08+'s';el.style.height=(v/maxRev*110)+'px';}}),300);
+  document.getElementById('topStudents').innerHTML=STUDENTS.sort((a,b)=>b.progress-a.progress).map((s,i)=>`
+    <div class="student-row">
+      <div style="width:22px;text-align:center;font-size:.85rem;">${i===0?'🥇':i===1?'🥈':i===2?'🥉':i+1}</div>
+      <div class="stu-ava">${s.emoji}</div>
+      <div class="stu-info"><div class="stu-name">${s.name}</div><div class="stu-sub">${s.attendance}% attendance · ${s.progress}% progress</div></div>
+      <div class="stu-pct" style="color:var(--gold);">⭐ ${s.rating}</div>
+    </div>`).join('');
+}
+
+/* ════════ RENDER: PROFILE ════════ */
+function renderProfile(){
+  document.getElementById('profileHero').innerHTML=`
+    <div class="ph-top">
+      <div class="ph-ava">🎸</div>
+      <div>
+        <div class="ph-name">Arjun Mehta</div>
+        <div class="ph-joined">Teaching on TagoreTunes since March 2023 · Verified Teacher</div>
+        <div class="ph-tags"><span class="ptag">🎸 Guitar</span><span class="ptag">🎓 Certified</span><span class="ptag">⭐ Top Rated</span><span class="ptag">📍 Mumbai</span></div>
+      </div>
+      <button class="btn btn-o btn-sm" style="margin-left:auto;background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.2);color:#fff;" onclick="showToast('📸 Upload photo…')">Change Photo</button>
+    </div>
+    <div class="ph-stats">
+      <div class="ph-stat"><div class="ph-sv">12</div><div class="ph-sl">Students</div></div>
+      <div class="ph-stat"><div class="ph-sv">3</div><div class="ph-sl">Courses</div></div>
+      <div class="ph-stat"><div class="ph-sv">4.9★</div><div class="ph-sl">Rating</div></div>
+      <div class="ph-stat"><div class="ph-sv">312</div><div class="ph-sl">Reviews</div></div>
+      <div class="ph-stat"><div class="ph-sv">₹3.0L</div><div class="ph-sl">Earned</div></div>
+    </div>`;
+  const fields=[
+    {lbl:'Full Name',val:'Arjun Mehta',type:'text'},{lbl:'Email Address',val:'arjun.mehta@email.com',type:'email'},
+    {lbl:'Phone',val:'+91 98765 43210',type:'tel'},{lbl:'City',val:'Mumbai, Maharashtra',type:'text'},
+    {lbl:'Primary Instrument',val:'Guitar',type:'text'},{lbl:'Years of Experience',val:'12',type:'number'},
+  ];
+  document.getElementById('profileForm').innerHTML=`
+    <div class="g2">${fields.map(f=>`<div class="pf-group"><div class="pf-label">${f.lbl}</div><input class="pf-input" type="${f.type}" value="${f.val}"></div>`).join('')}</div>
+    <div class="pf-group" style="margin-top:4px;"><div class="pf-label">Professional Bio</div><textarea class="pf-textarea" rows="3">Berklee Online certified guitarist with 12 years of teaching experience. Performed across 6 countries. Specialises in fingerstyle, blues, and contemporary guitar for all levels.</textarea></div>`;
+  document.getElementById('profileSideCols').innerHTML=`
+    <div class="card" style="padding:20px;">
+      <div class="card-hdr" style="margin-bottom:14px;"><div class="card-title">🔐 Security</div></div>
+      <button class="btn btn-o btn-sm" style="width:100%;margin-bottom:8px;" onclick="showToast('🔑 Password reset email sent!')">Change Password</button>
+      <button class="btn btn-o btn-sm" style="width:100%;margin-bottom:8px;" onclick="showToast('📱 2FA is enabled on your account')">2FA: Enabled ✓</button>
+    </div>
+    <div class="card" style="padding:20px;">
+      <div class="card-hdr" style="margin-bottom:14px;"><div class="card-title">💳 Payout Settings</div></div>
+      <div style="font-size:.82rem;color:var(--muted);margin-bottom:12px;">Bank: HDFC Bank •••• 4521<br>UPI: arjun.mehta@upi</div>
+      <button class="btn btn-o btn-sm" onclick="showToast('💳 Opening payout settings…')">Update Bank Details</button>
+    </div>
+    <div class="card" style="padding:20px;">
+      <div class="card-hdr" style="margin-bottom:14px;"><div class="card-title">🔔 Notifications</div></div>
+      ${[{lbl:'New student booking',on:true},{lbl:'Student messages',on:true},{lbl:'Payout processed',on:true},{lbl:'Weekly summary',on:false}].map(n=>`
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border);">
+        <span style="font-size:.8rem;color:var(--primary);">${n.lbl}</span>
+        <div onclick="this.classList.toggle('on');showToast('Preference updated')" style="width:36px;height:19px;border-radius:10px;background:${n.on?'linear-gradient(135deg,#7c3aed,#4338ca)':'rgba(8,37,103,.12)'};cursor:pointer;position:relative;transition:background .3s;flex-shrink:0;">
+          <div style="position:absolute;top:2px;left:${n.on?'17px':'2px'};width:15px;height:15px;border-radius:50%;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.2);transition:left .3s;"></div>
+        </div>
+      </div>`).join('')}
+    </div>`;
+}
+
+/* ════════ NOTIFICATIONS ════════ */
+function renderNotifs(){
+  document.getElementById('npList').innerHTML=NOTIFS.map((n,i)=>`
+    <div class="np-item${n.unread?' unread':''}" onclick="markRead(${i})">
+      <div class="np-ico ${n.bg}">${n.icon}</div>
+      <div class="np-text"><div class="np-msg">${n.msg}</div><div class="np-time">${n.time}</div></div>
+      ${n.unread?'<div class="np-dot"></div>':''}
+    </div>`).join('');
+}
+function markRead(i){NOTIFS[i].unread=false;renderNotifs();if(!NOTIFS.some(n=>n.unread))document.getElementById('notifDot').style.display='none';}
+
+/* ════════ SECTION SWITCHING ════════ */
+const TITLES={dashboard:'Good Morning, <em>Arjun</em> 👋',students:'My <em>Students</em>',schedule:'My <em>Schedule</em>',courses:'My <em>Courses</em>',assignments:'Assignments &amp; <em>Feedback</em>',messages:'Your <em>Messages</em>',earnings:'Earnings &amp; <em>Payouts</em>',reviews:'Student <em>Reviews</em>',analytics:'Teaching <em>Analytics</em>',profile:'My <em>Profile</em>'};
+const RENDERS={dashboard:renderDashboard,students:renderStudents,schedule:()=>renderCalendar(),courses:renderCourses,assignments:renderAssignments,messages:renderMessages,earnings:renderEarnings,reviews:renderReviews,analytics:renderAnalytics,profile:renderProfile};
+function switchSec(name){
+  document.querySelectorAll('.sec-page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.sb-item').forEach(i=>i.classList.remove('active'));
+  document.getElementById('sec-'+name).classList.add('active');
+  document.querySelector(`[data-sec="${name}"]`)?.classList.add('active');
+  document.getElementById('tbTitle').innerHTML=TITLES[name]||name;
+  if(RENDERS[name])RENDERS[name]();
+  window.scrollTo({top:0,behavior:'smooth'});
+  closeSb();
+}
+document.querySelectorAll('.sb-item[data-sec]').forEach(btn=>btn.addEventListener('click',()=>switchSec(btn.dataset.sec)));
+
+/* ════════ MOBILE SIDEBAR ════════ */
+function closeSb(){document.getElementById('sidebar').classList.remove('open');document.getElementById('sbOverlay').classList.remove('show');document.getElementById('mobBtn').classList.remove('open');}
+document.getElementById('mobBtn').addEventListener('click',()=>{
+  const o=document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('sbOverlay').classList.toggle('show',o);
+  document.getElementById('mobBtn').classList.toggle('open',o);
+});
+document.getElementById('sbOverlay').addEventListener('click',closeSb);
+
+/* ════════ NOTIF PANEL ════════ */
+document.getElementById('notifBtn').addEventListener('click',()=>document.getElementById('notifPanel').classList.add('open'));
+function closeNotif(){document.getElementById('notifPanel').classList.remove('open');}
+document.addEventListener('click',e=>{if(!e.target.closest('#notifPanel')&&!e.target.closest('#notifBtn'))closeNotif();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeNotif();closeSb();}});
+
+/* ════════ TOAST ════════ */
+let toastT;
+function showToast(msg,dur=3000){
+  const t=document.getElementById('toast');t.textContent=msg;t.style.opacity='1';t.style.transform='translateX(-50%) translateY(0)';
+  clearTimeout(toastT);toastT=setTimeout(()=>{t.style.opacity='0';t.style.transform='translateX(-50%) translateY(80px)';},dur);
+}
+
+/* ════════ INIT ════════ */
+renderDashboard();
+renderNotifs();
+</script>
+</body>
+</html>

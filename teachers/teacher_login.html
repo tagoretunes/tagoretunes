@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Teacher Portal — TagoreTunes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#0d1b4b;
+  --bg2:#1a1340;
+  --primary:#fff;
+  --accent:#7c3aed;
+  --accent2:#a78bfa;
+  --gold:#f59e0b;
+  --card:rgba(255,255,255,0.07);
+  --card-border:rgba(255,255,255,0.12);
+  --input-bg:rgba(255,255,255,0.08);
+  --muted:rgba(255,255,255,0.45);
+  --t:0.3s ease;
+}
+html{scroll-behavior:smooth;}
+body{
+  font-family:'Poppins',sans-serif;
+  background:linear-gradient(145deg,#0d1b4b 0%,#1a1340 50%,#0d1b4b 100%);
+  min-height:100vh;
+  display:flex;align-items:center;justify-content:center;
+  padding:1.5rem;
+  color:#fff;
+  overflow:hidden;
+  position:relative;
+}
+
+/* ── Orbs ── */
+.orb{position:fixed;border-radius:50%;filter:blur(80px);pointer-events:none;z-index:0;}
+.orb1{width:400px;height:400px;background:radial-gradient(#7c3aed,#4338ca 70%);top:-140px;right:-100px;opacity:.25;animation:floatO 10s ease-in-out infinite alternate;}
+.orb2{width:300px;height:300px;background:radial-gradient(#ec4899,#be185d 70%);bottom:-100px;left:-80px;opacity:.2;animation:floatO 13s ease-in-out infinite alternate-reverse;}
+.orb3{width:180px;height:180px;background:radial-gradient(#f59e0b,#d97706 70%);top:40%;right:8%;opacity:.15;animation:floatO 8s ease-in-out infinite alternate;}
+@keyframes floatO{from{transform:translate(0,0);}to{transform:translate(20px,16px);}}
+
+/* ── Grid pattern overlay ── */
+body::before{
+  content:'';
+  position:fixed;inset:0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.03) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,0.03) 1px,transparent 1px);
+  background-size:48px 48px;
+  pointer-events:none;z-index:0;
+}
+
+/* ── Layout ── */
+.layout{
+  position:relative;z-index:1;
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:0;max-width:900px;width:100%;
+  min-height:580px;
+  border-radius:28px;
+  overflow:hidden;
+  box-shadow:0 30px 80px rgba(0,0,0,0.5),0 1px 0 rgba(255,255,255,0.08) inset;
+  animation:rise .7s cubic-bezier(.22,1,.36,1) both;
+}
+@keyframes rise{from{opacity:0;transform:translateY(32px) scale(.97);}to{opacity:1;transform:translateY(0) scale(1);}}
+
+/* ── Left panel — branding ── */
+.left-panel{
+  background:linear-gradient(160deg,rgba(124,58,237,0.3),rgba(67,56,202,0.2));
+  border-right:1px solid rgba(255,255,255,0.08);
+  padding:48px 40px;
+  display:flex;flex-direction:column;justify-content:space-between;
+  position:relative;overflow:hidden;
+}
+.left-panel::before{
+  content:'';position:absolute;top:-80px;right:-80px;
+  width:260px;height:260px;
+  background:radial-gradient(#7c3aed,transparent 70%);
+  opacity:.3;border-radius:50%;
+}
+.left-panel::after{
+  content:'';position:absolute;bottom:-60px;left:-60px;
+  width:200px;height:200px;
+  background:radial-gradient(#ec4899,transparent 70%);
+  opacity:.2;border-radius:50%;
+}
+.lp-top{position:relative;z-index:1;}
+.lp-logo{display:flex;align-items:center;gap:10px;margin-bottom:48px;}
+.lp-logo-mark{
+  width:42px;height:42px;
+  background:linear-gradient(135deg,#7c3aed,#4338ca);
+  border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:900;color:#fff;
+  box-shadow:0 4px 14px rgba(124,58,237,0.5);
+}
+.lp-logo-text{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:700;color:#fff;letter-spacing:-.2px;}
+.lp-logo-text span{color:#c4b5fd;}
+.lp-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  background:rgba(245,158,11,0.15);
+  border:1px solid rgba(245,158,11,0.3);
+  border-radius:20px;padding:4px 12px;
+  font-size:.65rem;font-weight:700;color:#fbbf24;
+  letter-spacing:.8px;text-transform:uppercase;
+  margin-bottom:20px;
+}
+.lp-heading{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(1.6rem,3vw,2.2rem);
+  font-weight:900;line-height:1.18;
+  color:#fff;margin-bottom:14px;
+}
+.lp-heading em{font-style:italic;color:#c4b5fd;}
+.lp-sub{font-size:.875rem;color:rgba(255,255,255,.55);line-height:1.7;max-width:280px;}
+
+/* feature list */
+.lp-features{position:relative;z-index:1;}
+.feature-item{display:flex;align-items:center;gap:11px;margin-bottom:14px;}
+.feature-dot{
+  width:32px;height:32px;border-radius:9px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-size:.9rem;
+}
+.fd-purple{background:rgba(124,58,237,0.25);}
+.fd-gold{background:rgba(245,158,11,0.2);}
+.fd-green{background:rgba(16,185,129,0.2);}
+.fd-pink{background:rgba(236,72,153,0.2);}
+.feature-text{font-size:.8rem;color:rgba(255,255,255,.65);}
+.feature-text strong{color:#fff;font-weight:600;}
+
+/* ── Right panel — form ── */
+.right-panel{
+  background:rgba(13,27,75,0.8);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  padding:44px 40px;
+  display:flex;flex-direction:column;justify-content:center;
+}
+.rp-header{margin-bottom:28px;}
+.rp-title{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;color:#fff;margin-bottom:5px;}
+.rp-title em{font-style:italic;color:#c4b5fd;}
+.rp-sub{font-size:.82rem;color:var(--muted);}
+
+/* ── Field ── */
+.field{position:relative;margin-bottom:16px;}
+.field .ico{position:absolute;left:14px;top:50%;transform:translateY(-50%);width:16px;height:16px;color:rgba(255,255,255,0.3);pointer-events:none;transition:color var(--t);z-index:2;}
+.field:focus-within .ico{color:#a78bfa;}
+.field input{
+  width:100%;padding:17px 14px 6px 42px;
+  background:var(--input-bg);
+  border:1.5px solid var(--card-border);
+  border-radius:13px;
+  font-family:'Poppins',sans-serif;font-size:.88rem;color:#fff;
+  outline:none;
+  transition:border-color var(--t),box-shadow var(--t),background var(--t);
+}
+.field input:focus{
+  border-color:rgba(167,139,250,0.6);
+  box-shadow:0 0 0 4px rgba(124,58,237,0.2);
+  background:rgba(255,255,255,0.11);
+}
+.field input::placeholder{color:transparent;}
+.field label{
+  position:absolute;left:42px;top:50%;transform:translateY(-50%);
+  font-size:.855rem;color:rgba(255,255,255,0.35);
+  pointer-events:none;
+  transition:top var(--t),font-size var(--t),color var(--t);
+  padding:0 3px;z-index:1;
+}
+.field input:focus+label,
+.field input:not(:placeholder-shown)+label{
+  top:7px;font-size:.65rem;font-weight:600;
+  color:#a78bfa;
+  background:rgba(13,27,75,0.9);border-radius:4px;
+}
+.field .eye-btn{
+  position:absolute;right:12px;top:50%;transform:translateY(-50%);
+  background:none;border:none;cursor:pointer;padding:5px;
+  color:rgba(255,255,255,0.3);display:flex;align-items:center;
+  transition:color var(--t);z-index:3;border-radius:7px;
+}
+.field .eye-btn:hover{color:#a78bfa;}
+.field .eye-btn svg{width:16px;height:16px;}
+
+/* ── 2FA section ── */
+.twofa-section{
+  margin-bottom:16px;
+  background:rgba(245,158,11,0.08);
+  border:1px solid rgba(245,158,11,0.2);
+  border-radius:12px;padding:13px;
+  display:none;
+}
+.twofa-section.show{display:block;animation:fadeIn .3s ease both;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-6px);}to{opacity:1;transform:translateY(0);}}
+.twofa-label{font-size:.72rem;font-weight:600;color:#fbbf24;margin-bottom:9px;display:flex;align-items:center;gap:6px;}
+.otp-row{display:flex;gap:8px;justify-content:center;}
+.otp-box{
+  width:42px;height:46px;border-radius:11px;
+  border:1.5px solid rgba(245,158,11,0.3);
+  background:rgba(245,158,11,0.08);
+  font-family:'Poppins',sans-serif;font-size:1.2rem;font-weight:700;
+  color:#fbbf24;text-align:center;outline:none;
+  transition:border-color var(--t),box-shadow var(--t);
+  caret-color:#fbbf24;
+}
+.otp-box:focus{border-color:#f59e0b;box-shadow:0 0 0 3px rgba(245,158,11,0.18);}
+
+/* ── Forgot ── */
+.forgot-row{text-align:right;margin-bottom:20px;}
+.forgot-link{font-size:.77rem;font-weight:500;color:#a78bfa;text-decoration:none;transition:color var(--t);}
+.forgot-link:hover{color:#fff;}
+
+/* ── Submit ── */
+.btn-signin{
+  width:100%;padding:14px;
+  background:linear-gradient(135deg,#7c3aed,#4338ca);
+  color:#fff;font-family:'Poppins',sans-serif;font-size:.95rem;font-weight:600;
+  border:none;border-radius:13px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  box-shadow:0 5px 20px rgba(124,58,237,0.4);
+  transition:transform var(--t),box-shadow var(--t),letter-spacing var(--t);
+  position:relative;overflow:hidden;margin-bottom:18px;
+}
+.btn-signin::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.15),transparent);opacity:0;transition:opacity var(--t);}
+.btn-signin:hover{transform:translateY(-2px) scale(1.015);box-shadow:0 10px 28px rgba(124,58,237,.5);}
+.btn-signin:hover::after{opacity:1;}
+.btn-signin:hover .arr{transform:translateX(4px);}
+.btn-signin:active{transform:scale(.98);}
+.arr{transition:transform var(--t);display:flex;}
+.arr svg{width:16px;height:16px;}
+
+/* ── Bottom links ── */
+.bottom-links{display:flex;flex-direction:column;align-items:center;gap:8px;}
+.bl-text{font-size:.77rem;color:var(--muted);text-align:center;}
+.bl-text a{color:#a78bfa;font-weight:600;text-decoration:none;transition:color var(--t);}
+.bl-text a:hover{color:#fff;}
+.divider-line{display:flex;align-items:center;gap:8px;width:100%;}
+.divider-line::before,.divider-line::after{content:'';flex:1;height:1px;background:rgba(255,255,255,.08);}
+.divider-line span{font-size:.68rem;color:rgba(255,255,255,.25);white-space:nowrap;}
+
+/* ── Home btn ── */
+.home-btn{
+  display:flex;align-items:center;justify-content:center;gap:6px;
+  font-family:'Poppins',sans-serif;font-size:.78rem;font-weight:500;
+  color:rgba(255,255,255,.3);text-decoration:none;margin-top:16px;
+  transition:color var(--t);position:relative;z-index:1;
+}
+.home-btn:hover{color:rgba(255,255,255,.7);}
+.home-btn svg{transition:transform var(--t);}
+.home-btn:hover svg{transform:translateY(-2px);}
+
+/* ── Toast ── */
+#toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(80px);background:#fff;color:var(--bg);padding:11px 22px;border-radius:40px;font-size:.83rem;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,.3);transition:transform .4s cubic-bezier(.22,1,.36,1),opacity .4s;opacity:0;z-index:9999;white-space:nowrap;pointer-events:none;}
+
+/* ── Responsive ── */
+@media(max-width:700px){
+  .layout{grid-template-columns:1fr;}
+  .left-panel{display:none;}
+  .right-panel{padding:36px 24px;}
+}
+</style>
+</head>
+<body>
+
+<div class="orb orb1"></div>
+<div class="orb orb2"></div>
+<div class="orb orb3"></div>
+
+<div class="layout">
+
+  <!-- ══ LEFT PANEL ══ -->
+  <div class="left-panel">
+    <div class="lp-top">
+      <div class="lp-logo">
+        <div class="lp-logo-mark">H</div>
+        <span class="lp-logo-text">Har<span>monia</span></span>
+      </div>
+      <div class="lp-badge">🎓 Teacher Portal</div>
+      <h1 class="lp-heading">Your Students<br>Are <em>Waiting</em></h1>
+      <p class="lp-sub">Sign in to your dedicated teaching dashboard — manage courses, students, schedule, and earnings all in one place.</p>
+    </div>
+    <div class="lp-features">
+      <div class="feature-item">
+        <div class="feature-dot fd-purple">📚</div>
+        <div class="feature-text"><strong>Course Builder</strong> — create and publish your curriculum</div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-dot fd-gold">📅</div>
+        <div class="feature-text"><strong>Smart Scheduling</strong> — set availability, auto-confirm bookings</div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-dot fd-green">💰</div>
+        <div class="feature-text"><strong>Earnings Dashboard</strong> — track payouts and invoices</div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-dot fd-pink">📝</div>
+        <div class="feature-text"><strong>Assignments & Feedback</strong> — grade with audio/video notes</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ RIGHT PANEL ══ -->
+  <div class="right-panel">
+    <div class="rp-header">
+      <div class="rp-title">Welcome Back, <em>Teacher</em></div>
+      <div class="rp-sub">Sign in to your TagoreTunes teacher account</div>
+    </div>
+
+    <form id="teacherLoginForm" novalidate>
+
+      <!-- Email -->
+      <div class="field">
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        <input type="email" id="teacherEmail" placeholder=" " autocomplete="email">
+        <label for="teacherEmail">Teacher email address</label>
+      </div>
+
+      <!-- Password -->
+      <div class="field">
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        <input type="password" id="teacherPassword" placeholder=" " autocomplete="current-password">
+        <label for="teacherPassword">Password</label>
+        <button type="button" class="eye-btn" id="eyeBtn">
+          <svg id="eyeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- 2FA -->
+      <div class="twofa-section" id="twofaSection">
+        <div class="twofa-label">🔐 Two-Factor Authentication — enter your 6-digit code</div>
+        <div class="otp-row" id="otpRow">
+          <input class="otp-box" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]*">
+          <input class="otp-box" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]*">
+          <input class="otp-box" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]*">
+          <input class="otp-box" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]*">
+          <input class="otp-box" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]*">
+          <input class="otp-box" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]*">
+        </div>
+      </div>
+
+      <!-- Forgot -->
+      <div class="forgot-row">
+        <a href="forgot-password.html" class="forgot-link">Forgot password?</a>
+      </div>
+
+      <!-- Sign In button -->
+      <button type="submit" class="btn-signin">
+        Sign In to Portal
+        <span class="arr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
+      </button>
+
+      <div class="bottom-links">
+        <div class="bl-text">Not a teacher yet? <a href="../index.html#apply">Apply to join →</a></div>
+        <div class="divider-line"><span>or</span></div>
+        <div class="bl-text">Are you a student? <a href="../login.html">Student login →</a></div>
+      </div>
+
+    </form>
+
+    <a href="../index.html" class="home-btn">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+        <polyline points="9 22 9 12 15 12 15 22"/>
+      </svg>
+      Back to Home
+    </a>
+  </div>
+
+</div>
+
+<div id="toast"></div>
+
+<script>
+/* ── Eye toggle ── */
+const EYE_OPEN=`<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>`;
+const EYE_OFF=`<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>`;
+document.getElementById('eyeBtn').addEventListener('click',()=>{
+  const inp=document.getElementById('teacherPassword');
+  const show=inp.type==='password';
+  inp.type=show?'text':'password';
+  document.getElementById('eyeIcon').innerHTML=show?EYE_OFF:EYE_OPEN;
+  inp.focus();
+});
+
+/* ── OTP box navigation ── */
+document.querySelectorAll('.otp-box').forEach((box,i,boxes)=>{
+  box.addEventListener('input',()=>{
+    box.value=box.value.replace(/\D/g,'');
+    if(box.value&&i<boxes.length-1)boxes[i+1].focus();
+  });
+  box.addEventListener('keydown',e=>{
+    if(e.key==='Backspace'&&!box.value&&i>0){boxes[i-1].value='';boxes[i-1].focus();}
+  });
+  box.addEventListener('paste',e=>{
+    e.preventDefault();
+    const pasted=(e.clipboardData||window.clipboardData).getData('text').replace(/\D/g,'').slice(0,6);
+    pasted.split('').forEach((ch,j)=>{if(boxes[j])boxes[j].value=ch;});
+    boxes[Math.min(pasted.length,5)].focus();
+  });
+});
+
+/* ── Toast ── */
+let toastT;
+function showToast(msg,dur=3500){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.style.opacity='1';t.style.transform='translateX(-50%) translateY(0)';
+  clearTimeout(toastT);
+  toastT=setTimeout(()=>{t.style.opacity='0';t.style.transform='translateX(-50%) translateY(80px)';},dur);
+}
+
+/* ── Form submit ── */
+let step=1;
+document.getElementById('teacherLoginForm').addEventListener('submit',e=>{
+  e.preventDefault();
+  const email=document.getElementById('teacherEmail').value.trim();
+  const pw=document.getElementById('teacherPassword').value;
+  if(!email||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){showToast('⚠️ Enter a valid email address.');return;}
+  if(!pw){showToast('⚠️ Please enter your password.');return;}
+
+  if(step===1){
+    /* Show 2FA step */
+    document.getElementById('twofaSection').classList.add('show');
+    document.querySelector('.btn-signin').textContent='';
+    document.querySelector('.btn-signin').innerHTML='Verify & Sign In <span class="arr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>';
+    document.querySelectorAll('.otp-box')[0].focus();
+    showToast('🔐 2FA code sent to your registered email');
+    step=2;
+    return;
+  }
+
+  if(step===2){
+    const otp=[...document.querySelectorAll('.otp-box')].map(b=>b.value).join('');
+    if(otp.length<6){showToast('⚠️ Please enter the full 6-digit code.');return;}
+    /* Success — redirect */
+    showToast(`✅ Welcome back! Redirecting to your dashboard…`);
+    setTimeout(()=>{window.location.href='teacher_dashboard.html';},1500);
+  }
+});
+</script>
+</body>
+</html>
